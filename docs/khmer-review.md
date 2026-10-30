@@ -26,7 +26,7 @@ For each line: tick it if it is natural Khmer, or write a better version.
 
 | # | Where | Khmer now | Problem |
 |---|---|---|---|
-| 12 | Home, "How it works" step 1 (`index.html`) | ចុះឈ្មោះ | Means "register", but the page also says no registration is needed. Used for "Check-in". |
+| 12 | Home, "How it works" step 1 (`index.html`) | ~~ចុះឈ្មោះ~~ → now **ឆែកអ៊ីន** | "ចុះឈ្មោះ" meant "register" (the page also says no registration is needed). Replaced with the loanword for airport check-in. Please confirm. |
 | 13 | Home, "What we measure" label (`index.html`) | ឥវ៉ាន់របស់អ្នក | "Your luggage": the airport joke may confuse. |
 | 14 | ~~Report, "Why it matched" reasons~~ | ~~ចំណាប់អារម្មណ៍ខ្លាំងប្រភេទ អ្នកធ្វើ (ធ្វើការដោយដៃ)~~ | Removed: replaced by the new reasons in section C. |
 
@@ -63,3 +63,13 @@ Page text only. Every question, answer option and scale on the test page comes f
 | 39 | Home, About, FAQ (test length) | ប្រហែល ១២ នាទី … / អ្នកអាចវាយបញ្ចូលវា ហើយរំលងសំណួរបុគ្គលិកលក្ខណៈទាំង ១២។ | About 12 minutes … / you can type it in and skip the 12 personality questions. | |
 | 40 | Privacy, "We keep" | ផ្នែកសិក្សាថ្នាក់ទី ១២ និទ្ទេសជាធម្មតា និងការវាយតម្លៃជំនាញខ្លួនឯង | Your grade 12 track, usual grades and skill self-ratings | |
 | 41 | Privacy, "We keep" | ការងារក្នុងក្តីស្រមៃដែលអ្នកជ្រើស ឬវាយបញ្ចូល (សូមកុំវាយឈ្មោះរបស់អ្នក) | A dream job you choose or type in (please don't type your name) | |
+
+## D. Showcase mode (js/config.js SHOWCASE_FREE = true)
+
+| # | Where | Khmer now | Meaning in English | OK / better Khmer |
+|---|---|---|---|---|
+| 42 | Home price buttons, results button (`js/app.js`) | កំណែបង្ហាញ៖ របាយការណ៍ពេញលេញឥតគិតថ្លៃ | Showcase: full report free | |
+| 43 | Home, under the prices (`index.html`) | កំណែបង្ហាញ — ពេលនេះរបាយការណ៍ពេញលេញឥតគិតថ្លៃ។ តម្លៃខាងលើសម្រាប់ពេលក្រោយ។ | Showcase — the full report is free for now. The prices above are for later. | |
+| 44 | Checkout title (`checkout.html`) | ការបង់ប្រាក់នឹងមកដល់ឆាប់ៗ | Payment is coming soon | |
+| 45 | Checkout text (`checkout.html`) | នៅក្នុងកំណែបង្ហាញនេះ របាយការណ៍ពេញលេញឥតគិតថ្លៃ។ មិនមានការបង់ប្រាក់ទេ។ | In this showcase the full report is free. There is no payment. | |
+| 46 | FAQ, type question (`faq.html`) | …សូមជ្រើស «បាទ/ចាស ខ្ញុំដឹងពីបុគ្គលិកលក្ខណៈរបស់ខ្ញុំ» ហើយវាយបញ្ចូល… | …choose “Yes, I know my type” and type it in… (quotes the locked button text) | |

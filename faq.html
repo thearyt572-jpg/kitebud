@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
 .page{max-width:780px;margin:0 auto;padding-block:36px 40px;display:flex;flex-direction:column;gap:32px}
-.contact{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.contact{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 @media (max-width:700px){.contact{grid-template-columns:1fr}}
 .contact .panel{display:flex;flex-direction:column;gap:6px;min-width:0}
 .contact .mono{overflow-wrap:anywhere;user-select:all}
@@ -37,8 +37,10 @@
     <h2 id="ct" data-en="Contact us">ទាក់ទងមកយើង</h2>
     <div class="contact">
       <div class="panel"><span class="label" data-en="Email">អ៊ីមែល</span><span class="mono">weare@thekitebud.com</span><button class="linkbtn" type="button" id="copy" style="text-align:left" data-en="Copy email">ចម្លងអ៊ីមែល</button></div>
+      <!-- Hidden for the showcase until we have the real links (task 39):
       <div class="panel"><span class="label">Telegram</span><span class="mono">@kitebud</span><span class="small muted" data-en="Channel link coming soon">តំណឆានែលនឹងមានឆាប់ៗ</span></div>
       <div class="panel"><span class="label">Facebook</span><span class="mono">KITE · The Kite Bud</span><span class="small muted" data-en="Page link coming soon">តំណទំព័រនឹងមានឆាប់ៗ</span></div>
+      -->
     </div>
   </section>
 </div></main>
