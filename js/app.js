@@ -192,8 +192,11 @@ K.jobChoice = s => {
 };
 
 /* ---------- unlocks & demo ---------- */
+// showcase mode (js/config.js): every full report is free, no payment
+K.SHOWCASE = !!(window.KITE_CONFIG && window.KITE_CONFIG.SHOWCASE_FREE);
+K.SHOWCASE_LABEL = {km:"កំណែបង្ហាញ៖ របាយការណ៍ពេញលេញឥតគិតថ្លៃ", en:"Showcase: full report free"};
 // unlocks are saved as major ids at payment time, so changing answers can't reveal other majors
-K.unlocked = (s, majorId) => K.isDemo() || (s.unlocked||[]).includes(majorId);
+K.unlocked = (s, majorId) => K.isDemo() || K.SHOWCASE || (s.unlocked||[]).includes(majorId);
 K.unlock = (s, majorIds) => { s.unlocked = [...new Set([...(s.unlocked||[]), ...majorIds])]; };
 K.demoState = function(){
   // "Dara", a fictional student: all answers below are made up for the free sample

@@ -23,6 +23,7 @@ textarea.copybox{width:100%;min-height:90px;font:inherit;border:2px solid var(--
 <div id="kite-header"></div>
 <main class="wrap"><div class="rwrap" id="app"></div></main>
 <div id="kite-footer"></div>
+<script src="js/config.js"></script>
 <script src="js/questions.js"></script>
 <script src="js/majors.js"></script>
 <script src="js/major-profiles.js"></script>
@@ -93,7 +94,8 @@ function render(){
     </div>
     <div class="stack" style="gap:22px">${passes}</div>
     ${extra.length?`<p class="small muted">${K.t("ជំនាញផ្សេងទៀតដែលអ្នកបានដោះសោពីមុន៖ ","Other majors you unlocked before: ")}${extra.map(x=>`<b>${K.t(x.m)}</b> (${x.pct===null?K.t(K.NOINFO):K.n(x.pct)+"%"})`).join(" · ")}</p>`:""}
-    ${anyUnlocked?`<a class="btn btn--ink btn--lg" href="report.html">${K.t("បើករបាយការណ៍ពេញលេញ","Open my full report")} →</a>`:""}
+    ${K.SHOWCASE && !demo ? `<a class="btn btn--gold btn--lg" href="report.html">${K.t(K.SHOWCASE_LABEL)} →</a>`
+      : anyUnlocked?`<a class="btn btn--ink btn--lg" href="report.html">${K.t("បើករបាយការណ៍ពេញលេញ","Open my full report")} →</a>`:""}
 
     <section class="panel stack" aria-labelledby="prof">
       <h2 id="prof">${K.t("ប្រវត្តិរូបរបស់អ្នក ជាពាក្យសាមញ្ញ","Your profile in plain words")}</h2>

@@ -141,7 +141,7 @@
       <button class="btn btn--gold" type="button" data-pkg="B" data-en="Choose <span data-price='B'>$2.50</span>">ជ្រើសរើស <span data-price="B">$2.50</span></button>
     </div><div class="pass__stub"><span class="price" data-price="B">$2.50</span><span class="label" data-en="Majors #1–3">ជំនាញ #១–៣</span></div></div>
   </div>
-  <p class="banner" style="margin-top:22px" data-en="Test mode — no real money is collected.">របៀបសាកល្បង — មិនមានការកាត់ប្រាក់ពិតប្រាកដទេ។</p>
+  <p class="banner" style="margin-top:22px" id="payNote" data-en="Test mode — no real money is collected.">របៀបសាកល្បង — មិនមានការកាត់ប្រាក់ពិតប្រាកដទេ។</p>
 </div></section>
 
 <!-- E. Sample result preview -->
@@ -190,6 +190,7 @@
 </main>
 <div id="kite-footer"></div>
 
+<script src="js/config.js"></script>
 <script src="js/questions.js"></script>
 <script src="js/majors.js"></script>
 <script src="js/major-profiles.js"></script>
@@ -203,11 +204,19 @@ document.addEventListener("DOMContentLoaded", function(){
     b.onclick = function(){
       KITE.setDemo(false);
       var s = KITE.update(function(s){ s.pkg = b.dataset.pkg; });
-      if(s.done) location.href = "checkout.html";
+      if(s.done) location.href = KITE.SHOWCASE ? "report.html" : "checkout.html";
       else { KITE.toast(KITE.t("សូមធ្វើតេស្តជាមុនសិន បន្ទាប់មកអ្នកអាចដោះសោលទ្ធផល","Take the test first, then you can unlock your results")); setTimeout(function(){ location.href = "assessment.html"; }, 1400); }
     };
   });
+  showcaseText();
 });
+// Showcase (js/config.js): the package buttons open the full report for free
+function showcaseText(){
+  if(!KITE.SHOWCASE) return;
+  document.querySelectorAll("[data-pkg]").forEach(function(b){ b.textContent = KITE.t(KITE.SHOWCASE_LABEL); });
+  document.getElementById("payNote").textContent = KITE.t("កំណែបង្ហាញ — ពេលនេះរបាយការណ៍ពេញលេញឥតគិតថ្លៃ។ តម្លៃខាងលើសម្រាប់ពេលក្រោយ។","Showcase — the full report is free for now. The prices above are for later.");
+}
+document.addEventListener("kite:lang", showcaseText);
 </script>
 </body>
 </html>

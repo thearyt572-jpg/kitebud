@@ -25,6 +25,7 @@
 <div id="kite-header"></div>
 <main class="wrap"><div class="cwrap" id="app" aria-live="polite"></div></main>
 <div id="kite-footer"></div>
+<script src="js/config.js"></script>
 <script src="js/questions.js"></script>
 <script src="js/majors.js"></script>
 <script src="js/major-profiles.js"></script>
@@ -45,6 +46,14 @@ const banner = () => `<div class="testmode" role="note"><div><b>TEST MODE</b><sp
 
 function render(){
   const S = K.load();
+  // Showcase (js/config.js): no payment at all. The checkout below is kept for later but never shown.
+  if(K.SHOWCASE){
+    app.innerHTML = `<div class="stack-lg"><div class="panel status"><span class="big">🎁</span>
+      <h1>${K.t("ការបង់ប្រាក់នឹងមកដល់ឆាប់ៗ","Payment is coming soon")}</h1>
+      <p class="muted" style="max-width:44ch">${K.t("នៅក្នុងកំណែបង្ហាញនេះ របាយការណ៍ពេញលេញឥតគិតថ្លៃ។ មិនមានការបង់ប្រាក់ទេ។","In this showcase the full report is free. There is no payment.")}</p>
+      <a class="btn btn--gold btn--lg" href="${S.done?"report.html":"assessment.html"}">${S.done?K.t(K.SHOWCASE_LABEL):K.t("ចាប់ផ្ដើមតេស្ត","Start the test")} →</a></div></div>`;
+    return;
+  }
   if(K.isDemo()){
     app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel stack"><h1>${K.t("អ្នកកំពុងមើលលទ្ធផលគំរូ","You're viewing the sample")}</h1><p class="muted">${K.t("លទ្ធផលគំរូត្រូវបានដោះសោរួចហើយ។ ធ្វើតេស្តផ្ទាល់ខ្លួនដើម្បីដោះសោលទ្ធផលរបស់អ្នក។","The sample is already unlocked. Take the test yourself to unlock your own results.")}</p><button class="btn btn--gold" type="button" id="exit">${K.t("ចាប់ផ្ដើមតេស្តរបស់ខ្ញុំ","Start my own test")}</button></div></div>`;
     document.getElementById("exit").onclick = ()=>{ K.setDemo(false); location.href="assessment.html"; };

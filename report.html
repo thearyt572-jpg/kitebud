@@ -37,6 +37,7 @@
 <div id="kite-header"></div>
 <main class="wrap"><div class="rwrap" id="app"></div></main>
 <div id="kite-footer"></div>
+<script src="js/config.js"></script>
 <script src="js/questions.js"></script>
 <script src="js/majors.js"></script>
 <script src="js/major-profiles.js"></script>
@@ -137,8 +138,8 @@ function render(){
   }
   const R = K.score(S);
   // every unlocked major, even one that is no longer in the top 3 after a retake
-  // (the demo counts every major as unlocked, so it shows only its top 3)
-  const open = (demo ? R.top : R.all).map((x,i)=>({x,rank:i+1})).filter(o=>K.unlocked(S,o.x.id));
+  // (the demo and the showcase count every major as unlocked, so they show only the top 3)
+  const open = (demo || K.SHOWCASE ? R.top : R.all).map((x,i)=>({x,rank:i+1})).filter(o=>K.unlocked(S,o.x.id));
   const topOpen = R.top.filter(x=>K.unlocked(S,x.id)).length;
   if(!open.length){
     app.innerHTML = `<div class="panel stack" style="text-align:center;align-items:center"><span style="font-size:2.4rem" aria-hidden="true">🔒</span><h1 class="display">${K.t("របាយការណ៍នៅតែចាក់សោ","Your report is still locked")}</h1><p class="muted">${K.t("ជ្រើសកញ្ចប់ A ឬ B ដើម្បីដោះសោ។","Choose Package A or B to unlock it.")}</p><a class="btn btn--gold" href="results.html">${K.t("ត្រឡប់ទៅលទ្ធផល","Back to results")}</a></div>`;
