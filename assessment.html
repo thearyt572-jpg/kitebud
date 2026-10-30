@@ -107,7 +107,7 @@ function renderStart(){
            ${S.track?"":`<p class="small muted">${K.t("សូមជ្រើសថ្នាក់របស់អ្នកជាមុនសិន។","Choose your track first.")}</p>`}
            ${inProgress?`<button class="btn btn--ghost" type="button" data-act="restart">${K.t("ចាប់ផ្ដើមសាជាថ្មី","Start over")}</button>`:""}`}
       <div id="confirm" hidden class="banner banner--bad" style="flex-direction:column">
-        <span>${K.t("ចម្លើយ និងលទ្ធផលបច្ចុប្បន្នរបស់អ្នកនឹងត្រូវលុប។","Your current answers and results will be cleared.")}</span>
+        <span>${K.t("ចម្លើយ និងលទ្ធផលបច្ចុប្បន្នរបស់អ្នកនឹងត្រូវលុប។ ជំនាញដែលអ្នកបានដោះសោរួច នៅតែបើកនៅលើឧបករណ៍នេះ។","Your current answers and results will be cleared. Majors you already unlocked stay unlocked on this device.")}</span>
         <div class="row"><button class="btn btn--ink btn--sm" type="button" data-act="restart-yes">${K.t("បាទ/ចាស លុប ហើយចាប់ផ្ដើមថ្មី","Yes, clear and start again")}</button><button class="btn btn--sm" type="button" data-act="restart-no">${K.t("បោះបង់","Cancel")}</button></div>
       </div>
     </div>
@@ -219,7 +219,7 @@ function bind(){
     else if(a==="cookie") K.showCookie(true);
     else if(a==="restart") document.getElementById("confirm").hidden = false;
     else if(a==="restart-no") document.getElementById("confirm").hidden = true;
-    else if(a==="restart-yes"){ K.update(s=>{ s.ans={}; s.cKnown=null; s.cType=""; s.pos=0; s.done=false; s.paid=null; s.checks={}; s.started=null; }); render(); K.toast(K.t("បានលុបចម្លើយ","Answers cleared")); }
+    else if(a==="restart-yes"){ K.update(s=>{ s.ans={}; s.cKnown=null; s.cType=""; s.pos=0; s.done=false; s.checks={}; s.started=null; /* paid unlocks stay after a retake */ }); render(); K.toast(K.t("បានលុបចម្លើយ","Answers cleared")); }
   });
 }
 

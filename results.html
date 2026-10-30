@@ -50,7 +50,8 @@ function render(){
     return;
   }
   const R = K.score(S), P = R.profile;
-  const anyUnlocked = R.top.some(x=>K.unlocked(S,x.id));
+  const anyUnlocked = R.all.some(x=>K.unlocked(S,x.id));
+  const extra = demo ? [] : R.all.slice(3).filter(x=>K.unlocked(S,x.id)); // unlocked before a retake, now outside the top 3
   const passes = R.top.map((x,i)=>{
     const rank = i+1, open = K.unlocked(S, x.id);
     return `<article class="pass ${rank===1?"pass--gold":""}" aria-label="${K.t("ភាពសាកសមលេខ","Match")} ${rank}">
@@ -95,6 +96,7 @@ function render(){
       <p class="muted">${K.t("ទាំងនេះជាភាគរយភាពសាកសម មិនមែន «ជំនាញរបស់អ្នក» ទេ។ ប្រើវាដើម្បីចាប់ផ្ដើមស្វែងយល់។","These are % matches, not “your major”. Use them as a starting point to explore.")}</p>
     </div>
     <div class="stack" style="gap:22px">${passes}</div>
+    ${extra.length?`<p class="small muted">${K.t("ជំនាញផ្សេងទៀតដែលអ្នកបានដោះសោពីមុន៖ ","Other majors you unlocked before: ")}${extra.map(x=>`<b>${K.t(x.m)}</b> (${K.n(x.pct)}%)`).join(" · ")}</p>`:""}
     ${anyUnlocked?`<a class="btn btn--ink btn--lg" href="report.html">${K.t("បើករបាយការណ៍ពេញលេញ","Open my full report")} →</a>`:""}
 
     <section class="panel stack" aria-labelledby="prof">
