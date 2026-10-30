@@ -23,7 +23,6 @@ textarea.copybox{width:100%;min-height:90px;font:inherit;border:2px solid var(--
 <main class="wrap"><div class="rwrap" id="app"></div></main>
 <div id="kite-footer"></div>
 <script src="js/questions.js"></script>
-<script src="js/legacy-questions.js"></script>
 <script src="js/majors.js"></script>
 <script src="js/major-profiles.js"></script>
 <script src="js/universities.js"></script>
@@ -33,9 +32,7 @@ textarea.copybox{width:100%;min-height:90px;font:inherit;border:2px solid var(--
 (function(){
 const K = window.KITE, D = window.KITE_DATA, app = document.getElementById("app");
 
-function bars(parts){
-  return `<div class="bars">${["job","interest","pers","strength"].map(k=>`<div class="bar"><span>${K.t(K.PARTLABEL[k])}</span><div class="bar__track"><div class="bar__fill" style="width:${parts[k]}%"></div></div><span class="bar__val">${K.n(parts[k])}%</span></div>`).join("")}</div>`;
-}
+const bars = parts => K.partBars(parts);
 
 function render(){
   const demo = K.isDemo(), S = K.state();
@@ -70,13 +67,11 @@ function render(){
     </article>`;
   }).join("");
 
-  // admission note
-  const track = S.track;
-  const needSci = R.top.filter(x=>x.m.track==="sci");
-  let admit;
-  if(track==="sci") admit = K.t("អ្នករៀនថ្នាក់វិទ្យាសាស្ត្រ ដូច្នេះអ្នកអាចដាក់ពាក្យចូលជំនាញភាគច្រើនក្នុងបញ្ជីនេះ។ សាកលវិទ្យាល័យខ្លះនៅតែមានប្រឡងចូល។","You are in the Science track, so you can apply to most majors on this list. Some universities still have an entrance exam.");
-  else if(needSci.length) admit = K.t(`ជំនាញ ${K.n(needSci.length)} ក្នុងចំណោមជំនាញកំពូលរបស់អ្នក ជាធម្មតាតម្រូវឱ្យមានបាក់ឌុបថ្នាក់វិទ្យាសាស្ត្រ។ សូមសួរសាកលវិទ្យាល័យ ព្រោះកន្លែងខ្លះមានឆ្នាំសិក្សាមូលដ្ឋាន ឬលក្ខខណ្ឌផ្សេង។`,`${needSci.length} of your top majors usually require the Science track for BacII. Ask the university: some offer a foundation year or other routes.`);
-  else admit = K.t("ជំនាញកំពូលរបស់អ្នក ជាធម្មតាទទួលសិស្សពីថ្នាក់ទាំងពីរ។ សូមពិនិត្យលក្ខខណ្ឌចូលរៀនរបស់សាកលវិទ្យាល័យនីមួយៗ។","Your top majors usually accept students from either track. Check each university's entry requirements.");
+  // admission note: the track is used only here, never in the % match. Majors have no track data yet, so the note stays general.
+  const track = D.Q.D1.tracks.find(t=>t.id===(S.d1||{}).track);
+  const admit = K.t("លក្ខខណ្ឌចូលរៀនខុសគ្នាតាមសាកលវិទ្យាល័យ និងផ្នែកសិក្សា។ សូមពិនិត្យលក្ខខណ្ឌចូលរៀនរបស់សាកលវិទ្យាល័យនីមួយៗ។","Entry requirements differ by university and track. Check each university's entry requirements.");
+  const persWords = K.persWords(P), job = K.jobChoice(S);
+  const typed = S.c && S.c.known==="yes" && K.validType(S.c.type);
 
   const allOpen = R.top.every(x=>K.unlocked(S,x.id)), thirdOpen = K.unlocked(S, R.top[2].id);
   const unlockBlock = (demo || allOpen) ? "" : `<section class="stack" aria-labelledby="unl">
@@ -96,23 +91,26 @@ function render(){
       <p class="muted">${K.t("ទាំងនេះជាភាគរយភាពសាកសម មិនមែន «ជំនាញរបស់អ្នក» ទេ។ ប្រើវាដើម្បីចាប់ផ្ដើមស្វែងយល់។","These are % matches, not “your major”. Use them as a starting point to explore.")}</p>
     </div>
     <div class="stack" style="gap:22px">${passes}</div>
-    ${extra.length?`<p class="small muted">${K.t("ជំនាញផ្សេងទៀតដែលអ្នកបានដោះសោពីមុន៖ ","Other majors you unlocked before: ")}${extra.map(x=>`<b>${K.t(x.m)}</b> (${K.n(x.pct)}%)`).join(" · ")}</p>`:""}
+    ${extra.length?`<p class="small muted">${K.t("ជំនាញផ្សេងទៀតដែលអ្នកបានដោះសោពីមុន៖ ","Other majors you unlocked before: ")}${extra.map(x=>`<b>${K.t(x.m)}</b> (${x.pct===null?K.t(K.NOINFO):K.n(x.pct)+"%"})`).join(" · ")}</p>`:""}
     ${anyUnlocked?`<a class="btn btn--ink btn--lg" href="report.html">${K.t("បើករបាយការណ៍ពេញលេញ","Open my full report")} →</a>`:""}
 
     <section class="panel stack" aria-labelledby="prof">
       <h2 id="prof">${K.t("ប្រវត្តិរូបរបស់អ្នក ជាពាក្យសាមញ្ញ","Your profile in plain words")}</h2>
-      <div class="stack" style="gap:6px"><span class="label">${K.t("ចំណាប់អារម្មណ៍","Interests")}</span><p>${K.interestSentence(P)}</p></div>
+      <div class="stack" style="gap:6px"><span class="label">${K.t("ចំណាប់អារម្មណ៍","Interests")}</span>
+        <div class="words">${K.interestWords(P).map(w=>`<span>${w}</span>`).join("")}</div>
+        <div class="bars">${"RIASEC".split("").map(t=>{ const v = P.riasec[t]===null ? null : Math.round(P.riasec[t]*100);
+          return `<div class="bar"><span>${K.t(D.Q.RIASEC[t])}</span><div class="bar__track"><div class="bar__fill" style="width:${v||0}%"></div></div><span class="bar__val">${v===null?"–":K.n(v)+"%"}</span></div>`; }).join("")}</div></div>
       <div class="stack" style="gap:6px"><span class="label">${K.t("បុគ្គលិកលក្ខណៈ","Personality")}</span>
-        <div class="words">${K.persWords(P).map(w=>`<span>${w}</span>`).join("")}</div>
-        ${S.cKnown===true?`<p class="small muted">${K.t("ផ្អែកលើប្រភេទដែលអ្នកបានវាយបញ្ចូល។","Based on the type you entered.")}</p>`:""}
+        ${persWords?`<div class="words">${persWords.map(w=>`<span>${w}</span>`).join("")}</div>`:`<p class="muted">${K.t(K.NOINFO)}</p>`}
+        ${typed?`<p class="small muted">${K.t("ផ្អែកលើប្រភេទដែលអ្នកបានវាយបញ្ចូល។","Based on the type you entered.")}</p>`:""}
       </div>
-      <div class="stack" style="gap:6px"><span class="label">${K.t("ការងារអនាគត","Future jobs")}</span><p>${K.taskSentence(P)}</p></div>
+      <div class="stack" style="gap:6px"><span class="label">${K.t("ការងារអនាគត","Future jobs")}</span><p>${job ? K.esc(job) : K.t("អ្នកមិនទាន់បានជ្រើសការងារ ឬវិស័យនៅឡើយ។","You haven't chosen a job or field yet.")}</p></div>
     </section>
 
     ${unlockBlock}
 
     <section class="banner banner--info" style="flex-direction:column;gap:6px" aria-labelledby="adm">
-      <b id="adm">${K.t("កំណត់សម្គាល់ពីការចូលរៀន","Admission note")} · ${K.t(D.TRACKS[track]||D.TRACKS.unsure)}</b>
+      <b id="adm">${K.t("កំណត់សម្គាល់ពីការចូលរៀន","Admission note")}${track ? " · " + K.t(track) : ""}</b>
       <span>${admit}</span>
     </section>
 
@@ -132,7 +130,7 @@ function render(){
   // open the test's start screen (it has the Retake button and its confirm box), not the "You've landed" screen
   document.getElementById("retake").onclick = e => { if(demo){ K.setDemo(false); } else K.update(s=>{ s.pos = -1; s.started = null; }); };
   document.getElementById("share").onclick = ()=>{
-    const lines = R.top.map((x,i)=> `${i+1}. ${K.unlocked(S,x.id)?K.t(x.m):"🔒"} — ${x.pct}%`);
+    const lines = R.top.map((x,i)=> `${i+1}. ${K.unlocked(S,x.id)?K.t(x.m):"🔒"} — ${x.pct===null?K.t(K.NOINFO):x.pct+"%"}`);
     const txt = K.t("ភាពសាកសមកំពូលរបស់ខ្ញុំនៅលើ KITE ✈️","My top KITE matches ✈️") + "\n" + lines.join("\n") + "\n" + K.t("សាកល្បងតេស្តឥតគិតថ្លៃនៅ KITE","Try the free test on KITE");
     K.copy(txt, document.getElementById("sharebox"));
   };

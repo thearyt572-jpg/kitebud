@@ -15,11 +15,16 @@ function genId(){
   for(let i=0;i<8;i++){ s+=a[Math.floor(Math.random()*a.length)]; if(i===3) s+="-"; }
   return "KT-"+s;
 }
-function fresh(){ return {v:1,id:genId(),lang:"km",track:null,ans:{},cKnown:null,cType:"",pos:0,done:false,paid:null,unlocked:[],pkg:"B",checks:{},started:null}; }
+// v2 = answers to the owner's validated questions (js/questions.js), scored with formula 2.1
+// a: Part A · b1/b2/b3: interests · c: personality · d1: grades + track · d2: self-ratings
+function fresh(){ return {v:2,id:genId(),lang:"km",a:{},b1:{},b1order:null,b2:{},b3:[],c:{known:null,type:"",alsoQuiz:false,quiz:{}},d1:{grades:{},track:null},d2:{},
+  pos:0,done:false,paid:null,unlocked:[],pkg:"B",checks:{},started:null}; }
 K.load = function(){
   let s = safe(()=>JSON.parse(store().getItem(SKEY)||"null"), null)
        || safe(()=>JSON.parse(sessionStorage.getItem(SKEY)||"null"), null)
        || mem;
+  // answers saved by the old test (v1) can't be scored by formula 2.1: start again, keeping the visitor ID and language
+  if(s && s.v!==2){ const old = s; s = fresh(); s.id = old.id || s.id; s.lang = old.lang || s.lang; K.save(s); }
   if(!s){ s = fresh(); K.save(s); }
   return s;
 };
@@ -90,7 +95,11 @@ K.copy = function(text, fallbackEl){
   };
   try { navigator.clipboard.writeText(text).then(ok, fb); } catch(e){ fb(); }
 };
-K.flap = (pct, size) => `<span class="flap ${size||"flap--md"} anim" aria-label="${K.n(pct)}%">${K.n(pct).split("").concat("%").map(c=>`<span>${c}</span>`).join("")}</span>`;
+K.flap = (pct, size) => pct===null || pct===undefined ? `<span class="small muted">${K.t(K.NOINFO)}</span>`
+  : `<span class="flap ${size||"flap--md"} anim" aria-label="${K.n(pct)}%">${K.n(pct).split("").concat("%").map(c=>`<span>${c}</span>`).join("")}</span>`;
+// the 4 part bars of a major; a missing part (null) shows "Not enough info" instead of a misleading 0
+K.partBars = (parts, cls) => `<div class="bars ${cls||""}">${["job","interest","pers","strength"].map(k=>{ const v = parts[k], none = v===null || v===undefined;
+  return `<div class="bar"><span>${K.t(K.PARTLABEL[k])}</span><div class="bar__track"><div class="bar__fill" style="width:${none?0:v}%"></div></div><span class="bar__val${none?" small muted":""}">${none ? K.t(K.NOINFO) : K.n(v)+"%"}</span></div>`; }).join("")}</div>`;
 K.EMAIL = "weare@thekitebud.com";
 // Prices in USD, shown everywhere from here. TEST MODE: later the server decides prices and checks payments.
 K.PRICES = {A:"1.00", B:"2.50"};
@@ -166,19 +175,20 @@ function showCookie(force){
 K.showCookie = showCookie;
 
 /* ---------- words for the plain-language profile ---------- */
-const RI_VERB = {R:{km:"ធ្វើការដោយដៃ និងឧបករណ៍",en:"working with your hands and tools"},I:{km:"ស្វែងយល់ និងដោះស្រាយបញ្ហា",en:"investigating and solving problems"},A:{km:"បង្កើតរបស់ថ្មីៗ",en:"creating new things"},S:{km:"ជួយមនុស្ស",en:"helping people"},E:{km:"ដឹកនាំ និងបញ្ចុះបញ្ចូល",en:"leading and persuading"},C:{km:"រៀបចំអ្វីៗឱ្យមានរបៀប",en:"organizing"}};
-const TASK = {D:{km:"ទិន្នន័យ",en:"data"},I:{km:"គំនិត",en:"ideas"},P:{km:"មនុស្ស",en:"people"},T:{km:"ឧបករណ៍ និងវត្ថុ",en:"things and tools"}};
-K.TASK = TASK;
 K.PARTLABEL = {job:{km:"ការងារ",en:"Job"},interest:{km:"ចំណាប់អារម្មណ៍",en:"Interest"},pers:{km:"បុគ្គលិកលក្ខណៈ",en:"Personality"},strength:{km:"ចំណុចខ្លាំង",en:"Strength"}};
+K.NOINFO = {km:"ព័ត៌មានមិនគ្រប់",en:"Not enough info"}; // the owner's wording for a missing score
 
-K.interestSentence = function(P){
-  const top = Object.keys(P.ri).sort((a,b)=>P.ri[b]-P.ri[a]).slice(0,2);
-  return K.lang()==="en" ? `You enjoy ${RI_VERB[top[0]].en} and ${RI_VERB[top[1]].en}.` : `អ្នកចូលចិត្ត${RI_VERB[top[0]].km} និង${RI_VERB[top[1]].km}។`;
-};
-K.persWords = P => P.type.split("").map(l=>K.t(K.LETTER[l]));
-K.taskSentence = function(P){
-  const top = Object.keys(P.tasks).sort((a,b)=>P.tasks[b]-P.tasks[a]).slice(0,2);
-  return K.lang()==="en" ? `You lean toward work with ${TASK[top[0]].en} and ${TASK[top[1]].en}.` : `អ្នកចូលចិត្តការងារទាក់ទងនឹង${TASK[top[0]].km} និង${TASK[top[1]].km}។`;
+// top interest types as names (never letters), e.g. "ស្រាវជ្រាវ · រៀបរយ · ជាក់ស្តែង"
+K.interestWords = P => P.code.map(t=>K.t(D.Q.RIASEC[t]));
+// personality as words, one per dimension: the side the student leans to (50 or more = first side)
+K.persWords = P => P.dims ? D.Q.C.dimensions.map(d=>K.t(P.dims[d.id]>=50 ? d.high : d.low)) : null;
+// the student's Part A answer, in words
+K.jobChoice = s => {
+  const a = s.a||{};
+  if(a.mode==="job" && a.job){ const j = D.Q.A.jobs.find(x=>x.id===a.job); return j ? K.t(j) : null; }
+  if(a.mode==="job" && a.custom) return a.custom;
+  if(a.mode==="field" && a.field && a.field!=="none"){ const f = D.Q.A.fields.find(x=>x.id===a.field); return f ? K.t(f) : null; }
+  return null;
 };
 
 /* ---------- unlocks & demo ---------- */
@@ -186,15 +196,16 @@ K.taskSentence = function(P){
 K.unlocked = (s, majorId) => K.isDemo() || (s.unlocked||[]).includes(majorId);
 K.unlock = (s, majorIds) => { s.unlocked = [...new Set([...(s.unlocked||[]), ...majorIds])]; };
 K.demoState = function(){
-  const s = fresh(); s.id="KT-DEMO-0000"; s.lang = K.lang(); s.track="sci"; s.done=true; s.paid="B"; s.cKnown=false;
-  const like = {j2:4,j13:4,j4:3,j18:3,j11:3,j7:2,j1:2,j9:1,j3:1,j5:2,j6:1,j8:2,j10:1,j12:1,j14:2,j15:1,j16:1,j17:2};
-  Object.entries(like).forEach(([k,v])=>s.ans[k]=v);
-  const ri = {R:3,I:4,A:3,S:1,E:1,C:2};
-  D.ACTS.forEach((a,i)=>s.ans[a.id]=Math.max(0,Math.min(4,ri[a.k]-(i%3===0?1:0))));
-  ["c1","c5","c9"].forEach(id=>s.ans[id]=1); ["c2","c10"].forEach(id=>s.ans[id]=1); s.ans.c6=0;
-  ["c3","c7","c11"].forEach(id=>s.ans[id]=0); ["c4","c8"].forEach(id=>s.ans[id]=0); s.ans.c12=1;
-  const st = {math:4,sci:3,lang:2,comm:1,create:3,tech:4,org:2,care:1};
-  D.SKILLS.forEach((q,i)=>s.ans[q.id]=Math.max(0,st[q.k]-(i>7&&q.k!=="math"?1:0)));
+  // "Dara", a fictional student: all answers below are made up for the free sample
+  const s = fresh(); s.id="KT-DEMO-0000"; s.lang = K.lang(); s.done=true; s.paid="B";
+  s.a = {mode:"job", job:(D.Q.A.jobs.find(j=>j.en==="Data analyst")||{}).id};
+  const like = {R:3,I:5,A:3,S:2,E:2,C:4};
+  D.Q.B1.items.forEach((x,i)=>s.b1[x.id] = Math.max(1, like[x.type] - (i%4===0 ? 1 : 0)));
+  s.b2 = {"b2-saturday":"I", "b2-class-party":"Data"};
+  s.b3 = ["b3-02"];
+  s.c = {known:"no", type:"", alsoQuiz:false, quiz:Object.fromEntries(D.Q.C.quiz.map((x,i)=>[x.id, [2,1,3, 3,0,3, 1,3,0, 0,2,1][i]]))};
+  s.d1 = {grades:{math:"A",physics:"B",chemistry:"B",biology:"C",khmer:"B",english:"B",ict:"A"}, track:"science"};
+  s.d2 = {math:4,logic:5,khmer:3,english:3,design:2,hands_on:3,people:2,organization:4,computer:5};
   return s;
 };
 K.state = () => K.isDemo() ? K.demoState() : K.load();

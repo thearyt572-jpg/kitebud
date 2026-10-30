@@ -37,7 +37,6 @@
 <main class="wrap"><div class="rwrap" id="app"></div></main>
 <div id="kite-footer"></div>
 <script src="js/questions.js"></script>
-<script src="js/legacy-questions.js"></script>
 <script src="js/majors.js"></script>
 <script src="js/major-profiles.js"></script>
 <script src="js/universities.js"></script>
@@ -62,6 +61,7 @@ const dateText = d => d ? K.n(d.split("-").reverse().join("/")) : K.t("មិន
 
 function uniList(m){
   const f = F[m.id] || (F[m.id] = {max:"all",sch:false});
+  if(!D.UNIS.some(u=>u.majors.includes(m.id))) return `<p class="banner banner--info">${K.t("យើងកំពុងពិនិត្យបញ្ជីសាកលវិទ្យាល័យសម្រាប់ជំនាញនេះនៅឡើយ។","We're still checking the university list for this major.")}</p>`;
   const list = D.UNIS.filter(u=>u.majors.includes(m.id))
     .filter(u=>f.max==="all"||u.fee[0]<=+f.max)
     .filter(u=>!f.sch||u.sch);
@@ -84,6 +84,9 @@ function section(x, rank, S){
   const m = x.m, f = F[m.id] || (F[m.id] = {max:"all",sch:false});
   const sch = D.SCHOLARSHIPS.filter(s=>s.majors==="all"||s.majors.includes(m.id));
   const reasons = x.reasons.length ? x.reasons.map(r=>`<li>${K.t(r)}</li>`).join("") : `<li>${K.t("ចម្លើយរបស់អ្នកមានតុល្យភាពល្អ ក្នុងគ្រប់ផ្នែកទាំង ៤ សម្រាប់ជំនាញនេះ។","Your answers line up evenly with this major across all 4 categories.")}</li>`;
+  const db = x.dealBreakers.map(id=>K.t(D.Q.B3.items.find(i=>i.id===id)));
+  const jobs = m.jobs.map(id=>D.Q.A.jobs.find(j=>j.id===id)).filter(Boolean);
+  const hasUnis = D.UNIS.some(u=>u.majors.includes(m.id));
   const checks = (S.checks && S.checks[m.id]) || {};
   return `<section class="major" id="m-${m.id}" aria-labelledby="h-${m.id}">
     <div class="pass ${rank===1?"pass--gold":""}">
@@ -93,18 +96,19 @@ function section(x, rank, S){
     </div>
 
     <div class="grid g2">
-      <div class="sub panel"><h3><span class="label">A</span>${K.t("ការបំបែកតាមផ្នែក","Breakdown")}</h3><div class="bars bigbars">${["job","interest","pers","strength"].map(k=>`<div class="bar"><span>${K.t(K.PARTLABEL[k])}</span><div class="bar__track"><div class="bar__fill" style="width:${x.parts[k]}%"></div></div><span class="bar__val">${K.n(x.parts[k])}%</span></div>`).join("")}</div>
+      <div class="sub panel"><h3><span class="label">A</span>${K.t("ការបំបែកតាមផ្នែក","Breakdown")}</h3>${K.partBars(x.parts,"bigbars")}
         <p class="small muted">${K.t("សរុប = ","Overall = ")}${K.weightsLine()}</p></div>
-      <div class="sub"><h3><span class="label">B</span>${K.t("ហេតុអ្វីបានជាសាកសម","Why it matched")}</h3><ul class="reasons">${reasons}</ul></div>
+      <div class="sub"><h3><span class="label">B</span>${K.t("ហេតុអ្វីបានជាសាកសម","Why it matched")}</h3><ul class="reasons">${reasons}</ul>
+        ${db.length?`<p class="small muted">${K.t(`សម្គាល់៖ អ្នកបានជ្រើស «${db.join("», «")}» ដែលធ្វើឱ្យពិន្ទុចំណាប់អារម្មណ៍សម្រាប់ជំនាញនេះទាបជាងមុន។`,`Note: you ticked “${db.join("”, “")}”, which lowers this major's interest score.`)}</p>`:""}</div>
     </div>
 
-    <div class="sub"><h3><span class="label">C</span>${K.t("ជំនាញនេះជាអ្វី","What this major is")}</h3><p class="prose">${K.t(m.d)} ${K.t(m.track==="sci"?"ជាធម្មតាទទួលសិស្សថ្នាក់វិទ្យាសាស្ត្រ។":"ជាធម្មតាទទួលសិស្សពីថ្នាក់ទាំងពីរ។", m.track==="sci"?"Usually takes Science-track students.":"Usually takes students from either track.")}</p></div>
+    <div class="sub"><h3><span class="label">C</span>${K.t("ការងារដែលភ្ជាប់នឹងជំនាញនេះ","Jobs linked to this major")}</h3>
+      <p class="small muted">${K.t("ពីបញ្ជីការងាររបស់យើង។ ជំនាញមួយមិនធានាការងារណាមួយឡើយ។","From our career list. A degree does not guarantee any job.")}</p>
+      <div class="careers">${jobs.map(j=>`<span>${K.t(j)}</span>`).join("")}</div></div>
 
-    <div class="sub"><h3><span class="label">D</span>${K.t("អាជីពទូទៅ","Typical careers")}</h3><div class="careers">${m.c.map(c=>`<span>${K.t(c)}</span>`).join("")}</div></div>
-
-    <div class="sub"><h3><span class="label">E</span>${K.t("សាកលវិទ្យាល័យដែលមានជំនាញនេះ","Universities offering it")}</h3>
+    <div class="sub"><h3><span class="label">D</span>${K.t("សាកលវិទ្យាល័យដែលមានជំនាញនេះ","Universities offering it")}</h3>
       <p class="small muted">${K.t("បង្ហាញតែកម្មវិធីថ្នាក់បរិញ្ញាបត្រប៉ុណ្ណោះ។","Bachelor's degree programs only.")}</p>
-      <div class="filters">
+      <div class="filters" ${hasUnis?"":"hidden"}>
         <div class="field"><label class="small muted" for="t-${m.id}">${K.t("ថ្លៃសិក្សាអតិបរមា (ចាប់ពី)","Max tuition (starting from)")}</label><select class="input" id="t-${m.id}" data-f="max" data-m="${m.id}">${[["all",K.t("មិនកំណត់","Any")],["600","≤ $600"],["1000","≤ $1,000"],["2500","≤ $2,500"]].map(([v,l])=>`<option value="${v}" ${f.max===v?"selected":""}>${l}</option>`).join("")}</select></div>
         <label class="cb"><input type="checkbox" id="s-${m.id}" data-f="sch" data-m="${m.id}" ${f.sch?"checked":""}>${K.t("មានអាហារូបករណ៍","Scholarship available")}</label>
       </div>
@@ -112,13 +116,13 @@ function section(x, rank, S){
       <p class="banner small">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។ (ទិន្នន័យគំរូសម្រាប់របៀបសាកល្បង)","Info may change — check the official site. (Sample data for test mode.)")}</p>
     </div>
 
-    <div class="sub"><h3><span class="label">F</span>${K.t("អាហារូបករណ៍","Scholarships")}</h3>
+    <div class="sub"><h3><span class="label">E</span>${K.t("អាហារូបករណ៍","Scholarships")}</h3>
       <div class="tablewrap"><table><thead><tr><th>${K.t("ឈ្មោះ","Name")}</th><th>${K.t("ថ្ងៃផុតកំណត់","Deadline")}</th><th>${K.t("តំណ","Link")}</th></tr></thead><tbody>
-      ${sch.map(s=>`<tr><td>${K.t(s)}</td><td>${K.t(s.when)}</td><td>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${K.t("បើក","Open")} ↗</a>`:K.t("មើលផ្នែក E","See section E")}</td></tr>`).join("")}
+      ${sch.map(s=>`<tr><td>${K.t(s)}</td><td>${K.t(s.when)}</td><td>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${K.t("បើក","Open")} ↗</a>`:K.t("មើលផ្នែក D","See section D")}</td></tr>`).join("")}
       </tbody></table></div>
     </div>
 
-    <div class="sub panel"><h3><span class="label">G</span>${K.t("ជំហានបន្ទាប់របស់អ្នក","Your next steps")}</h3>
+    <div class="sub panel"><h3><span class="label">F</span>${K.t("ជំហានបន្ទាប់របស់អ្នក","Your next steps")}</h3>
       <div>${STEPS.map(st=>`<label class="check"><input type="checkbox" data-check="${st.id}" data-m="${m.id}" ${checks[st.id]?"checked":""}><span>${K.t(st)}</span></label>`).join("")}</div>
     </div>
   </section>`;

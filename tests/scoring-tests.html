@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KITE · Scoring checks (formula 2.1)</title>
+<link rel="stylesheet" href="../css/fonts.css">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.page{max-width:900px;margin:0 auto;padding:28px 16px}
+td.ok{color:var(--ok);font-weight:700} td.bad{color:var(--bad);font-weight:700}
+</style>
+</head>
+<body>
+<main class="page stack">
+  <h1>Scoring checks — formula <span id="ver"></span></h1>
+  <p class="muted">Internal page for the KITE team (not linked from the site). Each row checks one rule of the owner's formula
+    (docs/question-design.md, sections 10–15) or a worked example. Open this page after any change to scoring.</p>
+  <p class="banner" id="summary"></p>
+  <div class="tablewrap"><table><thead><tr><th>Check</th><th>Got</th><th>Expected</th><th>Result</th></tr></thead><tbody id="rows"></tbody></table></div>
+</main>
+<script src="../js/questions.js"></script>
+<script src="../js/majors.js"></script>
+<script src="../js/major-profiles.js"></script>
+<script src="../js/scoring.js"></script>
+<script src="scoring-tests.js"></script>
+<script>
+const res = KITE_TEST_RESULTS(), bad = res.filter(r=>!r.ok).length, fmt = v => typeof v==="number" ? Math.round(v*1000)/1000 : String(v);
+document.getElementById("ver").textContent = KITE.FORMULA_VERSION;
+document.getElementById("summary").textContent = `${res.length-bad} of ${res.length} checks passed` + (bad ? ` — ${bad} FAILED` : " ✓");
+document.getElementById("rows").innerHTML = res.map(r=>`<tr><td>${r.name}</td><td class="mono">${fmt(r.actual)}</td><td class="mono">${fmt(r.expected)}</td><td class="${r.ok?"ok":"bad"}">${r.ok?"PASS":"FAIL"}</td></tr>`).join("");
+</script>
+</body>
+</html>
