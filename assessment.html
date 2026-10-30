@@ -81,9 +81,6 @@ function build(s){
   q.push({t:"d1",part:"D"},{t:"d2",part:"D"},{t:"finish"});
   return q;
 }
-const isQ = x => x.part && x.t!=="break";
-const total = () => SEQ.filter(isQ).length;
-const numberOf = i => SEQ.slice(0,i+1).filter(isQ).length;
 // can the student press Next? (optional steps are always fine)
 function answered(st){
   const s = S;
@@ -150,12 +147,17 @@ function renderStart(){
   bind({t:"start"});
 }
 
+// Counter per group of questions with a fixed size, so it never jumps when a choice adds or removes screens.
+// Groups with one screen (deal-breakers, "do you know your type?") show no counter.
+const GROUPS = {a1:["A",2], ajob:["A",2], afield:["A",2], b1:["b1",Q.B1.items.length], b2:["b2",Q.B2.length], quiz:["quiz",Q.C.quiz.length], d1:["D",2], d2:["D",2]};
 function header(st){
-  const n = numberOf(S.pos), t = total();
+  const g = GROUPS[st.t];
+  let n = 0, t = 0;
+  if(g){ t = g[1]; n = SEQ.slice(0,S.pos+1).filter(x=>GROUPS[x.t] && GROUPS[x.t][0]===g[0]).length; }
   return `<div class="stack" style="gap:10px">
     <div class="qhead"><span class="label">${K.t("ផ្នែក","Part")} ${st.part} · ${K.t(PARTS[st.part])}</span>
-    <span class="mono small">${K.n(n)} / ${K.n(t)}</span></div>
-    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}"><div class="progress__fill" style="width:${(n-1)/t*100}%"></div></div>
+    ${g?`<span class="mono small">${K.n(n)} / ${K.n(t)}</span>`:""}</div>
+    ${g?`<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}"><div class="progress__fill" style="width:${(n-1)/t*100}%"></div></div>`:""}
   </div>`;
 }
 const nav = st => `<div class="qnav"><button class="btn" type="button" data-act="back">← ${K.t("ថយក្រោយ","Back")}</button><button class="btn btn--ink" type="button" data-act="next" ${answered(st)?"":"disabled"}>${K.t("បន្ទាប់","Next")} →</button></div>`;
@@ -242,12 +244,12 @@ function renderStep(st){
 }
 function renderBreak(st){
   const nxt = NEXT_PART[st.done];
-  const done = SEQ.slice(0,S.pos).filter(isQ).length;
+  const done = Object.keys(PARTS).indexOf(st.done) + 1; // parts finished out of 4: never jumps
   app.innerHTML = `<div class="stack-lg" style="text-align:center;align-items:center">
     <span class="big-ico" aria-hidden="true">✈️</span>
     <h1 class="display">${K.t("ផ្នែក","Part")} ${st.done} ${K.t("រួចរាល់!","done!")}</h1>
     <p class="muted">${K.t("បន្ទាប់: ","Next: ")}<b>${K.t("ផ្នែក","Part")} ${nxt} · ${K.t(PARTS[nxt])}</b></p>
-    <div class="progress" style="width:100%"><div class="progress__fill" style="width:${done/total()*100}%"></div></div>
+    <div class="progress" style="width:100%" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="${done}"><div class="progress__fill" style="width:${done/4*100}%"></div></div>
     <div class="qnav" style="width:100%"><button class="btn" type="button" data-act="back">← ${K.t("ថយក្រោយ","Back")}</button><button class="btn btn--gold" type="button" data-act="next">${K.t("បន្តទៅមុខ","Continue")} →</button></div>
   </div>`;
 }
