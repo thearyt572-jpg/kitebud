@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sheet to JS — KITEBud tool</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .tool { max-width: 900px; margin: 0 auto; padding: 32px 16px; }
+    .tool textarea {
+      width: 100%; min-height: 220px; padding: 12px;
+      font: 0.85rem/1.5 Consolas, monospace;
+      border: var(--border); border-radius: 12px; background: var(--white);
+    }
+    .tool ol { padding-left: 1.2em; }
+    .tool-messages { white-space: pre-wrap; font-size: 0.9rem; }
+    .tool-messages.has-warnings { color: var(--error); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <!-- Internal helper for the KITEBud team — not linked from the website -->
+  <main class="tool">
+    <h1>Google Sheet → universities.js</h1>
+    <ol>
+      <li>In Google Sheets, select the header row and all program rows, then copy (Ctrl+C).</li>
+      <li>Paste below (Ctrl+V) and click <strong>Convert</strong>.</li>
+      <li>Check the messages, then copy the result and paste it in <code>js/universities.js</code>
+          between the lines <code>REAL DATA</code> and <code>end of real data</code>.</li>
+    </ol>
+
+    <label for="input"><strong>1. Paste rows from Google Sheets (with the header row)</strong></label>
+    <textarea id="input" spellcheck="false"></textarea>
+    <p><button type="button" id="convert" class="button button-primary">Convert</button></p>
+
+    <p id="messages" class="tool-messages" aria-live="polite"></p>
+
+    <label for="output"><strong>2. Result — copy this into js/universities.js</strong></label>
+    <textarea id="output" spellcheck="false" readonly></textarea>
+  </main>
+
+  <script>
+    // Column names in the Google Sheet template (docs/university-programs-template.csv)
+    const COLUMNS = [
+      "university_id", "university_name_en", "university_name_km", "city", "official_website",
+      "social_media_url", "major_id", "program_name_en", "program_name_km", "program_type", "program_url",
+      "tuition_min", "tuition_max", "tuition_currency", "tuition_period", "tuition_notes",
+      "tuition_checked_year", "language_of_instruction", "entry_requirements",
+      "scholarship_names", "scholarship_urls", "scholarship_deadlines",
+      "scholarship_eligibility", "scholarship_coverage",
+      "last_verified", "source_url", "verification_status", "notes"
+    ];
+
+    // Words in the tuition_period column that clearly mean one period
+    const PERIOD_WORDS = {
+      semester: ["semester", "per semester", "term", "ឆមាស"],
+      year: ["year", "per year", "yearly", "annual", "annually", "ឆ្នាំ"],
+      total: ["total", "total program", "whole program", "សរុប"],
+      other: ["other"]
+    };
+
+    const VERIFICATION_VALUES = ["unverified", "partially_verified", "verified"];
+
+    // Several scholarships in one cell are separated with " | "
+    const LIST_SEPARATOR = "|";
+
+    // Google Sheets copies as tab-separated text. Cells with line breaks are wrapped in "quotes".
+    function parseTSV(text) {
+      const rows = [];
+      let row = [];
+      let cell = "";
+      let inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (inQuotes) {
+          if (char === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+          else if (char === '"') { inQuotes = false; }
+          else { cell += char; }
+        } else if (char === '"' && cell === "") {
+          inQuotes = true;
+        } else if (char === "\t") {
+          row.push(cell); cell = "";
+        } else if (char === "\n" || char === "\r") {
+          if (char === "\r" && text[i + 1] === "\n") { i++; }
+          row.push(cell); rows.push(row); row = []; cell = "";
+        } else {
+          cell += char;
+        }
+      }
+      if (cell !== "" || row.length > 0) { row.push(cell); rows.push(row); }
+      return rows.filter(r => r.some(c => c.trim() !== ""));
+    }
+
+    function text(value) {
+      const trimmed = (value || "").trim();
+      return trimmed === "" ? null : trimmed;
+    }
+
+    function splitList(value) {
+      return (value || "").split(LIST_SEPARATOR).map(item => item.trim());
+    }
+
+    function convert() {
+      const warnings = [];
+      const rows = parseTSV(document.getElementById("input").value);
+      if (rows.length < 2) {
+        show(["Paste the header row AND at least one program row."], "");
+        return;
+      }
+
+      const header = rows[0].map(name => name.trim());
+      COLUMNS.forEach(name => {
+        if (!header.includes(name)) warnings.push(`Missing column: ${name}`);
+      });
+      header.forEach(name => {
+        if (name && !COLUMNS.includes(name)) warnings.push(`Unknown column (ignored): ${name}`);
+      });
+
+      const programs = rows.slice(1).map((cells, index) => {
+        const rowNumber = index + 2; // row number as seen in Google Sheets
+        const get = name => {
+          const position = header.indexOf(name);
+          return position === -1 ? "" : (cells[position] || "");
+        };
+
+        // Numbers: remove $ , spaces and "USD"; anything else stays null with a warning
+        const number = name => {
+          const raw = get(name).trim();
+          if (raw === "") return null;
+          const cleaned = raw.replace(/[$,\s]|USD/gi, "");
+          const value = Number(cleaned);
+          if (cleaned === "" || Number.isNaN(value)) {
+            warnings.push(`Row ${rowNumber}: ${name} "${raw}" is not a plain number — left empty, please check`);
+            return null;
+          }
+          return value;
+        };
+
+        // Tuition period: only clear words are converted; unclear text stays in the notes
+        let tuitionNotes = text(get("tuition_notes"));
+        const periodRaw = (get("tuition_period") || "").trim();
+        let tuitionPeriod = null;
+        if (periodRaw !== "") {
+          const lower = periodRaw.toLowerCase();
+          Object.keys(PERIOD_WORDS).forEach(period => {
+            if (PERIOD_WORDS[period].includes(lower)) tuitionPeriod = period;
+          });
+          if (tuitionPeriod === null) {
+            warnings.push(`Row ${rowNumber}: tuition_period "${periodRaw}" is unclear — saved as unconfirmed, original kept in tuitionNotes`);
+            tuitionNotes = [tuitionNotes, `Period in sheet: ${periodRaw}`].filter(Boolean).join(" · ");
+          }
+        }
+
+        let verificationStatus = (get("verification_status") || "").trim().toLowerCase() || "unverified";
+        if (!VERIFICATION_VALUES.includes(verificationStatus)) {
+          warnings.push(`Row ${rowNumber}: verification_status "${verificationStatus}" is not allowed — set to "unverified"`);
+          verificationStatus = "unverified";
+        }
+        const lastVerified = text(get("last_verified"));
+
+        // Scholarships: one entry per name.
+        // Only a scholarship with an official link, in a row marked "verified" with a
+        // last_verified date, goes into "scholarships". Every other name is kept in
+        // "sourceNotes" as an unverified note (not shown to students, not used by the filter).
+        const names = splitList(get("scholarship_names"));
+        const urls = splitList(get("scholarship_urls"));
+        const deadlines = splitList(get("scholarship_deadlines"));
+        const eligibility = splitList(get("scholarship_eligibility"));
+        const coverage = splitList(get("scholarship_coverage"));
+        const scholarships = [];
+        const sourceNotes = [];
+        names.forEach((name, i) => {
+          if (text(name) === null) return;
+          const isVerified = verificationStatus === "verified" && lastVerified !== null && text(urls[i]) !== null;
+          if (isVerified) {
+            scholarships.push({
+              name: text(name),
+              nameKm: null,
+              officialUrl: text(urls[i]),
+              deadline: text(deadlines[i]),
+              eligibility: text(eligibility[i]),
+              coverage: text(coverage[i]),
+              lastVerified: lastVerified
+            });
+          } else {
+            sourceNotes.push("Scholarship (unverified, from sheet): " + text(name));
+          }
+        });
+
+        const program = {
+          isSample: false,
+          majorId: text(get("major_id")),
+          universityId: text(get("university_id")),
+          universityNameEn: text(get("university_name_en")),
+          universityNameKm: text(get("university_name_km")),
+          programNameEn: text(get("program_name_en")),
+          programNameKm: text(get("program_name_km")),
+          programType: text(get("program_type")),
+          city: text(get("city")),
+          officialWebsite: text(get("official_website")),
+          programUrl: text(get("program_url")),
+          socialMediaUrl: text(get("social_media_url")),
+          tuitionMin: number("tuition_min"),
+          tuitionMax: number("tuition_max"),
+          tuitionCurrency: text(get("tuition_currency")),
+          tuitionPeriod: tuitionPeriod,
+          tuitionNotes: tuitionNotes,
+          tuitionCheckedYear: text(get("tuition_checked_year")),
+          languageOfInstruction: text(get("language_of_instruction")),
+          entryRequirements: text(get("entry_requirements")),
+          scholarships: scholarships,
+          lastVerified: lastVerified,
+          verificationStatus: verificationStatus,
+          sourceUrl: text(get("source_url")),
+          sourceNotes: sourceNotes,
+          notes: text(get("notes"))
+        };
+
+        if (!program.universityId) warnings.push(`Row ${rowNumber}: university_id is empty`);
+        if (!program.majorId) warnings.push(`Row ${rowNumber}: major_id is empty — this program will not appear under any major`);
+        return program;
+      });
+
+      const output = programs.map(program => JSON.stringify(program, null, 2) + ",").join("\n\n");
+      show(warnings, `  // Imported from Google Sheet (${programs.length} rows)\n` + output);
+    }
+
+    function show(warnings, output) {
+      const messages = document.getElementById("messages");
+      messages.textContent = warnings.length > 0
+        ? "Please check:\n• " + warnings.join("\n• ")
+        : "Converted with no warnings.";
+      messages.classList.toggle("has-warnings", warnings.length > 0);
+      document.getElementById("output").value = output;
+    }
+
+    document.getElementById("convert").addEventListener("click", convert);
+  </script>
+</body>
+</html>

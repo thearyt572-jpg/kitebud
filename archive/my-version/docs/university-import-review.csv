@@ -1,0 +1,151 @@
+﻿sheet_row,university,program,issue,original_value
+36,RUPP,,University name normalised,Sheet spelling: Rupp
+128,BELTEI,,University name normalised,Sheet spelling: Beltie
+169,RULE,,University name normalised,Sheet spelling: Rule
+8,ITC,Architecture,Spelling corrected,Achitechture
+19,ITC,Internatioanl Program,"Treated as a group heading, not a program (its price '$2500 per year' was NOT copied to the programs below unless they show their own price)",Internatioanl Program
+29,ITC,Associate Degree Programs (2-Year Tracks),"Treated as a group heading, not a program (its price '$2500 per year' was NOT copied to the programs below unless they show their own price)",Associate Degree Programs (2-Year Tracks)
+30,ITC,Civil Engineering,Under 'Associate Degree Programs' heading after the International Program list — is this international?,
+31,ITC,Electrical Engineering,Under 'Associate Degree Programs' heading after the International Program list — is this international?,
+32,ITC,Food Science and Technology,Under 'Associate Degree Programs' heading after the International Program list — is this international?,
+33,ITC,Water and Environmental Engineering,Under 'Associate Degree Programs' heading after the International Program list — is this international?,
+44,RUPP,Clinical Psychology and Counseling Master Degree,Master's degree — KITE is for high-school students; keep?,Clinical Psychology and Counseling Master Degree
+63,RUPP,International Relations Bachelor Program,Spelling corrected,Internatioanl Relations Bachelor Program
+70,RUPP,IFL,"Treated as a group heading, not a program (its price '$450-$590' was NOT copied to the programs below unless they show their own price)",IFL
+71,RUPP,Bachelor of Arts for Works Skills,Spelling corrected,Bachelorr of Arts for Works Skills
+71,RUPP,Bachelor of Arts for Works Skills,Name may be 'Work Skills' — please check the official name,Bachelorr of Arts for Works Skills
+72,RUPP,Bachelor of Education in Teaching English as a Foreign Language,Spelling corrected,Bachelor of Education in Teaching English as a Foreig Language
+98,AUPP,Faculty of Social Science,"Treated as a group heading, not a program",Faculty of Social Science
+98,AUPP,Faculty of Social Science,No programs listed under this heading in the sheet,
+113,Paragon,English Preparatory Program,May not be a degree program — keep on KITE?,English Preparatory Program
+120,UTE,BA (Hons) in Business Management & Entrepreneurship,Spelling corrected,BA (Hons) in Business Management & Enterpreneurship
+122,UTE,"BSc (Hons) in Computer Science (Programming, Cybersecurity, and AI)",Spelling corrected,"BsSc (Hons) in Computer Science (Programming , Cybersecurity , and AI)"
+125,UTE,English for Academic Success (EAS),May not be a degree program — keep on KITE?,English for Academic Success (EAS)
+126,UTE,Professional Advanced Programs,May not be a degree program — keep on KITE?,Professional Advanced Programs
+127,UTE,International Exchange Programs,May not be a degree program — keep on KITE?,International Exchange Programs
+128,BELTEI,Bachelor of Business Administrator in General Management,Word 'Administrator' may mean 'Administration' — please check the official name,Bachelor of Business Administrator in General Management
+129,BELTEI,Bachelor Of Business Administrator in International business,Word 'Administrator' may mean 'Administration' — please check the official name,Bachelor Of Business Administrator in International business
+130,BELTEI,Bachelor of Business Administrator in Entrepreneurship and Innovation,Spelling corrected,Bachelor of Business Administrator in Enterpreneurships and Innovation
+130,BELTEI,Bachelor of Business Administrator in Entrepreneurship and Innovation,Word 'Administrator' may mean 'Administration' — please check the official name,Bachelor of Business Administrator in Enterpreneurships and Innovation
+131,BELTEI,Bachelor of Business Administrator in marketing,Word 'Administrator' may mean 'Administration' — please check the official name,Bachelor of Business Administrator in marketing
+151,BELTEI,Bachelor of Tourism and Hospitality in Hotel Management,Spelling corrected,Bachelor of Tourism and Hosptality in Hotel Management
+166,BELTEI,Bachelor of Aviation in Airline Management,Spelling corrected,Bachelor of Aviation in Ariline Management
+170,RULE,បរិញ្ញាបត្រ រដ្ឋបាលសាធារណៈ,Spelling corrected,បរិញ្ញាបត្រ រដ្ខបាលសាធារណ:
+234,Norton University,Bachelor of Science in Artificial Intelligence and Machine,Name looks cut off (maybe '... Machine Learning') — please check,Bachelor of Science in Artificial Intelligence and Machine
+238,Norton University,Marketing and Branding,Spelling corrected,Marketing and Brabding
+252,Norton University,Nursing,Separate from 'Bachelor of Nursing' with different fees — is this a non-bachelor (associate) program?,Nursing
+253,Norton University,Midwifery,Separate from 'Bachelor of Midwifery' with different fees — is this a non-bachelor (associate) program?,Midwifery
+255,Norton University,Doctor of Medicine,Spelling corrected,Dotor of Medicine
+262,Norton University,Bridge Design & Construction,Spelling corrected,Bride Design & Construction
+264,Norton University,Hydraulic Structural Design & Construction,Spelling corrected,Hydrulc Structural Design & Construction
+271,NUM,National Program,"Treated as a group heading, not a program (its price '$ 600/year' was NOT copied to the programs below unless they show their own price)",National Program
+274,NUM,Entrepreneurship,Spelling corrected,Enterpreneurship
+281,NUM,Business Economics,Spelling corrected,Businuss Economics
+288,NUM,Digital Economy,Listed before 'International College' heading — national or international?,$ 1 200 / Year
+289,NUM,Financial Technology,Listed before 'International College' heading — national or international?,$ 1 200 / Year
+290,NUM,Smart City Planning Management,Listed before 'International College' heading — national or international?,$ 1 200 / Year
+291,NUM,Computer Science,Listed before 'International College' heading — national or international?,$ 1 200 / Year
+292,NUM,International College,"Treated as a group heading, not a program (its price '$ 1 200 / Year' was NOT copied to the programs below unless they show their own price)",International College
+295,NUM,Global Entrepreneurship & Innovation,Spelling corrected,Global Enterpreneurship & Innovation
+313,IU,គ្រប់គ្រងពាណិជ្ជកម្ម,Spelling corrected,គ្រប់គ្រងពាណិជ្ចកម្ម
+315,IU,រដ្ឋបាលសាធារណៈ,Spelling corrected,រដ្ឋបាលសារណ:
+323,IU,Pharmacy,Spelling corrected,Pharmaccy
+43,RUPP,Sociology Bachelor Programs,Payment period not stated in sheet — left unconfirmed,$250
+46,RUPP,Geography and Land Management Bachelor Program,Payment period not stated in sheet — left unconfirmed,$250
+47,RUPP,Bachelor in Food Technology Engineering,Payment period not stated in sheet — left unconfirmed,$300
+48,RUPP,Bachelor in Bioengineering,Payment period not stated in sheet — left unconfirmed,$300
+55,RUPP,Bachelor of Science in Environment Science,Payment period not stated in sheet — left unconfirmed,$300
+56,RUPP,Bachelor of Science in Physics,Payment period not stated in sheet — left unconfirmed,$250
+57,RUPP,Bachelor of science in Chemistry,Payment period not stated in sheet — left unconfirmed,$300
+58,RUPP,Bachelor of Science in Biology,Payment period not stated in sheet — left unconfirmed,$300
+59,RUPP,Bachelor of Science in Mathematics,Payment period not stated in sheet — left unconfirmed,$250
+60,RUPP,Computer science Bachelor program,Payment period not stated in sheet — left unconfirmed,$450
+128,BELTEI,Bachelor of Business Administrator in General Management,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+129,BELTEI,Bachelor Of Business Administrator in International business,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+130,BELTEI,Bachelor of Business Administrator in Entrepreneurship and Innovation,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+131,BELTEI,Bachelor of Business Administrator in marketing,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+132,BELTEI,Bachelor of Finance and Banking in finance and banking,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+133,BELTEI,Bachelor of Finance and Banking in International banking,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+134,BELTEI,Bachelor of Finance and Banking in Finance Technology,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+135,BELTEI,Bachelor of Art in Economics,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+136,BELTEI,Bachelor of Art Development Economics,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+137,BELTEI,Bachelor of Art in International Economics,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+138,BELTEI,Bachelor of Art in Digital Economy,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+139,BELTEI,Bachelor of Laws in Law,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+140,BELTEI,Bachelor of Laws in Private Law,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+141,BELTEI,Bachelor of Laws in International Law,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+142,BELTEI,Bachelor of Laws in Public Administration,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+143,BELTEI,Bachelor of Education in Education Administration and Leadership,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+144,BELTEI,Bachelor of education in Teaching English as a Foreign Language,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+145,BELTEI,Bachelor of Education in Communication education,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+146,BELTEI,Bachelor of Education in Khmer Literature,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+147,BELTEI,Bachelor of Education in Mathematics,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+148,BELTEI,Bachelor of Education in Physics,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+149,BELTEI,Bachelor of Education in Chemistry,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+150,BELTEI,Bachelor of Tourism and Hospitality in Tourism Management,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+151,BELTEI,Bachelor of Tourism and Hospitality in Hotel Management,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+152,BELTEI,Bachelor of Tourism and Hospitality in Hospitality Management,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 : $900/ IP : Year 1,2 : $ 1 100 & Year 3,4 : $ 1 200"
+153,BELTEI,Bachelor of Information Technology in Software Engineering,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $900 and Year 3,4 : $1 000"
+154,BELTEI,Bachelor of Information Technology in Computer Networking and Cyber security,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $900 and Year 3,4 : $1 000"
+155,BELTEI,Bachelor of Information Technology in Computer Multimedia and Design,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $900 and Year 3,4 : $1 000"
+156,BELTEI,Bachelor of Science in Digital Technology,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $900 and Year 3,4 : $1 000"
+157,BELTEI,Bachelor of Science in Digital Communication and Media,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $900 and Year 3,4 : $1 000"
+158,BELTEI,Bachelor of Science in Electronic and Telecommunication Engineering,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $900 and Year 3,4 : $1 000"
+159,BELTEI,Bachelor of Engineering in Civil Engineering,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 ,5 : $900"
+160,BELTEI,Bachelor of Construction Engineering,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 ,5 : $900"
+161,BELTEI,Bachelor of Architecture in Architecture and Urbanization,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 ,5 : $900"
+162,BELTEI,Bachelor of Architecture in Interior Design,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","National Program : Year 1, 2 : $800 and Year 3,4 ,5 : $900"
+163,BELTEI,Bachelor of Art in international Relations,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","IP : Year 1, 2: $ 1 100 & Year 3, 4 : $ 1 200"
+164,BELTEI,Bachelor of Art in Diplomacy,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","IP : Year 1, 2: $ 1 100 & Year 3, 4 : $ 1 200"
+165,BELTEI,Bachelor of Art in International affairs and Negotiations,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","IP : Year 1, 2: $ 1 100 & Year 3, 4 : $ 1 200"
+166,BELTEI,Bachelor of Aviation in Airline Management,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","IP : Year 1, 2: $ 2 200 & Year 3, 4 : $ 2 400"
+167,BELTEI,Bachelor of Aviation in Aviation Management,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","IP : Year 1, 2: $ 2 200 & Year 3, 4 : $ 2 400"
+168,BELTEI,Bachelor of Aviation in Aviation Maintenance Engineering,"Year-by-year fees (e.g. 'Year 1, 2 : $800') — period left unconfirmed. Per year?","IP : Year 1, 2: $ 2 200 & Year 3, 4 : $ 2 400"
+190,CamEd,Bachelor of Accounting and Finance,Year-by-year fees — period left unconfirmed. Per year?,"Year1 : $ 6,198 · Year2: $ 6,698 · Year3: $ 6,998 · Year4: $ 5,598"
+198,UC,Business Administration,Price text starts with 'and …' — part of the price seems missing,"and $ 4,050 for the total program"
+220,SeTech Institute,Bachelor degree in the field of Management Information System,Price starts with a number like '2 semester' — looks like a copy error; treated as $540 per semester,2 semester $ 540 ( 7 Semesters)
+221,SeTech Institute,Bachelor degree in the field of Business Information Technology,Price starts with a number like '2 semester' — looks like a copy error; treated as $540 per semester,3 semester $ 540 ( 7 Semesters)
+252,Norton University,Nursing,Year-by-year fees — period left unconfirmed. Per year?,"Y1: $ 900, Y2: $900, From Y3:$ 950"
+253,Norton University,Midwifery,Year-by-year fees — period left unconfirmed. Per year?,"Y1: $ 900, Y2: $900, From Y3:$ 950"
+254,Norton University,Medical-Lab Technology,Year-by-year fees — period left unconfirmed. Per year?,"Y1: $ 900, Y2: $900, From Y3:$ 950"
+255,Norton University,Doctor of Medicine,Year-by-year fees — period left unconfirmed. Per year?,"Y1: $ 900, Y2: $1 200, From Y3:$ 1 500"
+256,Norton University,Doctor of Dentistry,Year-by-year fees — period left unconfirmed. Per year?,"Y1: $ 900, Y2: $1 200, From Y3:$ 1 500"
+257,Norton University,Bachelor of Pharmacy,Year-by-year fees — period left unconfirmed. Per year?,"Y1: $ 900, Y2: $1 200, From Y3:$ 1 500"
+258,Norton University,Bachelor of Nursing,Year-by-year fees — period left unconfirmed. Per year?,"Y1: $ 900, Y2: $1 100, From Y3:$ 1 500"
+259,Norton University,Bachelor of Midwifery,Year-by-year fees — period left unconfirmed. Per year?,"Y1: $ 900, Y2: $1 100, From Y3:$ 1 500"
+,ITC,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/cPCICOV4MhTuazMpa
+,ITC,(all programs),Official full English name and Khmer name not in sheet — please add,ITC
+,RUPP,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),(no link)
+,RUPP,(all programs),Official full English name and Khmer name not in sheet — please add,RUPP
+,CADT,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/33dHDMyAS57kQjIEh
+,CADT,(all programs),Official full English name and Khmer name not in sheet — please add,CADT
+,AUPP,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/3VFXL7gJQH8E9sepa
+,AUPP,(all programs),Official full English name and Khmer name not in sheet — please add,AUPP
+,AUPP,(all programs),"Website in sheet is an inner page, not the home page — kept as given",https://www.aupp.edu.kh/bachelor-of-arts-degree-and-bachelor-of-science-degrees/
+,Paragon,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/CtPFu0Ah4juQslln2
+,Paragon,(all programs),Official full English name and Khmer name not in sheet — please add,Paragon
+,UTE,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/NRntnRCbXyq8OIT4y
+,UTE,(all programs),Official full English name and Khmer name not in sheet — please add,UTE
+,BELTEI,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/c7WQDKb56JahNLQx4
+,BELTEI,(all programs),Official full English name and Khmer name not in sheet — please add,BELTEI
+,BELTEI,(all programs),"Website in sheet is an inner page, not the home page — kept as given",https://www.beltei.edu.kh/biu/admission/price
+,RULE,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/wLIcXDOTWaD1p54ko
+,RULE,(all programs),Official full English name and Khmer name not in sheet — please add,RULE
+,RULE,(all programs),"Website in sheet is an inner page, not the home page — kept as given",https://rule.edu.kh/home/contact_us
+,CamTech,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/Tfm20toblqVPO3csj
+,CamTech,(all programs),Official full English name and Khmer name not in sheet — please add,CamTech
+,CamEd,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/V3qARqFfCoikWhilW
+,CamEd,(all programs),Official full English name and Khmer name not in sheet — please add,CamEd
+,UC,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/iBn4YjfmXWxberFfE
+,UC,(all programs),Official full English name and Khmer name not in sheet — please add,UC
+,SeTech Institute,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/tNSNcztBXT588xGGN
+,SeTech Institute,(all programs),Official full English name and Khmer name not in sheet — please add,SeTech Institute
+,SeTech Institute,(all programs),"Website in sheet is an inner page, not the home page — kept as given",https://www.setecu.com/index.php/academic/bachelor-degree
+,Norton University,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),(no link)
+,Norton University,(all programs),Official full English name and Khmer name not in sheet — please add,Norton University
+,Norton University,(all programs),No official website in sheet,
+,NUM,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/ttS8eIP68OBR4Ubyh
+,NUM,(all programs),Official full English name and Khmer name not in sheet — please add,NUM
+,IU,(all programs),City not given — 'Location' column holds a share.google link (kept as sourceUrl),https://share.google/Y5pNI5nmPqwEKDdue
+,IU,(all programs),Official full English name and Khmer name not in sheet — please add,IU
+,(all),(all programs),majorId is empty — needs your approved KITE major list (Step 4) to link programs to majors,

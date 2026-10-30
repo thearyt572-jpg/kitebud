@@ -1,0 +1,1339 @@
+/* =========================================================
+   KITEBud — style.css
+   Mobile-first: the base styles are for phones (~375px).
+   Media queries at the bottom of each part add tablet/desktop changes.
+   ========================================================= */
+
+
+/* ===== 1. Design tokens (CSS variables) =====
+   Change a colour here and it changes everywhere. */
+:root {
+  /* Colours */
+  --sky: #7cc8f2;
+  --sky-light: #e4f4fd;
+  --pink: #ff8fb1;
+  --pink-dark: #ff6f9b;
+  --pink-light: #ffe6ee;
+  --yellow: #ffd166;
+  --yellow-light: #fff1c7;
+  --ink: #3b2f4a;
+  --ink-soft: #5e5270;
+  --cream: #fff8ec;
+  --white: #ffffff;
+  --error: #b3261e;
+
+  /* Fonts: Fredoka draws Latin letters/numbers, Kantumruy Pro draws Khmer */
+  --font-main: "Fredoka", "Kantumruy Pro", sans-serif;
+
+  /* Shapes */
+  --radius: 20px;
+  --border: 3px solid var(--ink);
+  --shadow: 4px 4px 0 var(--ink);
+  --shadow-big: 6px 6px 0 var(--ink);
+}
+
+
+/* ===== 2. Base ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth; /* menu links glide instead of jumping */
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  line-height: 1.7; /* Khmer vowels above/below need room */
+  color: var(--ink);
+  background: var(--cream);
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.5;
+  margin: 0 0 0.5em;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  color: inherit;
+}
+
+/* Keyboard focus: a thick outline so keyboard users always know where they are */
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* Headings that JavaScript moves focus to (not reachable with Tab) don't need an outline */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* Make sure the "hidden" attribute always hides, even on elements with display: flex */
+[hidden] {
+  display: none !important;
+}
+
+/* Centres content and limits its width on big screens */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+
+/* ===== 3. Buttons ===== */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px; /* big enough to tap with a thumb */
+  padding: 10px 22px;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+  text-decoration: none;
+  text-align: center;
+  background: var(--white);
+  border: var(--border);
+  border-radius: 999px; /* fully rounded "pill" */
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s, background-color 0.15s;
+}
+
+/* Hover: the button lifts up a little */
+.button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+/* Pressed: the button sinks into its shadow */
+.button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.button-primary {
+  background: var(--pink);
+}
+
+.button-primary:hover {
+  background: var(--pink-dark);
+}
+
+.button-secondary:hover {
+  background: var(--yellow);
+}
+
+/* Disabled: faded, and no lifting or sinking */
+.button:disabled,
+.button:disabled:hover,
+.button:disabled:active {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow);
+}
+
+.button-primary:disabled:hover {
+  background: var(--pink);
+}
+
+.button-secondary:disabled:hover {
+  background: var(--white);
+}
+
+/* A button that looks like a small underlined link */
+.link-button {
+  align-self: center;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  color: var(--ink);
+}
+
+
+/* ===== 4. Header & navigation ===== */
+.site-header {
+  background: var(--white);
+  border-bottom: var(--border);
+}
+
+/* Flexbox: logo and menu sit in a row, and wrap onto 2 lines on small phones */
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 16px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.logo-plane {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  font-size: 1.3rem;
+  background: var(--sky);
+  border: var(--border);
+  border-radius: 50%;
+  transform: rotate(-20deg); /* plane taking off */
+}
+
+.nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav ul a {
+  display: block;
+  padding: 4px 12px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 999px;
+}
+
+.nav ul a:hover {
+  background: var(--yellow);
+}
+
+/* The menu item for the section currently on screen (set by app.js) */
+.nav ul a.is-active {
+  background: var(--sky);
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .nav {
+    justify-content: space-between; /* logo left, menu right */
+  }
+}
+
+
+/* ===== 5. Sections (shared) ===== */
+main section {
+  padding: 56px 0;
+}
+
+main h2 {
+  font-size: 1.75rem;
+  text-align: center;
+}
+
+/* Dotted "flight path" under every section title */
+main h2::after {
+  content: "";
+  display: block;
+  width: 96px;
+  margin: 6px auto 0;
+  border-top: 5px dotted var(--sky);
+}
+
+.section-intro {
+  max-width: 560px;
+  margin: 0 auto 32px;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+/* Dashed boxes for content we haven't built yet */
+.placeholder {
+  margin: 0;
+  padding: 16px;
+  color: var(--ink-soft);
+  text-align: center;
+  background: var(--white);
+  border: 2px dashed var(--ink-soft);
+  border-radius: 12px;
+}
+
+
+/* ===== 6. Hero ===== */
+.hero {
+  background: var(--sky-light);
+  border-bottom: var(--border);
+}
+
+/* Grid: 1 column on phones (text, then picture) */
+.hero-layout {
+  display: grid;
+  gap: 40px;
+  align-items: center;
+}
+
+.tagline {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 2px 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: 999px;
+}
+
+.hero h1 {
+  font-size: 1.9rem;
+}
+
+.hero-description {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.hero-actions .button {
+  flex: 1 1 auto; /* on phones the buttons stretch to full width */
+}
+
+/* Illustration placeholder with a dotted flight path and a plane */
+.hero-illustration {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--ink-soft);
+  background: var(--white);
+  border: 3px dashed var(--ink);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* The curved dotted flight path */
+.hero-illustration::before {
+  content: "";
+  position: absolute;
+  top: 24%;
+  left: 8%;
+  right: 8%;
+  height: 70%;
+  border-top: 5px dotted var(--pink);
+  border-radius: 50% 50% 0 0;
+}
+
+/* The plane at the end of the path */
+.hero-illustration::after {
+  content: "\2708\FE0E";
+  position: absolute;
+  top: 18%;
+  right: 14%;
+  font-size: 2.2rem;
+  color: var(--ink);
+  transform: rotate(20deg);
+}
+
+.hero-illustration p {
+  position: relative; /* sits on top of the flight path */
+  margin: 0;
+  padding: 8px 12px;
+  background: var(--white);
+  border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding: 80px 0;
+  }
+
+  /* Grid: text and picture side by side */
+  .hero-layout {
+    grid-template-columns: 1.1fr 1fr;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-actions .button {
+    flex: 0 0 auto; /* buttons go back to their natural width */
+  }
+}
+
+
+/* ===== 7. How it works ===== */
+.how-it-works {
+  background: var(--white);
+}
+
+/* Grid: steps stacked on phones */
+.steps {
+  display: grid;
+  gap: 24px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps > li {
+  counter-increment: step;
+  padding: 24px 20px;
+  background: var(--cream);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Step number circle, using Khmer numerals: ១ ២ ៣ */
+.steps > li::before {
+  content: counter(step, khmer);
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: 50%;
+}
+
+.steps h3 {
+  font-size: 1.2rem;
+}
+
+.steps p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+@media (min-width: 768px) {
+  /* Grid: 3 steps side by side */
+  .steps {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+
+/* ===== 8. Pricing (boarding passes) ===== */
+.pricing {
+  background: var(--cream);
+}
+
+.demo-notice {
+  max-width: 640px;
+  margin: 0 auto 40px;
+  padding: 12px 16px;
+  text-align: center;
+  background: var(--yellow-light);
+  border: 2px dashed var(--ink);
+  border-radius: 12px;
+}
+
+/* Grid: cards stacked on phones and tablets */
+.pricing-cards {
+  display: grid;
+  gap: 40px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Flexbox (column) so the stub always sits at the bottom of the card */
+.pricing-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-big);
+  cursor: pointer; /* the whole card can be clicked */
+}
+
+/* The chosen card (set by app.js) gets a thick outline around it */
+.pricing-card.is-selected {
+  outline: 4px solid var(--ink);
+  outline-offset: 6px;
+}
+
+/* Top band with GATE / SEAT / CLASS */
+.pass-band {
+  padding: 10px 20px;
+  background: var(--sky);
+  border-bottom: var(--border);
+  /* round only the top corners to fit inside the card */
+  border-radius: calc(var(--radius) - 3px) calc(var(--radius) - 3px) 0 0;
+}
+
+.flight-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+}
+
+.flight-info dt {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.flight-info dd {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.pass-main {
+  flex: 1; /* grows so all stubs line up */
+  padding: 20px;
+}
+
+.pass-main h3 {
+  margin-bottom: 0;
+  font-size: 1.25rem;
+}
+
+.price {
+  margin-bottom: 12px;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.pass-main ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.pass-main li + li {
+  margin-top: 6px;
+}
+
+/* Tear-off stub: dashed tear line on top */
+.pass-stub {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 20px 20px;
+  border-top: 3px dashed var(--ink);
+}
+
+/* The two half-circle "notches" at each end of the tear line.
+   Each is a circle the colour of the page; only the half inside the card has a border. */
+.pass-stub::before,
+.pass-stub::after {
+  content: "";
+  position: absolute;
+  top: -16px;
+  width: 29px;
+  height: 29px;
+  background: var(--cream);
+  border: 3px solid transparent;
+  border-radius: 50%;
+  transform: rotate(45deg);
+}
+
+.pass-stub::before {
+  left: -16px;
+  border-top-color: var(--ink);
+  border-right-color: var(--ink);
+}
+
+.pass-stub::after {
+  right: -16px;
+  border-bottom-color: var(--ink);
+  border-left-color: var(--ink);
+}
+
+/* Barcode made from repeating stripes */
+.barcode {
+  height: 44px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--ink) 0 2px,
+    transparent 2px 4px,
+    var(--ink) 4px 7px,
+    transparent 7px 9px,
+    var(--ink) 9px 10px,
+    transparent 10px 13px,
+    var(--ink) 13px 16px,
+    transparent 16px 18px
+  );
+  border-radius: 2px;
+}
+
+/* Recommended card (Package B) */
+.pricing-card-recommended .pass-band {
+  background: var(--pink);
+}
+
+.pricing-card-recommended {
+  background: var(--pink-light);
+}
+
+.badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 0 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+}
+
+.package-status {
+  max-width: 640px;
+  margin: 40px auto 0;
+  font-weight: 500;
+  text-align: center;
+}
+
+.package-status a {
+  font-weight: 700;
+}
+
+@media (min-width: 1024px) {
+  /* Grid: 3 cards side by side */
+  .pricing-cards {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: none;
+    align-items: stretch;
+  }
+
+  /* Recommended card sits a little higher than the others */
+  .pricing-card-recommended {
+    transform: translateY(-12px);
+  }
+}
+
+
+/* ===== 9. Assessment ===== */
+.assessment {
+  background: var(--white);
+}
+
+.assessment-panel,
+.results-panel {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px;
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-big);
+}
+
+/* Flexbox (column) with even gaps between progress, question and buttons */
+.assessment-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
+  background: var(--cream);
+}
+
+.question-area .placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+}
+
+/* --- Progress bar --- */
+.progress-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.progress-part {
+  color: var(--ink-soft);
+}
+
+.progress-bar {
+  height: 16px;
+  overflow: hidden;
+  background: var(--white);
+  border: var(--border);
+  border-radius: 999px;
+}
+
+/* The fill looks like a runway with white dashes */
+.progress-fill {
+  width: 0;
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--sky) 0 14px,
+    var(--sky-light) 14px 20px
+  );
+  transition: width 0.3s;
+}
+
+/* --- One question --- */
+.question {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0; /* removes the default fieldset box */
+}
+
+.question-text {
+  display: block;
+  margin-bottom: 16px;
+  padding: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.question-hint {
+  min-height: 1.7em; /* keeps space so the page doesn't jump */
+  margin: 12px 0 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+.question-hint.is-error {
+  font-weight: 600;
+  color: var(--error);
+}
+
+/* --- Answer choices (radio buttons and checkboxes) --- */
+.choices {
+  display: grid;
+  gap: 10px;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 10px 16px;
+  background: var(--white);
+  border: var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.choice:hover {
+  background: var(--yellow-light);
+}
+
+/* :has() = "a choice that contains a checked input" */
+.choice:has(input:checked) {
+  background: var(--sky);
+  box-shadow: var(--shadow);
+}
+
+.choice:has(input:focus-visible) {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.choice:has(input:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.choice input {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+.choice input:focus-visible {
+  outline: none; /* the whole choice shows the outline instead */
+}
+
+/* Rating: number in a yellow circle */
+.choices-rating b {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-size: 0.95rem;
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+/* Pair: side ក and side ខ */
+.pair-sides {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.pair-side {
+  margin: 0;
+  padding: 12px;
+  font-weight: 500;
+  text-align: center;
+  background: var(--white);
+  border: 2px dashed var(--ink);
+  border-radius: 14px;
+}
+
+.pair-letter {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 6px;
+  font-weight: 700;
+  background: var(--pink);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.choices-pair {
+  grid-template-columns: 1fr 1fr;
+}
+
+.choices-pair .choice {
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+/* --- Number and text boxes --- */
+.text-input {
+  width: 100%;
+  max-width: 320px;
+  min-height: 52px;
+  padding: 10px 16px;
+  font: inherit;
+  font-size: 1.25rem;
+  color: var(--ink);
+  background: var(--white);
+  border: var(--border);
+  border-radius: 14px;
+}
+
+.text-input-code {
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.text-input[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+/* --- Back / Next --- */
+.question-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.question-navigation .button {
+  min-width: 110px;
+}
+
+/* --- Finished screen --- */
+.finished {
+  padding: 16px 0;
+  text-align: center;
+}
+
+.finished .question-text {
+  margin-bottom: 8px;
+}
+
+@media (min-width: 600px) {
+  /* Rating: 5 choices in one row, number above the label */
+  .choices-rating {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .choices-rating .choice {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .choices-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .choices-pair {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* --- Results --- */
+.results-panel {
+  background: var(--sky-light);
+}
+
+.results-panel h3 {
+  text-align: center;
+}
+
+.results-content {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.results-note {
+  margin: 0;
+  padding: 12px 16px;
+  text-align: center;
+  background: var(--yellow-light);
+  border: 2px dashed var(--ink);
+  border-radius: 12px;
+}
+
+.results-note a {
+  font-weight: 700;
+}
+
+.result-card {
+  padding: 16px 20px 20px;
+  background: var(--white);
+  border: var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Locked cards get diagonal stripes */
+.result-card.is-locked {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--white) 0 12px,
+    var(--cream) 12px 24px
+  );
+}
+
+.result-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.result-rank {
+  margin: 0;
+  padding: 0 12px;
+  font-weight: 700;
+  background: var(--yellow);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+}
+
+.result-percent {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.result-percent-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.result-major {
+  margin: 8px 0;
+  font-size: 1.2rem;
+}
+
+.meter {
+  display: block;
+  height: 14px;
+  overflow: hidden;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+}
+
+.meter-fill {
+  display: block;
+  height: 100%;
+  background: var(--pink);
+}
+
+.is-locked .meter-fill {
+  background: var(--ink-soft);
+}
+
+.result-lock-note {
+  margin: 12px 0 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.breakdown {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+}
+
+.breakdown-row {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  align-items: center;
+  gap: 8px;
+}
+
+.breakdown dt {
+  font-size: 0.9rem;
+}
+
+.breakdown dd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.breakdown .meter {
+  flex: 1;
+  height: 10px;
+}
+
+.breakdown .meter-fill {
+  background: var(--sky);
+}
+
+/* --- University filters --- */
+.university-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--white);
+  border: 2px dashed var(--ink);
+  border-radius: 14px;
+}
+
+.filters-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.filters-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.filter-input {
+  min-height: 44px;
+  padding: 6px 12px;
+  font: inherit;
+  color: var(--ink);
+  background: var(--white);
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+}
+
+.filter-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.filter-check input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--ink);
+}
+
+.filter-help {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.university-filters .link-button {
+  align-self: flex-start;
+  padding-left: 0;
+}
+
+@media (min-width: 600px) {
+  .filters-grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+  }
+}
+
+/* --- University listings inside a result card --- */
+.uni-section {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 2px dotted var(--ink-soft);
+}
+
+.uni-section summary {
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.uni-section[open] summary {
+  margin-bottom: 12px;
+}
+
+.uni-major-description,
+.uni-careers {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+}
+
+.uni-card {
+  margin-bottom: 12px;
+  padding: 14px 16px;
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+}
+
+.uni-badges {
+  margin: 0 0 6px;
+}
+
+.uni-badge {
+  display: inline-block;
+  padding: 0 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--white);
+  border: 1.5px solid var(--ink-soft);
+  border-radius: 999px;
+}
+
+.uni-badge-sample {
+  background: var(--yellow);
+  border-color: var(--ink);
+}
+
+.uni-name {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.uni-name-en {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.uni-program {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.uni-program-type {
+  margin: -6px 0 8px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.uni-facts {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.uni-fact {
+  display: grid;
+  gap: 2px;
+}
+
+.uni-fact dt {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.uni-fact dd {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.uni-amount {
+  font-weight: 700;
+}
+
+.uni-meta,
+.uni-note {
+  display: block;
+  font-size: 0.85rem;
+}
+
+.uni-note {
+  color: var(--ink-soft);
+}
+
+/* The "information may change" warning, shown beside each price and deadline */
+.info-warning {
+  display: inline-block;
+  margin: 4px 0;
+  padding: 0 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--yellow-light);
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+}
+
+.uni-scholarships {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.uni-verified {
+  margin: 8px 0 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.uni-empty {
+  margin: 0 0 12px;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+@media (min-width: 600px) {
+  .uni-fact {
+    grid-template-columns: 8rem 1fr;
+    gap: 8px;
+  }
+}
+
+/* --- Locked preview: blurred grey bars, no real text inside --- */
+.uni-locked {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 2px dotted var(--ink-soft);
+}
+
+.uni-skeleton {
+  display: grid;
+  gap: 8px;
+  filter: blur(3px);
+}
+
+.uni-skeleton span {
+  display: block;
+  height: 16px;
+  background: var(--ink-soft);
+  border-radius: 6px;
+  opacity: 0.35;
+}
+
+.uni-skeleton span:nth-child(2) {
+  width: 75%;
+}
+
+.uni-skeleton span:nth-child(3) {
+  width: 55%;
+}
+
+.uni-locked-note {
+  margin: 10px 0 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+
+/* ===== 10. Footer ===== */
+.site-footer {
+  padding: 40px 0;
+  text-align: center;
+  color: var(--cream);
+  background: var(--ink);
+}
+
+.site-footer :focus-visible {
+  outline-color: var(--cream); /* dark ink outline would be invisible here */
+}
+
+.footer-brand {
+  font-size: 1.15rem;
+}
+
+.footer-disclaimer {
+  max-width: 600px;
+  margin: 0 auto 1em;
+  font-size: 0.9rem;
+}
+
+
+/* ===== 11. Reduced motion =====
+   Some people feel sick from movement; respect their device setting. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .button,
+  .choice,
+  .progress-fill {
+    transition: none;
+  }
+}

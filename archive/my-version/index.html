@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KITEBud — ជំនាញរបស់អ្នក ដំណើររបស់អ្នក</title>
+
+  <!-- Fonts: Kantumruy Pro (Khmer) + Fredoka (rounded Latin letters and numbers) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ========== 1. NAVIGATION ========== -->
+  <header class="site-header">
+    <nav class="container nav" aria-label="ម៉ឺនុយមេ">
+      <a href="#home" class="logo">
+        <span class="logo-plane" aria-hidden="true">&#9992;&#xFE0E;</span> KITEBud
+      </a>
+      <ul>
+        <li><a href="#home">ទំព័រដើម</a></li>
+        <li><a href="#how-it-works">របៀបដំណើរការ</a></li>
+        <li><a href="#pricing">តម្លៃ</a></li>
+        <li><a href="#assessment">ការវាយតម្លៃ</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ========== 2. HERO ========== -->
+    <section id="home" class="hero">
+      <div class="container hero-layout">
+
+        <div class="hero-text">
+          <p class="tagline">ជំនាញរបស់អ្នក ដំណើររបស់អ្នក</p>
+          <h1>រកឃើញជំនាញសាកលវិទ្យាល័យ ដែលសាកសមនឹងអ្នក</h1>
+          <p class="hero-description">
+            KITEBud ជួយសិស្សវិទ្យាល័យកម្ពុជា ស្វែងយល់ពីចំណាប់អារម្មណ៍ និងចំណុចខ្លាំងរបស់ខ្លួន
+            ដើម្បីជ្រើសរើសជំនាញនៅសាកលវិទ្យាល័យដោយមានទំនុកចិត្ត។
+          </p>
+
+          <!-- Links (not buttons) because they take you to another part of the page -->
+          <div class="hero-actions">
+            <a href="#assessment" class="button button-primary">ចាប់ផ្តើមដំណើររបស់អ្នក</a>
+            <a href="#how-it-works" class="button button-secondary">ស្វែងយល់ពីរបៀបដំណើរការ</a>
+          </div>
+        </div>
+
+        <!-- PLACEHOLDER: airport illustration + student mascot will go here -->
+        <figure class="hero-illustration">
+          <p>[ កន្លែងសម្រាប់រូបភាពព្រលានយន្តហោះ និងតួអង្គសិស្ស ]</p>
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- ========== 3. HOW IT WORKS ========== -->
+    <section id="how-it-works" class="how-it-works">
+      <div class="container">
+        <h2>របៀបដំណើរការ</h2>
+        <ol class="steps">
+          <li>
+            <h3>ឆ្លើយសំណួរ</h3>
+            <p>ឆ្លើយសំណួរអំពីចំណាប់អារម្មណ៍ និងចំណុចខ្លាំងរបស់អ្នក។</p>
+          </li>
+          <li>
+            <h3>រកឃើញជំនាញដែលសមនឹងអ្នក</h3>
+            <p>ទទួលបានលទ្ធផលជាភាគរយ ដែលបង្ហាញថាជំនាញនីមួយៗសាកសមនឹងអ្នកកម្រិតណា។</p>
+          </li>
+          <li>
+            <h3>ស្វែងយល់ពីសាកលវិទ្យាល័យ និងអាហារូបករណ៍</h3>
+            <p>មើលព័ត៌មានអំពីសាកលវិទ្យាល័យ កម្មវិធីសិក្សា និងអាហារូបករណ៍ សម្រាប់ជំនាញទាំងនោះ។</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ========== 4. PRICING ========== -->
+    <section id="pricing" class="pricing">
+      <div class="container">
+        <h2>កញ្ចប់តម្លៃ</h2>
+        <p class="section-intro">ជ្រើសរើសកញ្ចប់ដែលសាកសមនឹងអ្នក។</p>
+
+        <!-- Demo notice: no real payment yet -->
+        <p class="demo-notice">
+          <strong>សម្គាល់៖</strong>
+          ការទូទាត់ប្រាក់នៅដំណាក់កាលនេះ គ្រាន់តែជាការសាកល្បងប៉ុណ្ណោះ។ មិនមានការកាត់ប្រាក់ពិតប្រាកដឡើយ។
+        </p>
+
+        <div class="pricing-cards">
+
+          <!-- Each card is a "boarding pass": band (flight info) / main part / tear-off stub -->
+          <article class="pricing-card" data-package="demo">
+            <div class="pass-band" aria-hidden="true">
+              <dl class="flight-info">
+                <div><dt>GATE</dt><dd>D0</dd></div>
+                <div><dt>SEAT</dt><dd>—</dd></div>
+                <div><dt>CLASS</dt><dd>DEMO</dd></div>
+              </dl>
+            </div>
+            <div class="pass-main">
+              <h3>សាកល្បងឥតគិតថ្លៃ</h3>
+              <p class="price">ឥតគិតថ្លៃ</p>
+              <ul>
+                <li>មើលឧទាហរណ៍នៃលទ្ធផល ដោយប្រើទិន្នន័យគំរូ</li>
+                <li>មិនមែនជាលទ្ធផលផ្ទាល់ខ្លួនរបស់អ្នកទេ</li>
+              </ul>
+            </div>
+            <div class="pass-stub">
+              <button type="button" class="button button-secondary">មើលឧទាហរណ៍</button>
+              <div class="barcode" aria-hidden="true"></div>
+            </div>
+          </article>
+
+          <article class="pricing-card" data-package="A">
+            <div class="pass-band" aria-hidden="true">
+              <dl class="flight-info">
+                <div><dt>GATE</dt><dd>A1</dd></div>
+                <div><dt>SEAT</dt><dd>#3</dd></div>
+                <div><dt>CLASS</dt><dd>ECONOMY</dd></div>
+              </dl>
+            </div>
+            <div class="pass-main">
+              <h3>កញ្ចប់ A</h3>
+              <p class="price">$1.00</p>
+              <ul>
+                <li>ដោះសោជំនាញលំដាប់ទី៣ (#3) តែមួយប៉ុណ្ណោះ</li>
+                <li>រួមទាំងព័ត៌មានលម្អិតដែលមានសម្រាប់ជំនាញនោះ</li>
+              </ul>
+            </div>
+            <div class="pass-stub">
+              <button type="button" class="button button-secondary">ជ្រើសរើស $1.00</button>
+              <div class="barcode" aria-hidden="true"></div>
+            </div>
+          </article>
+
+          <article class="pricing-card pricing-card-recommended" data-package="B">
+            <div class="pass-band" aria-hidden="true">
+              <dl class="flight-info">
+                <div><dt>GATE</dt><dd>B2</dd></div>
+                <div><dt>SEAT</dt><dd>#1–3</dd></div>
+                <div><dt>CLASS</dt><dd>FIRST</dd></div>
+              </dl>
+            </div>
+            <div class="pass-main">
+              <p class="badge">ណែនាំ</p>
+              <h3>កញ្ចប់ B</h3>
+              <p class="price">$2.50</p>
+              <ul>
+                <li>ដោះសោជំនាញទាំងបីលំដាប់ (#1, #2, #3)</li>
+                <li>រួមទាំងព័ត៌មានលម្អិតដែលមានសម្រាប់ជំនាញទាំងបី</li>
+              </ul>
+            </div>
+            <div class="pass-stub">
+              <button type="button" class="button button-primary">ជ្រើសរើស $2.50</button>
+              <div class="barcode" aria-hidden="true"></div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- JavaScript writes which package is chosen here -->
+        <p id="package-status" class="package-status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- ========== 5. ASSESSMENT ========== -->
+    <section id="assessment" class="assessment">
+      <div class="container">
+        <h2>ការវាយតម្លៃ</h2>
+        <p class="section-intro">ឆ្លើយសំណួរដោយស្មោះត្រង់ គ្មានចម្លើយត្រូវ ឬខុសនោះទេ។</p>
+
+        <div class="assessment-panel">
+          <!-- Progress: JavaScript fills in the text and the bar width -->
+          <div id="assessment-progress" class="progress">
+            <div class="progress-top">
+              <span id="progress-part" class="progress-part"></span>
+              <span id="progress-text">សំណួរទី 1</span>
+            </div>
+            <div id="progress-bar" class="progress-bar" role="progressbar"
+                 aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" aria-labelledby="progress-text">
+              <div id="progress-fill" class="progress-fill"></div>
+            </div>
+          </div>
+
+          <!-- JavaScript puts one question at a time in here (from js/questions.js) -->
+          <div id="question-area" class="question-area">
+            <p class="placeholder">កំពុងផ្ទុកសំណួរ...</p>
+          </div>
+
+          <div id="question-navigation" class="question-navigation">
+            <button type="button" id="back-button" class="button button-secondary">មុន</button>
+            <button type="button" id="next-button" class="button button-primary">បន្ទាប់</button>
+          </div>
+
+          <button type="button" id="restart-button" class="link-button">ចាប់ផ្តើមម្តងទៀត</button>
+        </div>
+
+        <!-- Results: JavaScript fills #results-content (numbers come from js/scoring.js) -->
+        <div id="results" class="results-panel">
+          <h3 id="results-heading" tabindex="-1">លទ្ធផលរបស់អ្នក</h3>
+
+          <!-- University filters: shown by JavaScript only when results are unlocked -->
+          <div id="university-filters" class="university-filters" hidden>
+            <p class="filters-title">តម្រងសាកលវិទ្យាល័យ</p>
+            <div class="filters-grid">
+              <label class="filter-field">
+                ទីតាំង
+                <select id="filter-city" class="filter-input">
+                  <option value="">ទាំងអស់</option>
+                </select>
+              </label>
+              <label class="filter-field">
+                តម្លៃសិក្សាអតិបរមា (USD)
+                <input id="filter-max-tuition" class="filter-input" type="number" min="0" step="50" inputmode="numeric" placeholder="ឧ. 1500">
+              </label>
+              <label class="filter-field">
+                រយៈពេលបង់ប្រាក់
+                <select id="filter-period" class="filter-input">
+                  <option value="year">ក្នុងមួយឆ្នាំ</option>
+                  <option value="semester">ក្នុងមួយឆមាស</option>
+                </select>
+              </label>
+              <label class="filter-check">
+                <input id="filter-scholarship" type="checkbox">
+                មានអាហារូបករណ៍ (បានផ្ទៀងផ្ទាត់)
+              </label>
+            </div>
+            <p class="filter-help">
+              តម្រងតម្លៃប្រៀបធៀបតែកម្មវិធីដែលមានតម្លៃជា USD និងរយៈពេលបង់ប្រាក់ដូចដែលអ្នកបានជ្រើសរើសប៉ុណ្ណោះ។
+            </p>
+            <button type="button" id="filter-clear" class="link-button">សម្អាតតម្រង</button>
+          </div>
+
+          <div id="results-content" class="results-content">
+            <p class="placeholder">សូមបញ្ចប់ការវាយតម្លៃខាងលើជាមុនសិន ដើម្បីមើលលទ្ធផលរបស់អ្នក។</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== 6. FOOTER ========== -->
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-brand"><strong>KITEBud</strong> — ជំនាញរបស់អ្នក ដំណើររបស់អ្នក</p>
+      <p class="footer-disclaimer">
+        លទ្ធផលនៃការផ្គូផ្គងនេះ គឺសម្រាប់ជួយអ្នកស្វែងយល់ពីអាជីព និងជំនាញសិក្សាតែប៉ុណ្ណោះ
+        ហើយមិនធានាការចូលរៀននៅសាកលវិទ្យាល័យ ឬការទទួលបានការងារនោះទេ។
+      </p>
+      <p><small>&copy; 2026 KITEBud</small></p>
+    </div>
+  </footer>
+
+  <!-- Data files load first, page behaviour (app.js) loads last -->
+  <script src="js/questions.js"></script>
+  <script src="js/majors.js"></script>
+  <script src="js/universities.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
