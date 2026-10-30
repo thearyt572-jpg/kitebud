@@ -15,7 +15,7 @@ function genId(){
   for(let i=0;i<8;i++){ s+=a[Math.floor(Math.random()*a.length)]; if(i===3) s+="-"; }
   return "KT-"+s;
 }
-// v2 = answers to the owner's validated questions (js/questions.js), scored with formula 2.1
+// v2 = answers to the owner's validated questions (js/questions.js), scored with formula 1.0
 // a: Part A · b1/b2/b3: interests · c: personality · d1: grades + track · d2: self-ratings
 function fresh(){ return {v:2,id:genId(),lang:"km",a:{},b1:{},b1order:null,b2:{},b3:[],c:{known:null,type:"",alsoQuiz:false,quiz:{}},d1:{grades:{},track:null},d2:{},
   pos:0,done:false,paid:null,unlocked:[],pkg:"B",checks:{},started:null}; }
@@ -23,7 +23,7 @@ K.load = function(){
   let s = safe(()=>JSON.parse(store().getItem(SKEY)||"null"), null)
        || safe(()=>JSON.parse(sessionStorage.getItem(SKEY)||"null"), null)
        || mem;
-  // answers saved by the old test (v1) can't be scored by formula 2.1: start again, keeping the visitor ID and language
+  // answers saved by the old test (v1) can't be scored by formula 1.0: start again, keeping the visitor ID and language
   if(s && s.v!==2){ const old = s; s = fresh(); s.id = old.id || s.id; s.lang = old.lang || s.lang; K.save(s); }
   if(!s){ s = fresh(); K.save(s); }
   return s;

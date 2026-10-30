@@ -1,4 +1,4 @@
-/* KITE — checks for formula 2.1 (docs/question-design.md sections 10–15). Runs in tests/scoring-tests.html
+/* KITE — checks for formula 1.0 (docs/question-design.md sections 10–15). Runs in tests/scoring-tests.html
    and in Node (node tools/test-scoring.js). Each check: [what it checks, actual value, expected value, tolerance]. */
 window.KITE_TESTS = function(){
   const K = window.KITE, D = window.KITE_DATA, F = K._formula, P = id => D.MAJOR_PROFILES[id];
@@ -17,7 +17,7 @@ window.KITE_TESTS = function(){
     ["Strength missing → (0.25J + 0.30I + 0.20P) ÷ 0.75", K.combine({job:100,interest:80,pers:60,strength:null}), (0.25*100+0.30*80+0.20*60)/0.75, 1e-9],
     ["Job and Strength missing → (0.30I + 0.20P) ÷ 0.50", K.combine({job:null,interest:80,pers:60,strength:null}), (0.30*80+0.20*60)/0.50, 1e-9],
     ["Nothing usable → null (shown as “Not enough info”)", K.combine({job:null,interest:null,pers:null,strength:null}), null],
-    ["Formula version is 2.1", K.FORMULA_VERSION, "2.1"],
+    ["Formula version is 1.0", K.FORMULA_VERSION, "1.0"],
     // ---- Job Fit (section 2 + mappings) ----
     ["Data analyst → Data Science 100 (direct)", F.jobFit({a:{mode:"job",job:job("Data analyst")}},"ds"), 100],
     ["Data analyst → IT / Software Eng. 100 (direct)", F.jobFit({a:{mode:"job",job:job("Data analyst")}},"it"), 100],

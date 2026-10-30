@@ -1,12 +1,13 @@
 /* KITE — scoring only: turns a student's answers into % matches for each major. No page code here.
-   FORMULA VERSION 2.1 (the owner's validated formula, docs/question-design.md sections 10–15).
+   FORMULA VERSION 1.0: the label the validation survey used (the source code called this same formula "2.1").
+   The owner's validated formula, docs/question-design.md sections 10–15.
    Any change to questions, weights or major profiles changes the version and must be approved by the owner first.
    Reads js/questions.js (D.Q), js/majors.js (D.MAJORS) and the hidden js/major-profiles.js.
    Missing evidence is null, never zero: a null part is left out of the overall % and the weights are renormalised. */
 (function(){
 const D = window.KITE_DATA;
 const K = window.KITE = window.KITE || {};
-K.FORMULA_VERSION = "2.1";
+K.FORMULA_VERSION = "1.0";
 
 // Weight of each part in the overall %. The about page and the report read this, so the text always matches.
 const W = K.WEIGHTS = {job:.25, interest:.30, pers:.20, strength:.25};
