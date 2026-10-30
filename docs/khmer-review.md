@@ -89,3 +89,9 @@ They come from `KITE.INTEREST_NAMES` in `js/scoring.js`. The hidden type names i
 | 52 | S | អ្នកជួយ | Helper | |
 | 53 | E | អ្នកដឹកនាំ | Persuader | Khmer means “leader”, not “persuader”. Keep, or suggest better. |
 | 54 | C | អ្នករៀបចំ | Organizer | |
+
+## F. University list
+
+| # | Where | Khmer now | Meaning in English | OK / better Khmer |
+|---|---|---|---|---|
+| 55 | Report, under the university list (`report.html`) | KITE មិនមានទំនាក់ទំនង ឬទទួលបានការគាំទ្រពីសាកលវិទ្យាល័យទាំងនេះទេ។ ព័ត៌មានយកចេញពីគេហទំព័រផ្លូវការរបស់ពួកគេ។ | KITE is not affiliated with or endorsed by these universities. Information comes from their official websites. | |

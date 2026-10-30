@@ -29,6 +29,9 @@
 .uni dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:.9rem}
 .uni dt{color:var(--muted)}
 .uni dd{margin:0;min-width:0}
+.uni__head{display:flex;gap:12px;align-items:center;min-width:0}
+.badge{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:var(--sky-soft);color:var(--ink);border:2px solid var(--sky);font-family:var(--f-mono);font-weight:600;font-size:.78rem;letter-spacing:.02em;line-height:1}
+.badge img{width:100%;height:100%;object-fit:contain;background:var(--logo-bg)}
 .cb{display:flex;align-items:center;gap:8px;min-height:48px}
 .cb input{width:20px;height:20px;accent-color:var(--sky)}
 </style>
@@ -59,6 +62,10 @@ const STEPS = [
 const money = n => "$" + n.toLocaleString("en-US");
 
 const safeUrl = u => /^https?:\/\//i.test(u||"") ? u : null; // only real web links
+// a real logo only with the university's written permission and a plain file name in images/logos/; otherwise its initials
+const logoFile = u => u.logo_permission==="yes" && /^[\w-]+\.(png|jpe?g|svg|webp)$/i.test(u.logo||"") ? "images/logos/" + u.logo : null;
+const initials = u => ((u.en.match(/\(([^)]+)\)/) || [])[1] || u.id).toUpperCase(); // "Royal University of Phnom Penh (RUPP)" → RUPP
+const badge = u => `<span class="badge" aria-hidden="true">${logoFile(u) ? `<img src="${logoFile(u)}" alt="">` : K.esc(initials(u))}</span>`;
 const dateText = d => d ? K.n(d.split("-").reverse().join("/")) : K.t("មិនទាន់ពិនិត្យ","Not checked yet"); // "2026-10-30" → 30/10/2026
 
 function uniList(m){
@@ -69,7 +76,7 @@ function uniList(m){
     .filter(u=>!f.sch||u.sch);
   if(!list.length) return `<p class="banner banner--info">${K.t("គ្មានសាកលវិទ្យាល័យត្រូវនឹងតម្រងនេះទេ។ សូមដកតម្រងខ្លះចេញ។","No universities match these filters. Try removing one.")}</p>`;
   return `<div class="grid g2">${list.map(u=>`<div class="uni">
-    <b>${K.t(u)}</b>
+    <div class="uni__head">${badge(u)}<b>${K.t(u)}</b></div>
     <dl>
       <dt>${K.t("ទីក្រុង","City")}</dt><dd>${K.t(D.CITIES[u.city])}</dd>
       <dt>${K.t("ថ្លៃសិក្សា","Tuition")}</dt><dd class="mono">≈ ${money(u.fee[0])}–${money(u.fee[1])} / ${K.t("ឆ្នាំ","year")}</dd>
@@ -116,6 +123,7 @@ function section(x, rank, S){
       </div>
       <div id="u-${m.id}">${uniList(m)}</div>
       <p class="banner small">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។ (ទិន្នន័យគំរូសម្រាប់របៀបសាកល្បង)","Info may change — check the official site. (Sample data for test mode.)")}</p>
+      ${hasUnis?`<p class="small muted">${K.t("KITE មិនមានទំនាក់ទំនង ឬទទួលបានការគាំទ្រពីសាកលវិទ្យាល័យទាំងនេះទេ។ ព័ត៌មានយកចេញពីគេហទំព័រផ្លូវការរបស់ពួកគេ។","KITE is not affiliated with or endorsed by these universities. Information comes from their official websites.")}</p>`:""}
     </div>
 
     <div class="sub"><h3><span class="label">E</span>${K.t("អាហារូបករណ៍","Scholarships")}</h3>

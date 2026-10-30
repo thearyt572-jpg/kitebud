@@ -16,6 +16,7 @@
   --board-text:#DCEAF7; --board-muted:#B4CBE2; --board-label:#A3BEDA; --board-strong:#FFFFFF; --board-line:rgba(220,234,247,.3); --final-fg:#E3EFFA;
   --flap-line:rgba(0,0,0,.55); --shadow-pop:0 18px 40px -16px rgba(0,0,0,.45);
   --skin:#C98E62;        /* the student in the home illustration */
+  --logo-bg:#FFFFFF;     /* behind university logos (most are made for white), both modes */
   --shadow:0 1px 0 var(--line), 0 10px 28px -18px rgba(11,46,89,.45);
   --f-body:"Kantumruy Pro","Noto Sans Khmer",system-ui,sans-serif;
   --f-display:"Moul","Kantumruy Pro",serif;
