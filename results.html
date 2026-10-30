@@ -127,7 +127,8 @@ function render(){
 
   const ex = document.getElementById("exitDemo"); if(ex) ex.onclick = ()=>{ K.setDemo(false); render(); };
   app.querySelectorAll("[data-pkg]").forEach(b=>b.onclick=()=>{ K.update(s=>s.pkg=b.dataset.pkg); location.href="checkout.html"; });
-  document.getElementById("retake").onclick = e => { if(demo){ K.setDemo(false); } };
+  // open the test's start screen (it has the Retake button and its confirm box), not the "You've landed" screen
+  document.getElementById("retake").onclick = e => { if(demo){ K.setDemo(false); } else K.update(s=>{ s.pos = -1; s.started = null; }); };
   document.getElementById("share").onclick = ()=>{
     const lines = R.top.map((x,i)=> `${i+1}. ${K.unlocked(S,i+1)?K.t(x.m):"🔒"} — ${x.pct}%`);
     const txt = K.t("ភាពសាកសមកំពូលរបស់ខ្ញុំនៅលើ KITE ✈️","My top KITE matches ✈️") + "\n" + lines.join("\n") + "\n" + K.t("សាកល្បងតេស្តឥតគិតថ្លៃនៅ KITE","Try the free test on KITE");
