@@ -91,7 +91,7 @@ function section(x, rank, S){
 
     <div class="grid g2">
       <div class="sub panel"><h3><span class="label">A</span>${K.t("ការបំបែកតាមផ្នែក","Breakdown")}</h3><div class="bars bigbars">${["job","interest","pers","strength"].map(k=>`<div class="bar"><span>${K.t(K.PARTLABEL[k])}</span><div class="bar__track"><div class="bar__fill" style="width:${x.parts[k]}%"></div></div><span class="bar__val">${K.n(x.parts[k])}%</span></div>`).join("")}</div>
-        <p class="small muted">${K.t("សរុប = ការងារ ៣០% · ចំណាប់អារម្មណ៍ ៣០% · ចំណុចខ្លាំង ២៥% · បុគ្គលិកលក្ខណៈ ១៥%","Overall = Job 30% · Interest 30% · Strength 25% · Personality 15%")}</p></div>
+        <p class="small muted">${K.t("សរុប = ","Overall = ")}${K.weightsLine()}</p></div>
       <div class="sub"><h3><span class="label">B</span>${K.t("ហេតុអ្វីបានជាសាកសម","Why it matched")}</h3><ul class="reasons">${reasons}</ul></div>
     </div>
 

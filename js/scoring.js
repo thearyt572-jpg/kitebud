@@ -5,6 +5,8 @@
 const D = window.KITE_DATA;
 const K = window.KITE = window.KITE || {};
 
+// Weight of each part in the overall %. The about page and the report read this, so the text always matches.
+const W = K.WEIGHTS = {job:.3, interest:.3, pers:.15, strength:.25};
 const PLUS = {EI:"E",SN:"N",TF:"F",JP:"J"};
 const clamp = (x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const mean = arr => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 3;
@@ -50,7 +52,7 @@ K.score = function(s){
     const im = wsum(pr.ri, P.ri), sm = wsum(pr.s, P.st);
     const pf = 1 - mean(Object.keys(pr.p).map(d=>Math.abs(P.lean[d]-pr.p[d])))/2;
     const f = {job:fit(jm,P.jobAvg), interest:fit(im,P.riAvg), pers:pf, strength:fit(sm,P.stAvg)};
-    const overall = .3*f.job + .3*f.interest + .15*f.pers + .25*f.strength;
+    const overall = W.job*f.job + W.interest*f.interest + W.pers*f.pers + W.strength*f.strength;
     // reasons
     const rs = [];
     pr.jobs.forEach(j=>{ const v=P.jobs[j]; if(v>=4){ const job=D.JOBS.find(x=>x.id===j); rs.push({w:v+.2, km:`អ្នកបានជ្រើសថាចង់ធ្វើការជា «${job.km}»`, en:`You said you'd like to work as a ${job.en.toLowerCase()}`}); }});

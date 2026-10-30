@@ -63,8 +63,12 @@ function applyStatic(root){
     if(el.dataset.kmAria===undefined) el.dataset.kmAria = el.getAttribute("aria-label")||"";
     el.setAttribute("aria-label", en ? el.dataset.enAria : el.dataset.kmAria);
   });
+  (root||document).querySelectorAll("[data-weight]").forEach(el=>{ el.textContent = K.weightPct(el.dataset.weight); });
   document.documentElement.lang = en ? "en" : "km";
 }
+K.weightPct = part => K.n(Math.round(K.WEIGHTS[part]*100)) + "%";
+// "Job 30% · Interest 30% · …", biggest weight first
+K.weightsLine = () => Object.keys(K.WEIGHTS).sort((a,b)=>K.WEIGHTS[b]-K.WEIGHTS[a]).map(k=>K.t(K.PARTLABEL[k]) + " " + K.weightPct(k)).join(" · ");
 K.applyStatic = applyStatic;
 K.setLang = function(l){
   K.update(s=>{ s.lang=l; });
