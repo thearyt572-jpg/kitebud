@@ -53,6 +53,7 @@ html[lang="en"] .qtext{line-height:1.35}
 <script src="js/universities.js"></script>
 <script src="js/scoring.js"></script>
 <script src="js/app.js"></script>
+<script src="js/db.js"></script>
 <script>
 (function(){
 /* The test. All question wording comes from js/questions.js (LOCKED) — never write question text here.
@@ -270,6 +271,8 @@ function go(delta){
   const h = app.querySelector("h1"); if(h) h.focus({preventScroll:true});
 }
 const set = fn => { K.update(fn); render(); };
+// a part is finished when the student continues from its "Part X done!" screen: save it (js/db.js, only with Allow)
+function finishPart(p){ K.update(s=>{ s.finishedParts = [...new Set([...(s.finishedParts||[]), p])]; }); if(K.db) K.db.savePart(p); }
 function refreshNext(st){ const n = app.querySelector('[data-act="next"]'); if(n) n.disabled = !answered(st); }
 
 function bind(st){
@@ -294,14 +297,16 @@ function bind(st){
     const a = b.dataset.act;
     if(a==="start"){ K.setDemo(false); K.update(s=>{ s.started = s.started || Date.now(); if(s.pos<0) s.pos=0; if(!s.b1order) s.b1order = shuffled(Q.B1.items.map(x=>x.id)); }); render(); }
     else if(a==="back") go(-1);
-    else if(a==="next"){ if(answered(SEQ[S.pos]||{})) go(1); }
-    else if(a==="finish"){ K.update(s=>{ s.done = true; }); location.href = "results.html"; }
+    else if(a==="next"){ const cur = SEQ[S.pos]||{}; if(answered(cur)){ if(cur.t==="break") finishPart(cur.done); go(1); } }
+    // part D and the results are saved on the results page (js/db.js), so nothing is cut off by the page change
+    else if(a==="finish"){ K.update(s=>{ s.done = true; s.finishedAt = Date.now(); s.finishedParts = ["A","B","C","D"]; }); location.href = "results.html"; }
     else if(a==="cookie") K.showCookie(true);
     else if(a==="toquiz") set(s=>{ s.c.known = "no"; });
     else if(a==="alsoquiz") set(s=>{ s.c.alsoQuiz = !s.c.alsoQuiz; });
     else if(a==="restart") document.getElementById("confirm").hidden = false;
     else if(a==="restart-no") document.getElementById("confirm").hidden = true;
-    else if(a==="restart-yes"){ K.update(s=>{ Object.assign(s, {a:{},b1:{},b1order:null,b2:{},b3:[],c:{known:null,type:"",alsoQuiz:false,quiz:{}},d1:{grades:{},track:null},d2:{},pos:0,done:false,checks:{},started:null}); /* paid unlocks stay after a retake */ }); jobQuery=""; jobCat=""; render(); K.toast(K.t("បានលុបចម្លើយ","Answers cleared")); }
+    else if(a==="restart-yes"){ K.update(s=>{ Object.assign(s, {a:{},b1:{},b1order:null,b2:{},b3:[],c:{known:null,type:"",alsoQuiz:false,quiz:{}},d1:{grades:{},track:null},d2:{},pos:0,done:false,checks:{},started:null,finishedAt:null,finishedParts:[],feedbackSent:false});
+      s.db = s.db ? {visitor:s.db.visitor, consent:s.db.consent} : s.db; /* new answers will be saved again; paid unlocks stay after a retake */ }); jobQuery=""; jobCat=""; render(); K.toast(K.t("បានលុបចម្លើយ","Answers cleared")); }
   });
 }
 function bindJobs(){

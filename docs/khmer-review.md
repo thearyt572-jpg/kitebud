@@ -97,3 +97,15 @@ They come from `KITE.INTEREST_NAMES` in `js/scoring.js`. The hidden type names i
 | 55 | Report, under the university list (`report.html`) | KITE មិនមានទំនាក់ទំនង ឬទទួលបានការគាំទ្រពីសាកលវិទ្យាល័យទាំងនេះទេ។ ព័ត៌មានយកចេញពីគេហទំព័រផ្លូវការរបស់ពួកគេ។ | KITE is not affiliated with or endorsed by these universities. Information comes from their official websites. | |
 | 56 | Report, each university (`report.html`) | កម្មវិធីសិក្សា | Programs | |
 | 57 | Report, each university, when the sheet gives no per-year price (`report.html`) | មិនទាន់បញ្ជាក់ | Not confirmed yet | |
+
+## G. Feedback on the results page (shown only after Allow)
+
+| # | Where | Khmer now | Meaning in English | OK / better Khmer |
+|---|---|---|---|---|
+| 58 | Results, feedback question (`results.html`) | តើលទ្ធផលនេះត្រូវនឹងអ្នកកម្រិតណា? | How well does this match you? | |
+| 59 | Results, under the 1–5 buttons | ១ = មិនត្រូវសោះ · ៥ = ត្រូវខ្លាំងណាស់ | 1 = not at all · 5 = very well | |
+| 60 | Results, comment box label | មតិ (ស្រេចចិត្ត) | Comment (optional) | |
+| 61 | Results, send button | ផ្ញើ | Send | |
+| 62 | Results, after sending | អរគុណសម្រាប់មតិរបស់អ្នក! | Thank you for your feedback! | |
+
+(The privacy hint under the comment box reuses row 23: កុំវាយឈ្មោះ ឬលេខទូរស័ព្ទរបស់អ្នក។)
