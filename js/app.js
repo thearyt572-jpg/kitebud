@@ -90,9 +90,9 @@ K.EMAIL = "weare@thekitebud.com";
 
 /* ---------- header, footer, cookie banner ---------- */
 const NAV = [
-  {href:"./",km:"ទំព័រដើម",en:"Home",page:"home"},
-  {href:"./#how",km:"របៀបដំណើរការ",en:"How it works"},
-  {href:"./#pricing",km:"តម្លៃ",en:"Pricing"}
+  {href:"index.html",km:"ទំព័រដើម",en:"Home",page:"home"},
+  {href:"index.html#how",km:"របៀបដំណើរការ",en:"How it works"},
+  {href:"index.html#pricing",km:"តម្លៃ",en:"Pricing"}
 ];
 function renderChrome(){
   const page = document.body.dataset.page;
@@ -101,7 +101,7 @@ function renderChrome(){
   const links = NAV.map(n=>`<a href="${n.href}"${n.page===page?' aria-current="page"':""}>${K.t(n)}</a>`).join("");
   if(h){
     h.innerHTML = `<div class="topbar"><div class="wrap topbar__in">
-      <a class="logo" href="./" aria-label="KITE — ${K.t("ទំព័រដើម","Home")}"><span class="logo__mark" aria-hidden="true">✈</span>KITE</a>
+      <a class="logo" href="index.html" aria-label="KITE — ${K.t("ទំព័រដើម","Home")}"><span class="logo__mark" aria-hidden="true">✈</span>KITE</a>
       <nav class="nav" aria-label="${K.t("ម៉ឺនុយមេ","Main menu")}">${links}<a class="btn btn--gold" href="assessment.html">${K.t("ចាប់ផ្ដើមតេស្ត","Start test")}</a></nav>
       <button class="langbtn" type="button" id="langbtn" aria-label="${K.t("ប្ដូរភាសា","Change language")}"><span class="${lang==="km"?"on":""}">ខ្មែរ</span><span class="${lang==="en"?"on":""}">EN</span></button>
       <button class="menubtn" type="button" id="menubtn" aria-expanded="false" aria-controls="mobilenav">${K.t("ម៉ឺនុយ","Menu")} ☰</button>
@@ -116,7 +116,7 @@ function renderChrome(){
     f.innerHTML = `<div class="footer"><div class="wrap">
       <div class="footer__grid">
         <div class="stack" style="gap:10px">
-          <a class="logo" href="./"><span class="logo__mark" aria-hidden="true">✈</span>KITE</a>
+          <a class="logo" href="index.html"><span class="logo__mark" aria-hidden="true">✈</span>KITE</a>
           <p>${K.t("ហោះហើរឆ្ពោះទៅរកជំនាញដែលសាកសមនឹងអ្នក។","Take off toward a major that fits you.")}</p>
         </div>
         <div class="footer__links">
