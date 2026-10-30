@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KITE · Privacy</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Moul&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="kite.css">
+<style>
+.page{max-width:780px;margin:0 auto;padding-block:36px 40px;display:flex;flex-direction:column;gap:34px}
+.page section{scroll-margin-top:90px}
+.yesno{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:620px){.yesno{grid-template-columns:1fr}}
+.yesno .panel ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+.idbox{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.idbox .mono{font-size:1.2rem;background:var(--board);color:var(--board-fg);padding:6px 12px;border-radius:8px;user-select:all}
+</style>
+</head>
+<body data-page="privacy">
+<div id="kite-header"></div>
+<main class="wrap"><div class="page">
+  <div class="stack" style="gap:8px">
+    <span class="label" data-en="Privacy policy · test mode">គោលការណ៍ឯកជនភាព · របៀបសាកល្បង</span>
+    <h1 class="display" data-en="Your privacy">ឯកជនភាពរបស់អ្នក</h1>
+    <p class="muted" data-en="Short version: no login, no name, no phone number. Your answers stay on your device.">សង្ខេប៖ គ្មានការចុះឈ្មោះ គ្មានឈ្មោះ គ្មានលេខទូរស័ព្ទ។ ចម្លើយរបស់អ្នកនៅលើឧបករណ៍របស់អ្នក។</p>
+  </div>
+
+  <section class="stack" aria-labelledby="p1">
+    <h2 id="p1" data-en="What we collect, and what we never collect">អ្វីដែលយើងប្រមូល និងអ្វីដែលយើងមិនដែលប្រមូល</h2>
+    <div class="yesno">
+      <div class="panel panel--flat stack" style="gap:8px"><span class="tag tag--ok" data-en="We keep">យើងរក្សាទុក</span><ul>
+        <li data-en="Your test answers">ចម្លើយតេស្តរបស់អ្នក</li>
+        <li data-en="Your grade 12 track">ថ្នាក់ទី ១២ របស់អ្នក</li>
+        <li data-en="A random visitor ID, such as KT-AB12-CD34">លេខសម្គាល់អ្នកទស្សនាចៃដន្យ ដូចជា KT-AB12-CD34</li>
+        <li data-en="Your language and cookie choice">ភាសា និងជម្រើសខូគីរបស់អ្នក</li>
+        <li data-en="Which package you unlocked (test mode)">កញ្ចប់ដែលអ្នកបានដោះសោ (របៀបសាកល្បង)</li>
+      </ul></div>
+      <div class="panel panel--flat stack" style="gap:8px"><span class="tag tag--bad" data-en="We never collect">យើងមិនដែលប្រមូល</span><ul>
+        <li data-en="Your name, phone, email or address">ឈ្មោះ លេខទូរស័ព្ទ អ៊ីមែល ឬអាសយដ្ឋាន</li>
+        <li data-en="Your school or ID card number">សាលា ឬលេខអត្តសញ្ញាណប័ណ្ណ</li>
+        <li data-en="Photos, location or contacts">រូបថត ទីតាំង ឬបញ្ជីទំនាក់ទំនង</li>
+        <li data-en="Real card or bank details">ព័ត៌មានកាត ឬគណនីធនាគារពិតប្រាកដ</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="prose" aria-labelledby="p2">
+    <h2 id="p2" data-en="Why we collect it">ហេតុអ្វីយើងប្រមូល</h2>
+    <p data-en="Only to calculate your % matches, show your results again when you come back, and remember what you unlocked. We do not sell data or use it for advertising.">គ្រាន់តែដើម្បីគណនាភាគរយភាពសាកសម បង្ហាញលទ្ធផលម្ដងទៀតពេលអ្នកត្រឡប់មកវិញ និងចងចាំអ្វីដែលអ្នកបានដោះសោ។ យើងមិនលក់ទិន្នន័យ ឬប្រើសម្រាប់ការផ្សាយពាណិជ្ជកម្មឡើយ។</p>
+  </section>
+
+  <section class="prose" aria-labelledby="p3">
+    <h2 id="p3" data-en="How long we keep it">យើងរក្សាទុករយៈពេលប៉ុន្មាន</h2>
+    <p data-en="In this test version, everything is stored only in your own browser. If you allowed cookies, it stays until you delete it. If you declined, it clears when you close the tab. Nothing is sent to a KITE server.">ក្នុងកំណែសាកល្បងនេះ អ្វីៗទាំងអស់ត្រូវបានរក្សាទុកតែក្នុងកម្មវិធីរុករករបស់អ្នកប៉ុណ្ណោះ។ ប្រសិនបើអ្នកអនុញ្ញាតខូគី វានៅរហូតដល់អ្នកលុប។ ប្រសិនបើអ្នកបដិសេធ វានឹងបាត់ពេលអ្នកបិទផ្ទាំង។ គ្មានអ្វីត្រូវបានផ្ញើទៅម៉ាស៊ីនមេរបស់ KITE ទេ។</p>
+  </section>
+
+  <section class="prose" id="cookies" aria-labelledby="p4">
+    <h2 id="p4" data-en="Cookies explained">ការពន្យល់អំពីខូគី</h2>
+    <p data-en="“Cookies” here means small pieces of data saved in your browser. KITE uses them for one job: keeping your answers and results. There are no advertising or tracking cookies.">«ខូគី» នៅទីនេះមានន័យថាទិន្នន័យតូចៗដែលរក្សាទុកក្នុងកម្មវិធីរុករករបស់អ្នក។ KITE ប្រើវាសម្រាប់ការងារតែមួយ គឺរក្សាចម្លើយ និងលទ្ធផលរបស់អ្នក។ គ្មានខូគីផ្សាយពាណិជ្ជកម្ម ឬតាមដានទេ។</p>
+    <p data-en="We do remember whether you chose Allow or Decline, so we don't ask you every time.">យើងចងចាំថាអ្នកបានជ្រើស «អនុញ្ញាត» ឬ «បដិសេធ» ដើម្បីកុំឱ្យសួរអ្នករាល់ពេល។</p>
+    <div class="row"><button class="btn btn--ink" type="button" id="ckbtn" data-en="Cookie settings">ការកំណត់ខូគី</button><span class="small muted" id="cknow"></span></div>
+  </section>
+
+  <section class="stack" id="delete" aria-labelledby="p5">
+    <h2 id="p5" data-en="How to delete your data">របៀបលុបទិន្នន័យរបស់អ្នក</h2>
+    <div class="idbox"><span class="small muted" data-en="Your visitor ID:">លេខសម្គាល់អ្នកទស្សនារបស់អ្នក៖</span><span class="mono" id="vid">—</span></div>
+    <ol class="prose" style="padding-left:1.3em;margin:0">
+      <li data-en="On this device: press the button below. It removes your answers, results, visitor ID and cookie choice straight away.">នៅលើឧបករណ៍នេះ៖ ចុចប៊ូតុងខាងក្រោម។ វានឹងលុបចម្លើយ លទ្ធផល លេខសម្គាល់ និងជម្រើសខូគីរបស់អ្នកភ្លាមៗ។</li>
+      <li data-en="By email: send your visitor ID to the address below and we will reply to confirm that nothing linked to it is kept.">តាមអ៊ីមែល៖ ផ្ញើលេខសម្គាល់អ្នកទស្សនាទៅអាសយដ្ឋានខាងក្រោម ហើយយើងនឹងឆ្លើយតបដើម្បីបញ្ជាក់ថាគ្មានអ្វីភ្ជាប់នឹងវាត្រូវបានរក្សាទុកទេ។</li>
+    </ol>
+    <div><button class="btn" type="button" id="delbtn" style="border-color:var(--bad);color:var(--bad)" data-en="Delete my data on this device">លុបទិន្នន័យរបស់ខ្ញុំនៅលើឧបករណ៍នេះ</button></div>
+    <div id="delconfirm" class="banner banner--bad" style="flex-direction:column" hidden>
+      <span data-en="This can't be undone. Your answers and any unlocked results will be gone.">សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។ ចម្លើយ និងលទ្ធផលដែលបានដោះសោនឹងបាត់។</span>
+      <div class="row"><button class="btn btn--ink btn--sm" type="button" id="delyes" data-en="Yes, delete everything">បាទ/ចាស លុបទាំងអស់</button><button class="btn btn--sm" type="button" id="delno" data-en="Cancel">បោះបង់</button></div>
+    </div>
+  </section>
+
+  <section class="prose" aria-labelledby="p6">
+    <h2 id="p6" data-en="For parents">សម្រាប់ឪពុកម្ដាយ</h2>
+    <p data-en="KITE is made for students around 15–18. Because we never ask for names or contact details, your child can use it without creating an account. We encourage you to look at the results together and talk about them. If you want your child's data removed, use the steps above or email us with the visitor ID shown on their results page.">KITE បង្កើតឡើងសម្រាប់សិស្សអាយុប្រហែល ១៥–១៨ ឆ្នាំ។ ដោយសារយើងមិនដែលសួររកឈ្មោះ ឬព័ត៌មានទំនាក់ទំនង កូនរបស់អ្នកអាចប្រើវាដោយមិនចាំបាច់បង្កើតគណនី។ យើងលើកទឹកចិត្តឱ្យអ្នកមើលលទ្ធផលជាមួយគ្នា ហើយពិភាក្សាអំពីវា។ ប្រសិនបើអ្នកចង់លុបទិន្នន័យកូនរបស់អ្នក សូមប្រើជំហានខាងលើ ឬផ្ញើអ៊ីមែលមកយើងជាមួយលេខសម្គាល់ដែលបង្ហាញនៅលើទំព័រលទ្ធផល។</p>
+  </section>
+
+  <section class="prose" aria-labelledby="p7">
+    <h2 id="p7" data-en="Contact">ទំនាក់ទំនង</h2>
+    <p><span data-en="Privacy questions:">សំណួរពីឯកជនភាព៖</span> <span class="mono" style="user-select:all">weare@thekitebud.com</span></p>
+  </section>
+</div></main>
+<div id="kite-footer"></div>
+<script src="kite-data.js"></script>
+<script src="kite.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  var K = window.KITE;
+  function fill(){
+    document.getElementById("vid").textContent = K.load().id;
+    var c = K.consent();
+    document.getElementById("cknow").textContent = K.t("ជម្រើសបច្ចុប្បន្ន: ","Current choice: ") + (c==="allow"?K.t("អនុញ្ញាត","Allowed"):c==="decline"?K.t("បដិសេធ","Declined"):K.t("មិនទាន់ជ្រើស","Not chosen yet"));
+  }
+  fill();
+  document.getElementById("ckbtn").onclick = function(){ K.showCookie(true); };
+  document.getElementById("delbtn").onclick = function(){ document.getElementById("delconfirm").hidden = false; };
+  document.getElementById("delno").onclick = function(){ document.getElementById("delconfirm").hidden = true; };
+  document.getElementById("delyes").onclick = function(){ K.wipe(); document.getElementById("delconfirm").hidden = true; K.toast(K.t("ទិន្នន័យត្រូវបានលុបពីឧបករណ៍នេះ","Your data was deleted from this device")); fill(); K.showCookie(false); };
+  document.addEventListener("kite:lang", fill);
+  document.addEventListener("kite:consent", fill);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KITE · Checkout</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Moul&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="kite.css">
+<style>
+.cwrap{max-width:640px;margin:0 auto;padding-block:28px 40px}
+.testmode{background:repeating-linear-gradient(-45deg,var(--gold) 0 18px,var(--gold-soft) 18px 36px);color:var(--gold-ink);border-radius:14px;padding:4px}
+.testmode div{background:var(--gold);border-radius:10px;padding:14px 18px;display:flex;flex-direction:column;gap:2px}
+.testmode b{font-family:var(--f-mono);letter-spacing:.14em;font-size:1.05rem}
+.sumrow{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.sumrow:last-child{border-bottom:0}
+.total{font-family:var(--f-mono);font-size:1.5rem;font-weight:600}
+.spinner{width:56px;height:56px;border-radius:50%;border:5px solid var(--sky-soft);border-top-color:var(--sky);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding-block:28px}
+.status .big{font-size:3rem;line-height:1}
+</style>
+</head>
+<body data-page="checkout">
+<div id="kite-header"></div>
+<main class="wrap"><div class="cwrap" id="app" aria-live="polite"></div></main>
+<div id="kite-footer"></div>
+<script src="kite-data.js"></script>
+<script src="kite.js"></script>
+<script>
+(function(){
+const K = window.KITE, app = document.getElementById("app");
+const PK = {
+  A:{price:"1.00",name:{km:"កញ្ចប់ A",en:"Package A"},what:{km:"ដោះសោជំនាញលេខ ៣ របស់អ្នក ព្រមទាំងព័ត៌មានលម្អិត សាកលវិទ្យាល័យ និងអាហារូបករណ៍",en:"Unlocks your #3 major with its details, universities and scholarships"}},
+  B:{price:"2.50",name:{km:"កញ្ចប់ B",en:"Package B"},what:{km:"ដោះសោជំនាញកំពូលទាំង ៣ ព្រមទាំងព័ត៌មានលម្អិត សាកលវិទ្យាល័យ និងអាហារូបករណ៍",en:"Unlocks all 3 top majors with their details, universities and scholarships"}}
+};
+let view = "form", method = "qr", outcome = "success", order = null, lastPkg = null;
+
+const banner = () => `<div class="testmode" role="note"><div><b>TEST MODE</b><span>${K.t("របៀបសាកល្បង — មិនមានការកាត់ប្រាក់ពិតប្រាកដទេ។ កុំបញ្ចូលព័ត៌មានកាតពិត។","Test mode — no real money is collected. Never enter real card details.")}</span></div></div>`;
+
+function render(){
+  const S = K.load();
+  if(K.isDemo()){
+    app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel stack"><h1>${K.t("អ្នកកំពុងមើលលទ្ធផលគំរូ","You're viewing the sample")}</h1><p class="muted">${K.t("លទ្ធផលគំរូត្រូវបានដោះសោរួចហើយ។ ធ្វើតេស្តផ្ទាល់ខ្លួនដើម្បីដោះសោលទ្ធផលរបស់អ្នក។","The sample is already unlocked. Take the test yourself to unlock your own results.")}</p><button class="btn btn--gold" type="button" id="exit">${K.t("ចាប់ផ្ដើមតេស្តរបស់ខ្ញុំ","Start my own test")}</button></div></div>`;
+    document.getElementById("exit").onclick = ()=>{ K.setDemo(false); location.href="assessment.html"; };
+    return;
+  }
+  if(!S.done){
+    app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel stack"><h1>${K.t("សូមបញ្ចប់តេស្តជាមុនសិន","Finish the test first")}</h1><p class="muted">${K.t("អ្នកត្រូវមានលទ្ធផល មុនពេលដោះសោវា។","You need results before you can unlock them.")}</p><a class="btn btn--gold" href="assessment.html">${K.t("ទៅកាន់តេស្ត","Go to the test")}</a></div></div>`;
+    return;
+  }
+  let pkg = S.pkg==="A" && S.paid!=="A" ? "A" : "B";
+  if(S.paid==="B"){ view = view==="success"?"success":"already"; }
+  const p = PK[pkg];
+
+  if(view==="already"){
+    app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel status"><span class="big">✅</span><h1>${K.t("អ្នកបានដោះសោគ្រប់យ៉ាងរួចហើយ","Everything is already unlocked")}</h1><a class="btn btn--gold btn--lg" href="report.html">${K.t("ទៅកាន់របាយការណ៍របស់ខ្ញុំ","Go to my report")} →</a></div></div>`;
+    return;
+  }
+  if(view==="processing"){
+    app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel status"><div class="spinner" role="img" aria-label="Processing"></div><h1>${K.t("កំពុងដំណើរការ…","Processing…")}</h1><p class="muted">${K.t("កុំបិទទំព័រនេះ។","Please keep this page open.")}</p></div></div>`;
+    return;
+  }
+  if(view==="success"){
+    app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel status"><span class="big">✅</span><h1>${K.t("ការបង់ប្រាក់សាកល្បងបានជោគជ័យ","Test payment successful")}</h1>
+      <p class="muted">${K.t("លេខបញ្ជាទិញ","Order number")}: <span class="mono">${order}</span></p>
+      <p class="muted">${K.t(PK[lastPkg||pkg].what)}</p>
+      <a class="btn btn--gold btn--lg" href="report.html">${K.t("ទៅកាន់របាយការណ៍របស់ខ្ញុំ","Go to my report")} →</a></div></div>`;
+    return;
+  }
+  if(view==="failed"){
+    app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel status"><span class="big">⛔</span><h1>${K.t("ការបង់ប្រាក់មិនបានសម្រេច","Payment didn't go through")}</h1>
+      <p class="muted" style="max-width:44ch">${K.t("អ្នកផ្ដល់សេវាសាកល្បងបានបដិសេធការបង់ប្រាក់នេះ។ គ្មានប្រាក់ត្រូវបានកាត់ទេ។ សូមព្យាយាមម្ដងទៀត ឬជ្រើសវិធីផ្សេង។","The test provider declined this payment. No money was taken. Try again or pick another method.")}</p>
+      <div class="row" style="justify-content:center"><button class="btn btn--gold" type="button" data-v="form">${K.t("ព្យាយាមម្ដងទៀត","Try again")}</button><a class="btn" href="results.html">${K.t("ត្រឡប់ទៅលទ្ធផល","Back to results")}</a></div></div></div>`;
+    bindV(); return;
+  }
+  if(view==="cancelled"){
+    app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel status"><span class="big">↩️</span><h1>${K.t("បានបោះបង់ការបង់ប្រាក់","Payment cancelled")}</h1>
+      <p class="muted">${K.t("គ្មានអ្វីត្រូវបានគិតប្រាក់ទេ។ លទ្ធផលរបស់អ្នកនៅតែមាន។","Nothing was charged. Your results are still here.")}</p>
+      <div class="row" style="justify-content:center"><button class="btn btn--gold" type="button" data-v="form">${K.t("ត្រឡប់ទៅការបង់ប្រាក់","Back to checkout")}</button><a class="btn" href="results.html">${K.t("ត្រឡប់ទៅលទ្ធផល","Back to results")}</a></div></div></div>`;
+    bindV(); return;
+  }
+
+  const opt = (name,val,cur,title,sub) => `<button type="button" class="choice" role="radio" aria-checked="${cur===val}" data-${name}="${val}"><span class="choice__key">${cur===val?"✓":""}</span><span class="stack" style="gap:0"><span>${title}</span>${sub?`<span class="small muted">${sub}</span>`:""}</span></button>`;
+  app.innerHTML = `<div class="stack-lg">
+    ${banner()}
+    <h1 class="display">${K.t("ការបង់ប្រាក់","Checkout")}</h1>
+    <section class="panel stack" aria-labelledby="sum">
+      <h2 id="sum" style="font-size:1.15rem">${K.t("សេចក្ដីសង្ខេបការបញ្ជាទិញ","Order summary")}</h2>
+      ${S.paid==="A"?`<p class="small muted">${K.t("អ្នកមានកញ្ចប់ A រួចហើយ។ ដំឡើងទៅកញ្ចប់ B ដើម្បីដោះសោជំនាញទាំង ៣។","You already have Package A. Upgrade to Package B to unlock all 3 majors.")}</p>`:
+      `<div class="choices g2 grid" role="radiogroup" aria-label="Package">${opt("pkg","A",pkg,K.t(PK.A.name)+" · $1.00","")}${opt("pkg","B",pkg,K.t(PK.B.name)+" · $2.50",K.t("ណែនាំ","Recommended"))}</div>`}
+      <div>
+        <div class="sumrow"><span>${K.t("កញ្ចប់","Package")}</span><b>${K.t(p.name)}</b></div>
+        <div class="sumrow"><span>${K.t("អ្វីដែលបានដោះសោ","What unlocks")}</span><span style="text-align:right;max-width:30ch">${K.t(p.what)}</span></div>
+        <div class="sumrow"><span>${K.t("លេខសម្គាល់អ្នកទស្សនា","Visitor ID")}</span><span class="mono">${S.id}</span></div>
+        <div class="sumrow"><span>${K.t("សរុប","Total")}</span><span class="total">$${p.price}</span></div>
+      </div>
+    </section>
+    <section class="panel stack" aria-labelledby="pm">
+      <h2 id="pm" style="font-size:1.15rem">${K.t("វិធីបង់ប្រាក់ (អ្នកផ្ដល់សេវាសាកល្បង)","Payment method (sandbox provider)")}</h2>
+      <div class="choices" role="radiogroup">
+        ${opt("m","qr",method,K.t("ស្កេន QR (សាកល្បង)","Scan QR (test)"),K.t("ក្លែងធ្វើការបង់តាមកម្មវិធីធនាគារ","Simulates paying with a banking app"))}
+        ${opt("m","card",method,K.t("កាត (សាកល្បង)","Card (test)"),K.t("មិនសួររកលេខកាតទេ — ការបង់ប្រាក់ត្រូវបានក្លែងធ្វើ","No card number asked — the payment is simulated"))}
+      </div>
+      <div class="field"><label for="outcome" class="small muted">${K.t("លទ្ធផលសាកល្បង (សម្រាប់អ្នកអភិវឌ្ឍ)","Test outcome (for developers)")}</label>
+        <select id="outcome" class="input"><option value="success" ${outcome==="success"?"selected":""}>${K.t("ជោគជ័យ","Success")}</option><option value="failed" ${outcome==="failed"?"selected":""}>${K.t("បរាជ័យ","Failed")}</option></select></div>
+    </section>
+    <div class="stack" style="gap:10px">
+      <button class="btn btn--gold btn--lg" type="button" id="pay">${K.t("បង់ប្រាក់សាកល្បង","Pay (test)")} $${p.price}</button>
+      <button class="btn btn--ghost" type="button" data-v="cancelled">${K.t("បោះបង់","Cancel")}</button>
+    </div>
+  </div>`;
+  app.querySelectorAll("[data-pkg]").forEach(b=>b.onclick=()=>{ K.update(s=>s.pkg=b.dataset.pkg); render(); });
+  app.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{ method=b.dataset.m; render(); });
+  document.getElementById("outcome").onchange = e => outcome = e.target.value;
+  document.getElementById("pay").onclick = ()=>{
+    lastPkg = pkg; view = "processing"; render(); window.scrollTo({top:0});
+    setTimeout(()=>{
+      if(outcome==="success"){
+        order = "KT-ORD-" + Math.random().toString(36).slice(2,8).toUpperCase();
+        K.update(s=>{ s.paid = (pkg==="B"||s.paid==="B") ? "B" : "A"; s.order = order; });
+        view = "success";
+      } else view = "failed";
+      render();
+    }, 1600);
+  };
+  bindV();
+}
+function bindV(){ app.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{ view=b.dataset.v; render(); window.scrollTo({top:0}); }); }
+document.addEventListener("DOMContentLoaded", render);
+document.addEventListener("kite:lang", render);
+})();
+</script>
+</body>
+</html>

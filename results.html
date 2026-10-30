@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KITE · Results</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Moul&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="kite.css">
+<style>
+.rwrap{max-width:860px;margin:0 auto;padding-block:32px 40px}
+.pass .mname{font-size:1.3rem}
+.pass__stub{align-items:flex-start}
+.unlock{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.unlock{grid-template-columns:1fr}}
+.unlock .panel{display:flex;flex-direction:column;gap:10px}
+.typechip{font-family:var(--f-mono);font-weight:600;letter-spacing:.2em;background:var(--board);color:var(--board-fg);padding:4px 10px;border-radius:6px}
+.words{display:flex;flex-wrap:wrap;gap:8px}
+.words span{padding:4px 12px;border-radius:999px;background:var(--sky-soft);font-weight:500}
+textarea.copybox{width:100%;min-height:90px;font:inherit;border:2px solid var(--line);border-radius:12px;padding:10px;background:var(--card);color:var(--ink)}
+</style>
+</head>
+<body data-page="results">
+<div id="kite-header"></div>
+<main class="wrap"><div class="rwrap" id="app"></div></main>
+<div id="kite-footer"></div>
+<script src="kite-data.js"></script>
+<script src="kite.js"></script>
+<script>
+(function(){
+const K = window.KITE, D = window.KITE_DATA, app = document.getElementById("app");
+
+function bars(parts){
+  return `<div class="bars">${["job","interest","pers","strength"].map(k=>`<div class="bar"><span>${K.t(K.PARTLABEL[k])}</span><div class="bar__track"><div class="bar__fill" style="width:${parts[k]}%"></div></div><span class="bar__val">${K.n(parts[k])}%</span></div>`).join("")}</div>`;
+}
+
+function render(){
+  const demo = K.isDemo(), S = K.state();
+  if(!demo && !S.done){
+    app.innerHTML = `<div class="panel stack" style="text-align:center;align-items:center;padding-block:40px">
+      <span style="font-size:2.6rem" aria-hidden="true">🛫</span>
+      <h1 class="display">${K.t("មិនទាន់មានលទ្ធផលនៅឡើយ","No results yet")}</h1>
+      <p class="muted" style="max-width:46ch">${K.t("បញ្ចប់តេស្តដើម្បីមើលភាគរយភាពសាកសមរបស់អ្នក ឬមើលលទ្ធផលគំរូជាមុនសិន។","Finish the test to see your % matches, or look at a sample result first.")}</p>
+      <div class="row" style="justify-content:center"><a class="btn btn--gold btn--lg" href="assessment.html">${S.started?K.t("បន្តតេស្ត","Continue the test"):K.t("ចាប់ផ្ដើមតេស្ត","Start the test")}</a><button class="btn" type="button" id="seeDemo">${K.t("មើលលទ្ធផលគំរូ","See a sample result")}</button></div>
+    </div>`;
+    document.getElementById("seeDemo").onclick = ()=>{ K.setDemo(true); render(); };
+    return;
+  }
+  const R = K.score(S), P = R.profile;
+  const anyUnlocked = [1,2,3].some(r=>K.unlocked(S,r));
+  const passes = R.top.map((x,i)=>{
+    const rank = i+1, open = K.unlocked(S, rank);
+    return `<article class="pass ${rank===1?"pass--gold":""}" aria-label="${K.t("ភាពសាកសមលេខ","Match")} ${rank}">
+      <div class="pass__main">
+        <div class="pass__band"><span>${K.t("ភាពសាកសមលេខ","Match #")}${K.n(rank)}</span><span>${S.id}</span></div>
+        ${open
+          ? `<h2 class="mname">${K.t(x.m)}</h2>`
+          : `<div><h2 class="mname locked" aria-hidden="true">${K.t("ជំនាញដែលបានលាក់","Hidden major name")}</h2><span class="lockchip small">🔒 ${K.t("ចាក់សោ — ដោះសោដើម្បីមើលឈ្មោះ","Locked — unlock to see the name")}</span></div>`}
+        ${bars(x.parts)}
+      </div>
+      <div class="pass__stub">
+        <span class="label">${K.t("សរុប","Overall")}</span>
+        ${K.flap(x.pct)}
+        ${open?`<span class="tag tag--ok">${K.t("បានដោះសោ","Unlocked")}</span>`:`<span class="tag">${rank===3?K.t("កញ្ចប់ A ឬ B","Package A or B"):K.t("កញ្ចប់ B","Package B")}</span>`}
+      </div>
+    </article>`;
+  }).join("");
+
+  // admission note
+  const track = S.track;
+  const needSci = R.top.filter(x=>x.m.track==="sci");
+  let admit;
+  if(track==="sci") admit = K.t("អ្នករៀនថ្នាក់វិទ្យាសាស្ត្រ ដូច្នេះអ្នកអាចដាក់ពាក្យចូលជំនាញភាគច្រើនក្នុងបញ្ជីនេះ។ សាកលវិទ្យាល័យខ្លះនៅតែមានប្រឡងចូល។","You are in the Science track, so you can apply to most majors on this list. Some universities still have an entrance exam.");
+  else if(needSci.length) admit = K.t(`ជំនាញ ${K.n(needSci.length)} ក្នុងចំណោមជំនាញកំពូលរបស់អ្នក ជាធម្មតាតម្រូវឱ្យមានបាក់ឌុបថ្នាក់វិទ្យាសាស្ត្រ។ សូមសួរសាកលវិទ្យាល័យ ព្រោះកន្លែងខ្លះមានឆ្នាំសិក្សាមូលដ្ឋាន ឬលក្ខខណ្ឌផ្សេង។`,`${needSci.length} of your top majors usually require the Science track for BacII. Ask the university: some offer a foundation year or other routes.`);
+  else admit = K.t("ជំនាញកំពូលរបស់អ្នក ជាធម្មតាទទួលសិស្សពីថ្នាក់ទាំងពីរ។ សូមពិនិត្យលក្ខខណ្ឌចូលរៀនរបស់សាកលវិទ្យាល័យនីមួយៗ។","Your top majors usually accept students from either track. Check each university's entry requirements.");
+
+  const paid = S.paid;
+  const unlockBlock = (demo || paid==="B") ? "" : `<section class="stack" aria-labelledby="unl">
+    <h2 id="unl">${K.t("ដោះសោលទ្ធផលពេញលេញ","Unlock your full results")}</h2>
+    <div class="unlock">
+      ${paid==="A"?"":`<div class="panel panel--flat"><span class="label">${K.t("កញ្ចប់ A","Package A")}</span><span class="mono" style="font-size:1.6rem;font-weight:600">$1.00</span><p class="small muted">${K.t("ដោះសោជំនាញលេខ ៣ និងព័ត៌មានលម្អិត","Unlocks major #3 and its details")}</p><button class="btn" type="button" data-pkg="A">${K.t("ជ្រើសកញ្ចប់ A","Choose Package A")}</button></div>`}
+      <div class="panel" style="outline:3px solid var(--gold);outline-offset:-3px"><span class="row" style="justify-content:space-between"><span class="label">${K.t("កញ្ចប់ B","Package B")}</span><span class="tag tag--gold">${K.t("ណែនាំ","Recommended")}</span></span><span class="mono" style="font-size:1.6rem;font-weight:600">$2.50</span><p class="small muted">${K.t("ដោះសោជំនាញទាំង ៣ និងព័ត៌មានលម្អិត","Unlocks all 3 majors and their details")}</p><button class="btn btn--gold" type="button" data-pkg="B">${K.t("ជ្រើសកញ្ចប់ B","Choose Package B")}</button></div>
+    </div>
+    <p class="banner small">${K.t("របៀបសាកល្បង — មិនមានការកាត់ប្រាក់ពិតប្រាកដទេ។","Test mode — no real money is collected.")}</p>
+  </section>`;
+
+  app.innerHTML = `<div class="stack-lg">
+    ${demo?`<div class="banner banner--info" style="justify-content:space-between;flex-wrap:wrap"><span>${K.t("នេះជាលទ្ធផលគំរូរបស់សិស្សប្រឌិតម្នាក់ឈ្មោះ «ដារា»។ ទិន្នន័យទាំងអស់ជាការប្រឌិត។","This is a sample result for a fictional student, “Dara”. All data is made up.")}</span><button class="btn btn--sm" type="button" id="exitDemo">${K.t("ចេញពីគំរូ","Exit sample")}</button></div>`:""}
+    <div class="stack" style="gap:8px">
+      <span class="label">${K.t("ផ្ទាំងព័ត៌មានការហោះហើរ","Departures board")}</span>
+      <h1 class="display">${K.t("ជំនាញដែលសាកសមបំផុតរបស់អ្នក","Your top matches")}</h1>
+      <p class="muted">${K.t("ទាំងនេះជាភាគរយភាពសាកសម មិនមែន «ជំនាញរបស់អ្នក» ទេ។ ប្រើវាដើម្បីចាប់ផ្ដើមស្វែងយល់។","These are % matches, not “your major”. Use them as a starting point to explore.")}</p>
+    </div>
+    <div class="stack" style="gap:22px">${passes}</div>
+    ${anyUnlocked?`<a class="btn btn--ink btn--lg" href="report.html">${K.t("បើករបាយការណ៍ពេញលេញ","Open my full report")} →</a>`:""}
+
+    <section class="panel stack" aria-labelledby="prof">
+      <h2 id="prof">${K.t("ប្រវត្តិរូបរបស់អ្នក ជាពាក្យសាមញ្ញ","Your profile in plain words")}</h2>
+      <div class="stack" style="gap:6px"><span class="label">${K.t("ចំណាប់អារម្មណ៍","Interests")}</span><p>${K.interestSentence(P)}</p></div>
+      <div class="stack" style="gap:6px"><span class="label">${K.t("បុគ្គលិកលក្ខណៈ","Personality")}</span>
+        <div class="row"><span class="typechip">${P.type}</span><div class="words">${K.persWords(P).map(w=>`<span>${w}</span>`).join("")}</div></div>
+        ${S.cKnown===true?`<p class="small muted">${K.t("ផ្អែកលើប្រភេទដែលអ្នកបានវាយបញ្ចូល។","Based on the type you entered.")}</p>`:""}
+      </div>
+      <div class="stack" style="gap:6px"><span class="label">${K.t("ការងារអនាគត","Future jobs")}</span><p>${K.taskSentence(P)}</p></div>
+    </section>
+
+    ${unlockBlock}
+
+    <section class="banner banner--info" style="flex-direction:column;gap:6px" aria-labelledby="adm">
+      <b id="adm">${K.t("កំណត់សម្គាល់ពីការចូលរៀន","Admission note")} · ${K.t(D.TRACKS[track]||D.TRACKS.unsure)}</b>
+      <span>${admit}</span>
+    </section>
+
+    <section class="stack" style="gap:10px">
+      <div class="row">
+        <a class="btn" href="assessment.html" id="retake">${K.t("ធ្វើតេស្តម្ដងទៀត","Retake test")}</a>
+        <button class="btn" type="button" id="share">${K.t("ចែករំលែកលទ្ធផល","Share result")}</button>
+      </div>
+      <textarea class="copybox" id="sharebox" hidden readonly aria-label="Share text"></textarea>
+      <p class="small muted">${K.t("ការចែករំលែកមិនរួមបញ្ចូលព័ត៌មានផ្ទាល់ខ្លួន ឬលេខសម្គាល់អ្នកទស្សនាឡើយ។","Sharing never includes personal info or your visitor ID.")}</p>
+      <p class="small muted">${K.t("លេខសម្គាល់អ្នកទស្សនា (សម្រាប់ស្នើលុបទិន្នន័យ): ","Your visitor ID (for deletion requests): ")}<span class="mono" style="user-select:all">${S.id}</span> · <a href="privacy.html#delete">${K.t("របៀបលុបទិន្នន័យ","How to delete data")}</a></p>
+    </section>
+  </div>`;
+
+  const ex = document.getElementById("exitDemo"); if(ex) ex.onclick = ()=>{ K.setDemo(false); render(); };
+  app.querySelectorAll("[data-pkg]").forEach(b=>b.onclick=()=>{ K.update(s=>s.pkg=b.dataset.pkg); location.href="checkout.html"; });
+  document.getElementById("retake").onclick = e => { if(demo){ K.setDemo(false); } };
+  document.getElementById("share").onclick = ()=>{
+    const lines = R.top.map((x,i)=> `${i+1}. ${K.unlocked(S,i+1)?K.t(x.m):"🔒"} — ${x.pct}%`);
+    const txt = K.t("ភាពសាកសមកំពូលរបស់ខ្ញុំនៅលើ KITE ✈️","My top KITE matches ✈️") + "\n" + lines.join("\n") + "\n" + K.t("សាកល្បងតេស្តឥតគិតថ្លៃនៅ KITE","Try the free test on KITE");
+    K.copy(txt, document.getElementById("sharebox"));
+  };
+}
+document.addEventListener("DOMContentLoaded", render);
+document.addEventListener("kite:lang", render);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KITE · Assessment</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Moul&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="kite.css">
+<style>
+.qwrap{max-width:680px;margin:0 auto;padding-block:28px 48px}
+.qhead{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.qtext{font-size:clamp(1.25rem,3.6vw,1.6rem);font-weight:600;line-height:1.6}
+html[lang="en"] .qtext{line-height:1.35}
+.qnav{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.qnav .btn{width:100%}
+.parts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.parts div{padding:10px;border-radius:10px;background:var(--card);border:1px solid var(--line);text-align:center;font-size:.85rem}
+.parts b{display:block;font-family:var(--f-mono);font-size:1.1rem;color:var(--sky)}
+@media (max-width:480px){.parts{grid-template-columns:repeat(2,1fr)}}
+.big-ico{font-size:3rem;line-height:1}
+.typebox{font-family:var(--f-mono);font-size:1.6rem;letter-spacing:.3em;text-transform:uppercase;text-align:center;max-width:260px}
+.err{color:var(--bad);font-weight:600}
+.savenote{font-size:.875rem;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body data-page="assessment">
+<div id="kite-header"></div>
+<main class="wrap"><div class="qwrap" id="app" aria-live="polite"></div></main>
+<div id="kite-footer"></div>
+<script src="kite-data.js"></script>
+<script src="kite.js"></script>
+<script>
+(function(){
+const K = window.KITE, D = window.KITE_DATA, app = document.getElementById("app");
+let S, SEQ;
+const NEXT_PART = {A:"B",B:"C",C:"D"};
+
+function build(s){
+  const q = [];
+  D.JOBS.forEach(x=>q.push({type:"q",part:"A",item:x}));
+  q.push({type:"break",done:"A"});
+  D.ACTS.forEach(x=>q.push({type:"q",part:"B",item:x}));
+  q.push({type:"break",done:"B"});
+  q.push({type:"choiceC"});
+  if(s.cKnown!==true) D.PERS.forEach(x=>q.push({type:"q",part:"C",item:x}));
+  q.push({type:"break",done:"C"});
+  D.SKILLS.forEach(x=>q.push({type:"q",part:"D",item:x}));
+  q.push({type:"finish"});
+  return q;
+}
+const total = () => SEQ.filter(x=>x.type==="q").length;
+const numberOf = i => SEQ.slice(0,i+1).filter(x=>x.type==="q").length;
+const answered = () => SEQ.filter(x=>x.type==="q" && S.ans[x.item.id]!==undefined).length;
+
+function saveNote(){
+  const c = K.consent();
+  return `<p class="savenote"><span>${c==="allow"
+    ? K.t("💾 ចម្លើយត្រូវបានរក្សាទុកដោយស្វ័យប្រវត្តិនៅលើឧបករណ៍នេះ។ អ្នកអាចបិទ ហើយបន្តពេលក្រោយ។","💾 Answers save automatically on this device. You can close this page and continue later.")
+    : K.t("⚠️ ខូគីត្រូវបានបិទ ដូច្នេះចម្លើយនឹងបាត់ពេលអ្នកបិទផ្ទាំងនេះ។","⚠️ Cookies are off, so your answers clear when you close this tab.")}</span>
+    ${c!=="allow"?`<button class="linkbtn" type="button" data-act="cookie">${K.t("ប្ដូរការកំណត់ខូគី","Change cookie settings")}</button>`:""}</p>`;
+}
+
+function render(){
+  S = K.load(); SEQ = build(S);
+  if(S.pos >= SEQ.length) S.pos = SEQ.length-1;
+  if(!S.started || S.pos < 0) return renderStart();
+  const step = SEQ[S.pos];
+  if(step.type==="q") renderQ(step);
+  else if(step.type==="break") renderBreak(step);
+  else if(step.type==="choiceC") renderChoiceC();
+  else renderFinish();
+  bind();
+  const h = app.querySelector("h1,h2"); if(h){ h.setAttribute("tabindex","-1"); }
+}
+
+function renderStart(){
+  const inProgress = S.started && !S.done && answered()>0;
+  const tracks = Object.entries(D.TRACKS).map(([k,v])=>`<button type="button" class="choice" role="radio" aria-checked="${S.track===k}" data-track="${k}"><span class="choice__key">${S.track===k?"✓":""}</span>${K.t(v)}</button>`).join("");
+  app.innerHTML = `<div class="stack-lg">
+    <div class="stack" style="gap:10px">
+      <span class="label">${K.t("ការត្រួតពិនិត្យមុនឡើងយន្តហោះ","Pre-flight check")}</span>
+      <h1 class="display">${S.done?K.t("អ្នកបានបញ្ចប់តេស្តរួចហើយ","You've finished the test"):K.t("មុនពេលចាប់ផ្ដើម","Before you start")}</h1>
+    </div>
+    <div class="parts">
+      <div><b>A</b>${K.t(D.PARTS.A)}</div><div><b>B</b>${K.t(D.PARTS.B)}</div><div><b>C</b>${K.t(D.PARTS.C)}</div><div><b>D</b>${K.t(D.PARTS.D)}</div>
+    </div>
+    <ul class="prose" style="padding-left:1.2em;margin:0">
+      <li>${K.t("ផ្នែក ៤ សំណួរខ្លីៗរហូតដល់ ៧០ ប្រហែល ១៥–២០ នាទី។","4 parts, up to 70 short questions, about 15–20 minutes.")}</li>
+      <li>${K.t("ឆ្លើយដោយស្មោះត្រង់ តាមអ្វីដែលអ្នកពិតជាគិត មិនមែនអ្វីដែលអ្នកដទៃចង់ឱ្យអ្នកក្លាយជា។","Answer honestly, with what you really think, not what others expect of you.")}</li>
+      <li>${K.t("គ្មានចម្លើយត្រូវ ឬខុសទេ។","There are no right or wrong answers.")}</li>
+      <li>${K.t("ចម្លើយត្រូវបានរក្សាទុក លុះត្រាតែអ្នកអនុញ្ញាតខូគី។","Answers are saved only if you allow cookies.")}</li>
+    </ul>
+    <div class="stack" style="gap:10px">
+      <h2 style="font-size:1.1rem">${K.t("ថ្នាក់ទី ១២ របស់អ្នកជាថ្នាក់អ្វី?","Which grade 12 track are you in?")}</h2>
+      <p class="small muted">${K.t("ប្រើសម្រាប់កំណត់សម្គាល់ពីលក្ខខណ្ឌចូលរៀនប៉ុណ្ណោះ។","Used only for admission notes on your results.")}</p>
+      <div class="choices" role="radiogroup">${tracks}</div>
+    </div>
+    ${saveNote()}
+    <div class="stack" style="gap:10px">
+      ${S.done
+        ? `<a class="btn btn--gold btn--lg" href="results.html">${K.t("មើលលទ្ធផលរបស់ខ្ញុំ","See my results")}</a><button class="btn" type="button" data-act="restart">${K.t("ធ្វើតេស្តម្ដងទៀត","Retake the test")}</button>`
+        : `<button class="btn btn--gold btn--lg" type="button" data-act="start" ${S.track?"":"disabled"}>${inProgress?K.t("បន្តពីកន្លែងដែលអ្នកបានឈប់","Continue where you left off"):K.t("ចាប់ផ្ដើម","Start")} ✈</button>
+           ${S.track?"":`<p class="small muted">${K.t("សូមជ្រើសថ្នាក់របស់អ្នកជាមុនសិន។","Choose your track first.")}</p>`}
+           ${inProgress?`<button class="btn btn--ghost" type="button" data-act="restart">${K.t("ចាប់ផ្ដើមសាជាថ្មី","Start over")}</button>`:""}`}
+      <div id="confirm" hidden class="banner banner--bad" style="flex-direction:column">
+        <span>${K.t("ចម្លើយ និងលទ្ធផលបច្ចុប្បន្នរបស់អ្នកនឹងត្រូវលុប។","Your current answers and results will be cleared.")}</span>
+        <div class="row"><button class="btn btn--ink btn--sm" type="button" data-act="restart-yes">${K.t("បាទ/ចាស លុប ហើយចាប់ផ្ដើមថ្មី","Yes, clear and start again")}</button><button class="btn btn--sm" type="button" data-act="restart-no">${K.t("បោះបង់","Cancel")}</button></div>
+      </div>
+    </div>
+  </div>`;
+  bind();
+}
+
+function header(step){
+  const n = numberOf(S.pos), t = total();
+  return `<div class="stack" style="gap:10px">
+    <div class="qhead"><span class="label">${K.t("ផ្នែក","Part")} ${step.part} · ${K.t(D.PARTS[step.part])}</span>
+    <span class="mono small">${K.t("សំណួរ","Question")} ${K.n(n)} / ${K.n(t)}</span></div>
+    <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}"><div class="progress__fill" style="width:${(n-1)/t*100}%"></div></div>
+  </div>`;
+}
+
+function renderQ(step){
+  const it = step.item, cur = S.ans[it.id];
+  let opts, stem, text;
+  if(step.part==="C"){
+    stem = K.t(D.PARTS.C.stem); text = K.t(it);
+    opts = [it.a,it.b].map((o,i)=>`<button type="button" class="choice" aria-pressed="${cur===i}" data-ans="${i}"><span class="choice__key">${i?"B":"A"}</span><span>${K.t(o)}</span></button>`).join("");
+  } else {
+    stem = K.t(D.PARTS[step.part].stem); text = K.t(it);
+    opts = D.SCALE[D.PARTS[step.part].scale].map((o,i)=>`<button type="button" class="choice" aria-pressed="${cur===i}" data-ans="${i}"><span class="choice__key">${K.n(i+1)}</span><span>${K.t(o)}</span></button>`).join("");
+  }
+  app.innerHTML = `<div class="stack-lg">${header(step)}
+    <div class="stack" style="gap:6px"><p class="muted">${stem}</p><h1 class="qtext">${text}</h1></div>
+    <div class="choices" role="group" aria-label="${K.esc(stem)}">${opts}</div>
+    <div class="qnav"><button class="btn" type="button" data-act="back">← ${K.t("ថយក្រោយ","Back")}</button><button class="btn btn--ink" type="button" data-act="next" ${cur===undefined?"disabled":""}>${K.t("បន្ទាប់","Next")} →</button></div>
+    ${saveNote()}
+  </div>`;
+}
+
+function renderBreak(step){
+  const nxt = NEXT_PART[step.done];
+  app.innerHTML = `<div class="stack-lg" style="text-align:center;align-items:center">
+    <span class="big-ico" aria-hidden="true">✈️</span>
+    <h1 class="display">${K.t("ផ្នែក","Part")} ${step.done} ${K.t("រួចរាល់!","done!")}</h1>
+    <p class="muted">${K.t("បន្ទាប់: ","Next: ")}<b>${K.t("ផ្នែក","Part")} ${nxt} · ${K.t(D.PARTS[nxt])}</b></p>
+    <div class="progress" style="width:100%"><div class="progress__fill" style="width:${answered()/total()*100}%"></div></div>
+    <div class="qnav" style="width:100%"><button class="btn" type="button" data-act="back">← ${K.t("ថយក្រោយ","Back")}</button><button class="btn btn--gold" type="button" data-act="next">${K.t("បន្តទៅមុខ","Continue")} →</button></div>
+  </div>`;
+}
+
+function renderChoiceC(){
+  const known = S.cKnown;
+  app.innerHTML = `<div class="stack-lg">
+    <div class="stack" style="gap:10px"><span class="label">${K.t("ផ្នែក","Part")} C · ${K.t(D.PARTS.C)}</span>
+    <h1 class="qtext">${K.t("តើអ្នកដឹងប្រភេទបុគ្គលិកលក្ខណៈ ៤ អក្សររបស់អ្នកទេ?","Do you know your 4-letter personality type?")}</h1>
+    <p class="muted">${K.t("ឧទាហរណ៍ INTP ឬ ESFJ ពីតេស្តផ្សេងទៀតដែលអ្នកធ្លាប់ធ្វើ។","For example INTP or ESFJ, from another test you've taken.")}</p></div>
+    <div class="choices">
+      <button type="button" class="choice" aria-pressed="${known===true}" data-known="1"><span class="choice__key">✓</span>${K.t("ដឹង — ខ្ញុំនឹងវាយបញ្ចូល","Yes — I'll type it in")}</button>
+      <button type="button" class="choice" aria-pressed="${known===false}" data-known="0"><span class="choice__key">?</span>${K.t("មិនដឹង — ធ្វើតេស្តខ្លី ១២ សំណួរ","No — take a short 12-question quiz")}</button>
+    </div>
+    <div class="field" id="typefield" ${known===true?"":"hidden"} style="align-items:center">
+      <label for="typein">${K.t("វាយប្រភេទ ៤ អក្សររបស់អ្នក","Type your 4 letters")}</label>
+      <input id="typein" class="input typebox" maxlength="6" autocomplete="off" value="${K.esc(S.cType||"")}" placeholder="INTP">
+      <p class="small muted">${K.t("អក្សរទី១ E/I · ទី២ S/N · ទី៣ T/F · ទី៤ J/P","1st E/I · 2nd S/N · 3rd T/F · 4th J/P")}</p>
+      <p class="err" id="typeerr" hidden>${K.t("ប្រភេទនេះមិនត្រឹមត្រូវ។ សូមពិនិត្យអក្សរនីមួយៗតាមគំរូខាងលើ។","That type isn't valid. Check each letter against the pattern above.")}</p>
+    </div>
+    <div class="qnav"><button class="btn" type="button" data-act="back">← ${K.t("ថយក្រោយ","Back")}</button><button class="btn btn--ink" type="button" data-act="next" ${known===null?"disabled":""}>${K.t("បន្ទាប់","Next")} →</button></div>
+  </div>`;
+}
+
+function renderFinish(){
+  const missing = total() - answered();
+  app.innerHTML = `<div class="stack-lg" style="text-align:center;align-items:center">
+    <span class="big-ico" aria-hidden="true">🛬</span>
+    <h1 class="display">${K.t("អ្នកបានមកដល់ហើយ!","You've landed!")}</h1>
+    <p class="muted" style="max-width:46ch">${K.t("អរគុណសម្រាប់ការឆ្លើយដោយស្មោះត្រង់។ លទ្ធផលរបស់អ្នករួចរាល់ហើយ។","Thanks for answering honestly. Your results are ready.")}</p>
+    ${missing>0?`<p class="banner">${K.t(`នៅមានសំណួរ ${K.n(missing)} ដែលមិនទាន់ឆ្លើយ។ សំណួរទាំងនោះនឹងរាប់ជា «ធម្មតា»។`,`${missing} questions are unanswered. They will count as neutral.`)}</p>`:""}
+    <button class="btn btn--gold btn--lg" type="button" data-act="finish">${K.t("មើលលទ្ធផលរបស់ខ្ញុំ","See my results")} →</button>
+    <button class="btn btn--ghost" type="button" data-act="back">← ${K.t("ពិនិត្យចម្លើយឡើងវិញ","Review answers")}</button>
+  </div>`;
+}
+
+function go(delta){
+  K.update(s=>{ s.pos = Math.max(-1, s.pos + delta); if(s.pos<0) s.started = null; });
+  render(); window.scrollTo({top:0});
+  const h = app.querySelector("h1"); if(h) h.focus({preventScroll:true});
+}
+function setAns(i){
+  const step = SEQ[S.pos]; if(!step || step.type!=="q") return;
+  K.update(s=>{ s.ans[step.item.id] = i; });
+  render();
+}
+
+function bind(){
+  app.querySelectorAll("[data-track]").forEach(b=>b.onclick=()=>{ K.update(s=>s.track=b.dataset.track); render(); });
+  app.querySelectorAll("[data-ans]").forEach(b=>b.onclick=()=>setAns(+b.dataset.ans));
+  app.querySelectorAll("[data-known]").forEach(b=>b.onclick=()=>{ K.update(s=>{ s.cKnown = b.dataset.known==="1"; }); render(); const ti=document.getElementById("typein"); if(ti && !ti.hidden) ti.focus(); });
+  const ti = document.getElementById("typein");
+  if(ti) ti.oninput = () => { document.getElementById("typeerr").hidden = true; };
+  app.querySelectorAll("[data-act]").forEach(b=>b.onclick=()=>{
+    const a = b.dataset.act;
+    if(a==="start"){ K.setDemo(false); K.update(s=>{ s.started = s.started || Date.now(); if(s.pos<0) s.pos=0; }); render(); }
+    else if(a==="back") go(-1);
+    else if(a==="next"){
+      const step = SEQ[S.pos];
+      if(step.type==="choiceC" && S.cKnown===true){
+        const v = (document.getElementById("typein").value||"").trim().toUpperCase().replace(/-[AT]$/,"");
+        if(!/^[EI][SN][TF][JP]$/.test(v)){ document.getElementById("typeerr").hidden=false; return; }
+        K.update(s=>s.cType=v);
+      }
+      go(1);
+    }
+    else if(a==="finish"){ K.update(s=>{ s.done = true; }); location.href = "results.html"; }
+    else if(a==="cookie") K.showCookie(true);
+    else if(a==="restart") document.getElementById("confirm").hidden = false;
+    else if(a==="restart-no") document.getElementById("confirm").hidden = true;
+    else if(a==="restart-yes"){ K.update(s=>{ s.ans={}; s.cKnown=null; s.cType=""; s.pos=0; s.done=false; s.paid=null; s.checks={}; s.started=null; }); render(); K.toast(K.t("បានលុបចម្លើយ","Answers cleared")); }
+  });
+}
+
+document.addEventListener("keydown", e=>{
+  if(e.target.matches("input,textarea,select") || e.metaKey || e.ctrlKey || e.altKey) return;
+  const step = SEQ && SEQ[S.pos]; if(!S.started || !step) return;
+  if(step.type==="q"){
+    const max = step.part==="C"?2:5;
+    let i = -1;
+    if(/^[1-5]$/.test(e.key)) i = +e.key-1;
+    if(step.part==="C" && /^[ab]$/i.test(e.key)) i = e.key.toLowerCase()==="a"?0:1;
+    if(i>=0 && i<max){ setAns(i); return; }
+  }
+  if(e.key==="Enter" && e.target.tagName!=="BUTTON" && e.target.tagName!=="A"){ const n = app.querySelector('[data-act="next"]:not([disabled]),[data-act="finish"]'); if(n){ e.preventDefault(); n.click(); } }
+});
+
+document.addEventListener("DOMContentLoaded", ()=>{ K.setDemo(false); render(); });
+document.addEventListener("kite:lang", render);
+document.addEventListener("kite:consent", render);
+})();
+</script>
+</body>
+</html>

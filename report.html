@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KITE · Full report</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Moul&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="kite.css">
+<style>
+.rwrap{max-width:920px;margin:0 auto;padding-block:32px 40px}
+.jump{display:flex;flex-wrap:wrap;gap:8px}
+.jump a{padding:6px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500}
+.major{display:flex;flex-direction:column;gap:22px;scroll-margin-top:90px}
+.major + .major{border-top:2px dashed var(--line);padding-top:40px}
+.sub{display:flex;flex-direction:column;gap:10px}
+.sub h3{display:flex;gap:10px;align-items:baseline}
+.sub h3 .label{color:var(--sky)}
+.bigbars .bar{grid-template-columns:minmax(96px,150px) 1fr 3.4em;font-size:1rem}
+.bigbars .bar__track{height:16px}
+.careers{display:flex;flex-wrap:wrap;gap:8px}
+.careers span{padding:6px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.reasons{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.reasons li{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--card);border-radius:10px;border:1px solid var(--line)}
+.reasons li::before{content:"✓";color:var(--ok);font-weight:700}
+.filters{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+@media (max-width:620px){.filters{grid-template-columns:1fr}}
+.uni{display:flex;flex-direction:column;gap:6px;padding:16px;background:var(--card);border-radius:12px;border:1px solid var(--line);min-width:0}
+.uni dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:.9rem}
+.uni dt{color:var(--muted)}
+.uni dd{margin:0;min-width:0}
+.cb{display:flex;align-items:center;gap:8px;min-height:48px}
+.cb input{width:20px;height:20px;accent-color:var(--sky)}
+</style>
+</head>
+<body data-page="report">
+<div id="kite-header"></div>
+<main class="wrap"><div class="rwrap" id="app"></div></main>
+<div id="kite-footer"></div>
+<script src="kite-data.js"></script>
+<script src="kite.js"></script>
+<script>
+(function(){
+const K = window.KITE, D = window.KITE_DATA, app = document.getElementById("app");
+const F = {}; // filters per major
+const STEPS = [
+  {id:"talk",km:"ពិភាក្សាលទ្ធផលនេះជាមួយគ្រួសារ ឬគ្រូរបស់អ្នក",en:"Talk these results through with your family or a teacher"},
+  {id:"site",km:"បើកគេហទំព័រផ្លូវការរបស់សាកលវិទ្យាល័យ ២ យ៉ាងតិច ហើយពិនិត្យថ្លៃសិក្សា",en:"Open the official site of at least 2 universities and check the fees"},
+  {id:"req",km:"កត់ត្រាលក្ខខណ្ឌចូលរៀន និងថ្ងៃផុតកំណត់ដាក់ពាក្យ",en:"Write down the entry requirements and application deadlines"},
+  {id:"talkstudent",km:"សួរនិស្សិតឆ្នាំទី១ ឬទី២ ដែលកំពុងរៀនជំនាញនេះ",en:"Ask a first- or second-year student who studies this major"},
+  {id:"sch",km:"ជ្រើសអាហារូបករណ៍មួយ ហើយរៀបចំឯកសារដាក់ពាក្យ",en:"Pick one scholarship and start gathering the documents"},
+  {id:"bac",km:"ផ្ដោតលើមុខវិជ្ជាដែលសំខាន់សម្រាប់ជំនាញនេះ សម្រាប់ប្រឡងបាក់ឌុប",en:"Focus on the BacII subjects that matter most for this major"}
+];
+const money = n => "$" + n.toLocaleString("en-US");
+
+function uniList(m){
+  const f = F[m.id] || (F[m.id] = {city:"all",max:"all",sch:false});
+  const list = D.UNIS.filter(u=>u.majors.includes(m.id))
+    .filter(u=>f.city==="all"||u.city===f.city)
+    .filter(u=>f.max==="all"||u.fee[0]<=+f.max)
+    .filter(u=>!f.sch||u.sch);
+  if(!list.length) return `<p class="banner banner--info">${K.t("គ្មានសាកលវិទ្យាល័យត្រូវនឹងតម្រងនេះទេ។ សូមដកតម្រងខ្លះចេញ។","No universities match these filters. Try removing one.")}</p>`;
+  return `<div class="grid g2">${list.map(u=>`<div class="uni">
+    <b>${K.t(u)}</b>
+    <dl>
+      <dt>${K.t("ទីក្រុង","City")}</dt><dd>${K.t(D.CITIES[u.city])}</dd>
+      <dt>${K.t("ថ្លៃសិក្សា","Tuition")}</dt><dd class="mono">≈ ${money(u.fee[0])}–${money(u.fee[1])} / ${K.t("ឆ្នាំ","year")}</dd>
+      <dt>${K.t("ភាសា","Language")}</dt><dd>${K.t(u.lang)}</dd>
+      <dt>${K.t("លក្ខខណ្ឌ","Entry")}</dt><dd>${K.t(u.req)}</dd>
+      <dt>${K.t("អាហារូបករណ៍","Scholarship")}</dt><dd>${u.sch?K.t("មាន","Available"):K.t("មិនមានព័ត៌មាន","No info")}</dd>
+    </dl>
+    <a href="${u.url}" target="_blank" rel="noopener">${K.t("គេហទំព័រផ្លូវការ","Official website")} ↗</a>
+  </div>`).join("")}</div>`;
+}
+
+function section(x, rank, S){
+  const m = x.m, f = F[m.id] || (F[m.id] = {city:"all",max:"all",sch:false});
+  const sch = D.SCHOLARSHIPS.filter(s=>s.majors==="all"||s.majors.includes(m.id));
+  const cities = [...new Set(D.UNIS.filter(u=>u.majors.includes(m.id)).map(u=>u.city))];
+  const reasons = x.reasons.length ? x.reasons.map(r=>`<li>${K.t(r)}</li>`).join("") : `<li>${K.t("ចម្លើយរបស់អ្នកមានតុល្យភាពល្អ ក្នុងគ្រប់ផ្នែកទាំង ៤ សម្រាប់ជំនាញនេះ។","Your answers line up evenly with this major across all 4 categories.")}</li>`;
+  const checks = (S.checks && S.checks[m.id]) || {};
+  return `<section class="major" id="m-${m.id}" aria-labelledby="h-${m.id}">
+    <div class="pass ${rank===1?"pass--gold":""}">
+      <div class="pass__main"><div class="pass__band"><span>${K.t("ភាពសាកសមលេខ","Match #")}${K.n(rank)}</span><span>${S.id}</span></div>
+      <h2 id="h-${m.id}" class="display">${K.t(m)}</h2></div>
+      <div class="pass__stub"><span class="label">${K.t("សរុប","Overall")}</span>${K.flap(x.pct,"flap--lg")}</div>
+    </div>
+
+    <div class="grid g2">
+      <div class="sub panel"><h3><span class="label">A</span>${K.t("ការបំបែកតាមផ្នែក","Breakdown")}</h3><div class="bars bigbars">${["job","interest","pers","strength"].map(k=>`<div class="bar"><span>${K.t(K.PARTLABEL[k])}</span><div class="bar__track"><div class="bar__fill" style="width:${x.parts[k]}%"></div></div><span class="bar__val">${K.n(x.parts[k])}%</span></div>`).join("")}</div>
+        <p class="small muted">${K.t("សរុប = ការងារ ៣០% · ចំណាប់អារម្មណ៍ ៣០% · ចំណុចខ្លាំង ២៥% · បុគ្គលិកលក្ខណៈ ១៥%","Overall = Job 30% · Interest 30% · Strength 25% · Personality 15%")}</p></div>
+      <div class="sub"><h3><span class="label">B</span>${K.t("ហេតុអ្វីបានជាសាកសម","Why it matched")}</h3><ul class="reasons">${reasons}</ul></div>
+    </div>
+
+    <div class="sub"><h3><span class="label">C</span>${K.t("ជំនាញនេះជាអ្វី","What this major is")}</h3><p class="prose">${K.t(m.d)} ${K.t(m.track==="sci"?"ជាធម្មតាទទួលសិស្សថ្នាក់វិទ្យាសាស្ត្រ។":"ជាធម្មតាទទួលសិស្សពីថ្នាក់ទាំងពីរ។", m.track==="sci"?"Usually takes Science-track students.":"Usually takes students from either track.")}</p></div>
+
+    <div class="sub"><h3><span class="label">D</span>${K.t("អាជីពទូទៅ","Typical careers")}</h3><div class="careers">${m.c.map(c=>`<span>${K.t(c)}</span>`).join("")}</div></div>
+
+    <div class="sub"><h3><span class="label">E</span>${K.t("សាកលវិទ្យាល័យដែលមានជំនាញនេះ","Universities offering it")}</h3>
+      <div class="filters">
+        <div class="field"><label class="small muted" for="c-${m.id}">${K.t("ទីក្រុង","City")}</label><select class="input" id="c-${m.id}" data-f="city" data-m="${m.id}"><option value="all">${K.t("ទាំងអស់","All")}</option>${cities.map(c=>`<option value="${c}" ${f.city===c?"selected":""}>${K.t(D.CITIES[c])}</option>`).join("")}</select></div>
+        <div class="field"><label class="small muted" for="t-${m.id}">${K.t("ថ្លៃសិក្សាអតិបរមា (ចាប់ពី)","Max tuition (starting from)")}</label><select class="input" id="t-${m.id}" data-f="max" data-m="${m.id}">${[["all",K.t("មិនកំណត់","Any")],["600","≤ $600"],["1000","≤ $1,000"],["2500","≤ $2,500"]].map(([v,l])=>`<option value="${v}" ${f.max===v?"selected":""}>${l}</option>`).join("")}</select></div>
+        <label class="cb"><input type="checkbox" id="s-${m.id}" data-f="sch" data-m="${m.id}" ${f.sch?"checked":""}>${K.t("មានអាហារូបករណ៍","Scholarship available")}</label>
+      </div>
+      <div id="u-${m.id}">${uniList(m)}</div>
+      <p class="banner small">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។ ពិនិត្យចុងក្រោយ: មិនទាន់ផ្ទៀងផ្ទាត់ (ទិន្នន័យគំរូសម្រាប់របៀបសាកល្បង)។","Info may change — check the official site. Last checked: not yet verified (sample data for test mode).")}</p>
+    </div>
+
+    <div class="sub"><h3><span class="label">F</span>${K.t("អាហារូបករណ៍","Scholarships")}</h3>
+      <div class="tablewrap"><table><thead><tr><th>${K.t("ឈ្មោះ","Name")}</th><th>${K.t("ថ្ងៃផុតកំណត់","Deadline")}</th><th>${K.t("តំណ","Link")}</th></tr></thead><tbody>
+      ${sch.map(s=>`<tr><td>${K.t(s)}</td><td>${K.t(s.when)}</td><td>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${K.t("បើក","Open")} ↗</a>`:K.t("មើលផ្នែក E","See section E")}</td></tr>`).join("")}
+      </tbody></table></div>
+    </div>
+
+    <div class="sub panel"><h3><span class="label">G</span>${K.t("ជំហានបន្ទាប់របស់អ្នក","Your next steps")}</h3>
+      <div>${STEPS.map(st=>`<label class="check"><input type="checkbox" data-check="${st.id}" data-m="${m.id}" ${checks[st.id]?"checked":""}><span>${K.t(st)}</span></label>`).join("")}</div>
+    </div>
+  </section>`;
+}
+
+function render(){
+  const demo = K.isDemo(), S = K.state();
+  if(!demo && !S.done){
+    app.innerHTML = `<div class="panel stack" style="text-align:center;align-items:center"><h1 class="display">${K.t("មិនទាន់មានរបាយការណ៍","No report yet")}</h1><p class="muted">${K.t("បញ្ចប់តេស្ត ហើយដោះសោលទ្ធផលរបស់អ្នក ដើម្បីមើលរបាយការណ៍ពេញលេញ។","Finish the test and unlock your results to see the full report.")}</p><a class="btn btn--gold" href="assessment.html">${K.t("ទៅកាន់តេស្ត","Go to the test")}</a></div>`;
+    return;
+  }
+  const R = K.score(S);
+  const open = R.top.map((x,i)=>({x,rank:i+1})).filter(o=>K.unlocked(S,o.rank));
+  if(!open.length){
+    app.innerHTML = `<div class="panel stack" style="text-align:center;align-items:center"><span style="font-size:2.4rem" aria-hidden="true">🔒</span><h1 class="display">${K.t("របាយការណ៍នៅតែចាក់សោ","Your report is still locked")}</h1><p class="muted">${K.t("ជ្រើសកញ្ចប់ A ឬ B ដើម្បីដោះសោ។","Choose Package A or B to unlock it.")}</p><a class="btn btn--gold" href="results.html">${K.t("ត្រឡប់ទៅលទ្ធផល","Back to results")}</a></div>`;
+    return;
+  }
+  app.innerHTML = `<div class="stack-lg">
+    ${demo?`<div class="banner banner--info">${K.t("របាយការណ៍គំរូ — សិស្សប្រឌិត «ដារា»។","Sample report — fictional student “Dara”.")}</div>`:""}
+    <div class="stack" style="gap:8px"><span class="label">${K.t("របាយការណ៍ពេញលេញ","Full report")} · ${S.id}</span>
+      <h1 class="display">${K.t("ផែនការហោះហើររបស់អ្នក","Your flight plan")}</h1>
+      ${open.length>1?`<nav class="jump" aria-label="Majors">${open.map(o=>`<a href="#m-${o.x.m.id}">${K.n(o.rank)}. ${K.t(o.x.m)}</a>`).join("")}</nav>`:""}
+      ${!demo && S.paid==="A"?`<p class="small muted">${K.t("កញ្ចប់ A បង្ហាញជំនាញលេខ ៣។","Package A shows your #3 major.")} <a href="checkout.html" id="upB">${K.t("ដំឡើងទៅកញ្ចប់ B ដើម្បីមើលទាំង ៣","Upgrade to Package B to see all 3")}</a></p>`:""}
+    </div>
+    ${open.map(o=>section(o.x,o.rank,S)).join("")}
+    <a class="btn" href="results.html">← ${K.t("ត្រឡប់ទៅលទ្ធផល","Back to results")}</a>
+  </div>`;
+  const up = document.getElementById("upB"); if(up) up.onclick = ()=>K.update(s=>s.pkg="B");
+  app.querySelectorAll("[data-f]").forEach(el=>el.onchange=()=>{
+    const f = F[el.dataset.m]; f[el.dataset.f] = el.type==="checkbox" ? el.checked : el.value;
+    const m = D.MAJORS.find(x=>x.id===el.dataset.m);
+    document.getElementById("u-"+m.id).innerHTML = uniList(m);
+  });
+  app.querySelectorAll("[data-check]").forEach(el=>el.onchange=()=>{
+    if(demo) return;
+    K.update(s=>{ s.checks = s.checks||{}; s.checks[el.dataset.m] = s.checks[el.dataset.m]||{}; s.checks[el.dataset.m][el.dataset.check] = el.checked; });
+  });
+}
+document.addEventListener("DOMContentLoaded", render);
+document.addEventListener("kite:lang", render);
+})();
+</script>
+</body>
+</html>
