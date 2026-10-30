@@ -1,0 +1,5 @@
+# Netlify settings. Only public/ goes online; it is rebuilt from the site files on every deploy.
+# archive/, docs/, tools/ and tests/ are never published.
+[build]
+  command = "node tools/build-public.js"
+  publish = "public"
