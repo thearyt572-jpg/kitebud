@@ -31,6 +31,8 @@
 .uni dd{margin:0;min-width:0}
 .uni__head{display:flex;gap:12px;align-items:center;min-width:0}
 .badge{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:var(--sky-soft);color:var(--ink);border:2px solid var(--sky);font-family:var(--f-mono);font-weight:600;font-size:.78rem;letter-spacing:.02em;line-height:1}
+.badge--long{font-size:.62rem;letter-spacing:0}
+.progs{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:2px}
 .badge img{width:100%;height:100%;object-fit:contain;background:var(--logo-bg)}
 .cb{display:flex;align-items:center;gap:8px;min-height:48px}
 .cb input{width:20px;height:20px;accent-color:var(--sky)}
@@ -64,25 +66,30 @@ const money = n => "$" + n.toLocaleString("en-US");
 const safeUrl = u => /^https?:\/\//i.test(u||"") ? u : null; // only real web links
 // a real logo only with the university's written permission and a plain file name in images/logos/; otherwise its initials
 const logoFile = u => u.logo_permission==="yes" && /^[\w-]+\.(png|jpe?g|svg|webp)$/i.test(u.logo||"") ? "images/logos/" + u.logo : null;
-const initials = u => ((u.en.match(/\(([^)]+)\)/) || [])[1] || u.id).toUpperCase(); // "Royal University of Phnom Penh (RUPP)" → RUPP
-const badge = u => `<span class="badge" aria-hidden="true">${logoFile(u) ? `<img src="${logoFile(u)}" alt="">` : K.esc(initials(u))}</span>`;
+const initials = u => u.short || ((u.en.match(/\(([^)]+)\)/) || [])[1] || u.id).toUpperCase(); // "RUPP", "CAMTECH", "NU"
+const badge = u => { const t = initials(u); return `<span class="badge${t.length>4?" badge--long":""}" aria-hidden="true">${logoFile(u) ? `<img src="${logoFile(u)}" alt="">` : K.esc(t)}</span>`; };
 const dateText = d => d ? K.n(d.split("-").reverse().join("/")) : K.t("មិនទាន់ពិនិត្យ","Not checked yet"); // "2026-10-30" → 30/10/2026
+// fee = [min, max] USD per year (js/universities.js), or null when the sheet gives no per-year price
+const perYear = (a, b) => `${money(a)}${b && b!==a ? "–" + money(b) : ""} / ${K.t("ឆ្នាំ","year")}`;
+const offers = (u, id) => u.programs.some(p=>p.majors.includes(id));
 
 function uniList(m){
   const f = F[m.id] || (F[m.id] = {max:"all",sch:false});
-  if(!D.UNIS.some(u=>u.majors.includes(m.id))) return `<p class="banner banner--info">${K.t("យើងកំពុងពិនិត្យបញ្ជីសាកលវិទ្យាល័យសម្រាប់ជំនាញនេះនៅឡើយ។","We're still checking the university list for this major.")}</p>`;
-  const list = D.UNIS.filter(u=>u.majors.includes(m.id))
-    .filter(u=>f.max==="all"||u.fee[0]<=+f.max)
-    .filter(u=>!f.sch||u.sch);
+  if(!D.UNIS.some(u=>offers(u, m.id))) return `<p class="banner banner--info">${K.t("យើងកំពុងពិនិត្យបញ្ជីសាកលវិទ្យាល័យសម្រាប់ជំនាញនេះនៅឡើយ។","We're still checking the university list for this major.")}</p>`;
+  const list = D.UNIS.filter(u=>offers(u, m.id)).map(u=>{
+      const progs = u.programs.filter(p=>p.majors.includes(m.id)), fees = progs.filter(p=>p.fee);
+      return {u, progs, min: fees.length ? Math.min(...fees.map(p=>p.fee[0])) : null, max: fees.length ? Math.max(...fees.map(p=>p.fee[1])) : null};
+    })
+    .filter(o=>f.max==="all"||(o.min!==null && o.min<=+f.max)) // a price we can't confirm can't pass a budget filter
+    .filter(o=>!f.sch||o.u.sch.length);
   if(!list.length) return `<p class="banner banner--info">${K.t("គ្មានសាកលវិទ្យាល័យត្រូវនឹងតម្រងនេះទេ។ សូមដកតម្រងខ្លះចេញ។","No universities match these filters. Try removing one.")}</p>`;
-  return `<div class="grid g2">${list.map(u=>`<div class="uni">
-    <div class="uni__head">${badge(u)}<b>${K.t(u)}</b></div>
+  return `<div class="grid g2">${list.map(({u,progs,min,max})=>`<div class="uni">
+    <div class="uni__head">${badge(u)}<b>${K.esc(K.t(u))}</b></div>
     <dl>
       <dt>${K.t("ទីក្រុង","City")}</dt><dd>${K.t(D.CITIES[u.city])}</dd>
-      <dt>${K.t("ថ្លៃសិក្សា","Tuition")}</dt><dd class="mono">≈ ${money(u.fee[0])}–${money(u.fee[1])} / ${K.t("ឆ្នាំ","year")}</dd>
-      <dt>${K.t("ភាសា","Language")}</dt><dd>${K.t(u.lang)}</dd>
-      <dt>${K.t("លក្ខខណ្ឌ","Entry")}</dt><dd>${K.t(u.req)}</dd>
-      <dt>${K.t("អាហារូបករណ៍","Scholarship")}</dt><dd>${u.sch?K.t("មាន","Available"):K.t("មិនមានព័ត៌មាន","No info")}</dd>
+      <dt>${K.t("កម្មវិធីសិក្សា","Programs")}</dt><dd><ul class="progs">${progs.map(p=>`<li>${K.esc(p.name)}${p.fee?` <span class="mono">· ${perYear(p.fee[0],p.fee[1])}</span>`:""}</li>`).join("")}</ul></dd>
+      <dt>${K.t("ថ្លៃសិក្សា","Tuition")}</dt><dd>${min!==null?`<span class="mono">≈ ${perYear(min,max)}</span>`:`<span class="muted">${K.t("មិនទាន់បញ្ជាក់","Not confirmed yet")}</span>`}</dd>
+      <dt>${K.t("អាហារូបករណ៍","Scholarship")}</dt><dd>${u.sch.length?K.esc(u.sch.join(" · ")):K.t("មិនមានព័ត៌មាន","No info")}</dd>
       <dt>${K.t("ពិនិត្យចុងក្រោយ","Date checked")}</dt><dd>${dateText(u.lastVerified)}</dd>
     </dl>
     ${safeUrl(u.url)?`<a href="${K.esc(safeUrl(u.url))}" target="_blank" rel="noopener">${K.t("គេហទំព័រផ្លូវការ","Official website")} ↗</a>`:""}
@@ -95,7 +102,7 @@ function section(x, rank, S){
   const reasons = x.reasons.length ? x.reasons.map(r=>`<li>${K.t(r)}</li>`).join("") : `<li>${K.t("ចម្លើយរបស់អ្នកមានតុល្យភាពល្អ ក្នុងគ្រប់ផ្នែកទាំង ៤ សម្រាប់ជំនាញនេះ។","Your answers line up evenly with this major across all 4 categories.")}</li>`;
   const db = x.dealBreakers.map(id=>K.t(D.Q.B3.items.find(i=>i.id===id)));
   const jobs = m.jobs.map(id=>D.Q.A.jobs.find(j=>j.id===id)).filter(Boolean);
-  const hasUnis = D.UNIS.some(u=>u.majors.includes(m.id));
+  const hasUnis = D.UNIS.some(u=>offers(u, m.id));
   const checks = (S.checks && S.checks[m.id]) || {};
   return `<section class="major" id="m-${m.id}" aria-labelledby="h-${m.id}">
     <div class="pass ${rank===1?"pass--gold":""}">
@@ -122,7 +129,7 @@ function section(x, rank, S){
         <label class="cb"><input type="checkbox" id="s-${m.id}" data-f="sch" data-m="${m.id}" ${f.sch?"checked":""}>${K.t("មានអាហារូបករណ៍","Scholarship available")}</label>
       </div>
       <div id="u-${m.id}">${uniList(m)}</div>
-      <p class="banner small">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។ (ទិន្នន័យគំរូសម្រាប់របៀបសាកល្បង)","Info may change — check the official site. (Sample data for test mode.)")}</p>
+      <p class="banner small">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។","Info may change — check the official site.")}</p>
       ${hasUnis?`<p class="small muted">${K.t("KITE មិនមានទំនាក់ទំនង ឬទទួលបានការគាំទ្រពីសាកលវិទ្យាល័យទាំងនេះទេ។ ព័ត៌មានយកចេញពីគេហទំព័រផ្លូវការរបស់ពួកគេ។","KITE is not affiliated with or endorsed by these universities. Information comes from their official websites.")}</p>`:""}
     </div>
 

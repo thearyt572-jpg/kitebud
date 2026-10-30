@@ -17,7 +17,7 @@ For each line: tick it if it is natural Khmer, or write a better version.
 | 5 | Report, each university (`report.html`) | ពិនិត្យចុងក្រោយ | Date checked | |
 | 6 | Report, each university (`report.html`) | មិនទាន់ពិនិត្យ | Not checked yet | |
 | 7 | Report, universities section (`report.html`) | បង្ហាញតែកម្មវិធីថ្នាក់បរិញ្ញាបត្រប៉ុណ្ណោះ។ | Bachelor's degree programs only. | |
-| 8 | Report, under the universities (`report.html`) | ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។ (ទិន្នន័យគំរូសម្រាប់របៀបសាកល្បង) | Info may change — check the official site. (Sample data for test mode.) | |
+| 8 | Report, under the universities (`report.html`) | ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។ | Info may change — check the official site. (The “sample data” part was removed when the real university data went in.) | |
 | 9 | Cookie banner on phones (`js/app.js`) | យើងរក្សាទុកចម្លើយរបស់អ្នកតែលើឧបករណ៍នេះ ដើម្បីឱ្យអ្នកបន្តពេលក្រោយបាន។ បើបដិសេធ ចម្លើយនឹងបាត់ពេលអ្នកបិទផ្ទាំងនេះ។ | We save your answers only on this device so you can continue later. If you decline, they clear when you close this tab. | |
 | 10 | Cookie banner on phones (`js/app.js`) | អានបន្ថែម | Read more | |
 | 11 | About → "Ideas we build on" (`about.html`) | សំណួរប្រចាំថ្ងៃសាមញ្ញៗ អំពីរបៀបដែលអ្នកចូលចិត្តប្រើថាមពល ទទួលគំនិត សម្រេចចិត្ត និងរៀបចំផែនការ។ ប្រសិនបើអ្នកដឹងប្រភេទបុគ្គលិកលក្ខណៈ ៤ អក្សររបស់អ្នកពីតេស្តផ្សេងរួចហើយ អ្នកអាចវាយបញ្ចូលវាជំនួសវិញ។ | Simple everyday questions about how you like to spend your energy, take in ideas, make decisions and plan. If you already know a 4-letter personality type from another test, you can type it in instead. (English approved.) | |
@@ -95,3 +95,5 @@ They come from `KITE.INTEREST_NAMES` in `js/scoring.js`. The hidden type names i
 | # | Where | Khmer now | Meaning in English | OK / better Khmer |
 |---|---|---|---|---|
 | 55 | Report, under the university list (`report.html`) | KITE មិនមានទំនាក់ទំនង ឬទទួលបានការគាំទ្រពីសាកលវិទ្យាល័យទាំងនេះទេ។ ព័ត៌មានយកចេញពីគេហទំព័រផ្លូវការរបស់ពួកគេ។ | KITE is not affiliated with or endorsed by these universities. Information comes from their official websites. | |
+| 56 | Report, each university (`report.html`) | កម្មវិធីសិក្សា | Programs | |
+| 57 | Report, each university, when the sheet gives no per-year price (`report.html`) | មិនទាន់បញ្ជាក់ | Not confirmed yet | |
