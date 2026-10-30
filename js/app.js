@@ -58,7 +58,9 @@ function applyStatic(root){
   const en = K.lang()==="en";
   (root||document).querySelectorAll("[data-en]").forEach(el=>{
     if(el.dataset.km===undefined) el.dataset.km = el.innerHTML;
-    el.innerHTML = en ? el.dataset.en : el.dataset.km;
+    // showcase mode (js/config.js) uses data-showcase-km / data-showcase-en when a text has them
+    const sc = K.SHOWCASE && el.dataset.showcaseEn!==undefined;
+    el.innerHTML = sc ? (en ? el.dataset.showcaseEn : el.dataset.showcaseKm) : (en ? el.dataset.en : el.dataset.km);
   });
   (root||document).querySelectorAll("[data-en-ph]").forEach(el=>{
     if(el.dataset.kmPh===undefined) el.dataset.kmPh = el.getAttribute("placeholder")||"";
@@ -178,8 +180,8 @@ K.showCookie = showCookie;
 K.PARTLABEL = {job:{km:"ការងារ",en:"Job"},interest:{km:"ចំណាប់អារម្មណ៍",en:"Interest"},pers:{km:"បុគ្គលិកលក្ខណៈ",en:"Personality"},strength:{km:"ចំណុចខ្លាំង",en:"Strength"}};
 K.NOINFO = {km:"ព័ត៌មានមិនគ្រប់",en:"Not enough info"}; // the owner's wording for a missing score
 
-// top interest types as names (never letters), e.g. "ស្រាវជ្រាវ · រៀបរយ · ជាក់ស្តែង"
-K.interestWords = P => P.code.map(t=>K.t(D.Q.RIASEC[t]));
+// top interest types as names (never letters), e.g. "Thinker · Organizer · Doer" (K.INTEREST_NAMES in js/scoring.js)
+K.interestWords = P => P.code.map(t=>K.t(K.INTEREST_NAMES[t]));
 // personality as words, one per dimension: the side the student leans to (50 or more = first side)
 K.persWords = P => P.dims ? D.Q.C.dimensions.map(d=>K.t(P.dims[d.id]>=50 ? d.high : d.low)) : null;
 // the student's Part A answer, in words

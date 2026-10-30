@@ -111,6 +111,12 @@ K.score = function(s){
 K._formula = {jobFit, riasec, interestFit, personality, persFit, skillScore, strengthFit};
 
 /* ---------- "Why it matched" (page text built from the parts above; it does not change any score) ---------- */
+// The interest type names students see, on every page (same words as the About page).
+// The hidden type names in js/questions.js (locked) are not shown.
+K.INTEREST_NAMES = {
+  R:{km:"អ្នកធ្វើ",en:"Doer"}, I:{km:"អ្នកគិត",en:"Thinker"}, A:{km:"អ្នកបង្កើត",en:"Creator"},
+  S:{km:"អ្នកជួយ",en:"Helper"}, E:{km:"អ្នកដឹកនាំ",en:"Persuader"}, C:{km:"អ្នករៀបចំ",en:"Organizer"}
+};
 function reasons(s, m, p, parts, P){
   const t = (km,en)=>({km,en}), out = [], a = s.a || {};
   if(parts.job===100 && a.mode==="job"){ const j = D.Q.A.jobs.find(x=>x.id===a.job);
@@ -118,7 +124,7 @@ function reasons(s, m, p, parts, P){
   if(parts.job===100 && a.mode==="field"){ const f = D.Q.A.fields.find(x=>x.id===a.field);
     out.push(t(`អ្នកបានជ្រើសវិស័យ «${f.km}» ដែលរួមមានជំនាញនេះ។`, `You chose the field “${f.en}”, which includes this major.`)); }
   const main = p.riasec[0];
-  if(P.riasec[main]!==null && P.riasec[main]>=.6){ const n = D.Q.RIASEC[main];
+  if(P.riasec[main]!==null && P.riasec[main]>=.6){ const n = K.INTEREST_NAMES[main];
     out.push(t(`អ្នកចូលចិត្តសកម្មភាពប្រភេទ «${n.km}» ដែលជាប្រភេទចំណាប់អារម្មណ៍សំខាន់របស់ជំនាញនេះ។`, `You enjoy “${n.en}” activities, this major's main interest type.`)); }
   if(has(parts.strength) && parts.strength>=75) out.push(t("និទ្ទេស និងការវាយតម្លៃខ្លួនឯងរបស់អ្នក ខ្លាំងលើជំនាញដែលជំនាញនេះត្រូវការ។","Your grades and self-ratings are strong in what this major needs."));
   if(has(parts.pers) && parts.pers>=80) out.push(t("ទំនោរបុគ្គលិកលក្ខណៈរបស់អ្នកសមនឹងជំនាញនេះ។","Your personality leanings fit this major."));

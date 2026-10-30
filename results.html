@@ -102,7 +102,7 @@ function render(){
       <div class="stack" style="gap:6px"><span class="label">${K.t("ចំណាប់អារម្មណ៍","Interests")}</span>
         <div class="words">${K.interestWords(P).map(w=>`<span>${w}</span>`).join("")}</div>
         <div class="bars">${"RIASEC".split("").map(t=>{ const v = P.riasec[t]===null ? null : Math.round(P.riasec[t]*100);
-          return `<div class="bar"><span>${K.t(D.Q.RIASEC[t])}</span><div class="bar__track"><div class="bar__fill" style="width:${v||0}%"></div></div><span class="bar__val">${v===null?"–":K.n(v)+"%"}</span></div>`; }).join("")}</div></div>
+          return `<div class="bar"><span>${K.t(K.INTEREST_NAMES[t])}</span><div class="bar__track"><div class="bar__fill" style="width:${v||0}%"></div></div><span class="bar__val">${v===null?"–":K.n(v)+"%"}</span></div>`; }).join("")}</div></div>
       <div class="stack" style="gap:6px"><span class="label">${K.t("បុគ្គលិកលក្ខណៈ","Personality")}</span>
         ${persWords?`<div class="words">${persWords.map(w=>`<span>${w}</span>`).join("")}</div>`:`<p class="muted">${K.t(K.NOINFO)}</p>`}
         ${typed?`<p class="small muted">${K.t("ផ្អែកលើប្រភេទដែលអ្នកបានវាយបញ្ចូល។","Based on the type you entered.")}</p>`:""}

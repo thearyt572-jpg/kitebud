@@ -73,3 +73,19 @@ Page text only. Every question, answer option and scale on the test page comes f
 | 44 | Checkout title (`checkout.html`) | ការបង់ប្រាក់នឹងមកដល់ឆាប់ៗ | Payment is coming soon | |
 | 45 | Checkout text (`checkout.html`) | នៅក្នុងកំណែបង្ហាញនេះ របាយការណ៍ពេញលេញឥតគិតថ្លៃ។ មិនមានការបង់ប្រាក់ទេ។ | In this showcase the full report is free. There is no payment. | |
 | 46 | FAQ, type question (`faq.html`) | …សូមជ្រើស «បាទ/ចាស ខ្ញុំដឹងពីបុគ្គលិកលក្ខណៈរបស់ខ្ញុំ» ហើយវាយបញ្ចូល… | …choose “Yes, I know my type” and type it in… (quotes the locked button text) | |
+| 47 | Home, pricing intro (`index.html`) | តេស្តគឺឥតគិតថ្លៃជានិច្ច។ បច្ចុប្បន្ននេះ របាយការណ៍ពេញលេញក៏ឥតគិតថ្លៃដែរ។ ការបង់ប្រាក់នឹងមកដល់ពេលក្រោយ។ | The test is always free. For now the full report is free too. Payment will come later. | |
+| 48 | Home and FAQ, “Is payment real?” answer (`index.html`, `faq.html`) | មិនទាន់ទេ។ បច្ចុប្បន្ននេះ របាយការណ៍ពេញលេញឥតគិតថ្លៃ។ ការបង់ប្រាក់នឹងមកដល់ពេលក្រោយ។ | Not yet. For now the full report is free. Payment will come later. | |
+
+## E. Interest type names (one set on every page)
+
+Shown on the About page, the results page (“Your profile in plain words”) and the report (“Why it matched”, line 29).
+They come from `KITE.INTEREST_NAMES` in `js/scoring.js`. The hidden type names in `js/questions.js` stay locked and are not shown.
+
+| # | Type | Khmer now | English | OK / better Khmer |
+|---|---|---|---|---|
+| 49 | R | អ្នកធ្វើ | Doer | |
+| 50 | I | អ្នកគិត | Thinker | |
+| 51 | A | អ្នកបង្កើត | Creator | |
+| 52 | S | អ្នកជួយ | Helper | |
+| 53 | E | អ្នកដឹកនាំ | Persuader | Khmer means “leader”, not “persuader”. Keep, or suggest better. |
+| 54 | C | អ្នករៀបចំ | Organizer | |

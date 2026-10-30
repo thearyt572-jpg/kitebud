@@ -120,7 +120,7 @@ function section(x, rank, S){
 
     <div class="sub"><h3><span class="label">E</span>${K.t("អាហារូបករណ៍","Scholarships")}</h3>
       <div class="tablewrap"><table><thead><tr><th>${K.t("ឈ្មោះ","Name")}</th><th>${K.t("ថ្ងៃផុតកំណត់","Deadline")}</th><th>${K.t("តំណ","Link")}</th></tr></thead><tbody>
-      ${sch.map(s=>`<tr><td>${K.t(s)}</td><td>${K.t(s.when)}</td><td>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${K.t("បើក","Open")} ↗</a>`:K.t("មើលផ្នែក D","See section D")}</td></tr>`).join("")}
+      ${sch.map(s=>`<tr><td>${K.t(s)}</td><td>${K.t(s.when)}</td><td>${safeUrl(s.url)?`<a href="${K.esc(safeUrl(s.url))}" target="_blank" rel="noopener">${K.t("បើក","Open")} ↗</a>`:K.t("មើលផ្នែក D","See section D")}</td></tr>`).join("")}
       </tbody></table></div>
     </div>
 
