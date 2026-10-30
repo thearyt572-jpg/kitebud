@@ -119,7 +119,8 @@ function render(){
 }
 
 function renderStart(){
-  const inProgress = S.started && !S.done && S.pos>0;
+  // "Continue" whenever any answer is saved, even after pressing Back past the first question
+  const inProgress = !S.done && (has(S.a.mode) || Object.keys(S.b1).length>0 || has(S.c.known) || has(S.d1.track));
   app.innerHTML = `<div class="stack-lg">
     <div class="stack" style="gap:10px">
       <span class="label">${K.t("ការត្រួតពិនិត្យមុនឡើងយន្តហោះ","Pre-flight check")}</span>
