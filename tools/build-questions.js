@@ -82,7 +82,11 @@ const dims = table("Dimension\tFirst side\tSecond side", e0, 3).map((c, i) => {
   const side = s => { const [en, km] = s.split(" — "); return { en, km }; };
   return { id: DIM_IDS[i], en: c[0], high: side(c[1]), low: side(c[2]) };
 });
-const quizScale = table("Score\tEnglish", e0, 2).map(c => ({ value: +c[0], en: c[1], km: NEEDS }));
+// Khmer for the 4 quiz answer labels comes from the owner's mappings doc (section 3, "Existing Khmer")
+const M = fs.readFileSync("docs/question-design-mappings.md", "utf8").split(/\r?\n/);
+const mStart = M.indexOf("English\tExisting Khmer"); if (mStart < 0) throw new Error("Quiz label Khmer table not found");
+const quizKm = Object.fromEntries(M.slice(mStart + 1).filter((l, i, a) => a.slice(0, i + 1).every(x => x.includes("\t"))).map(l => l.split("\t")));
+const quizScale = table("Score\tEnglish", e0, 2).map(c => ({ value: +c[0], en: c[1], km: quizKm[c[1]] || NEEDS }));
 
 /* ---------- D1 ---------- */
 const [f0, f1] = between("8. Part D1 — School results", "9. Part D2 — Self-assessed skills");

@@ -1469,22 +1469,22 @@ D.Q = {
    {
     "value": 1,
     "en": "Definitely A",
-    "km": "[NEEDS KHMER]"
+    "km": "A ច្បាស់"
    },
    {
     "value": 2,
     "en": "Probably A",
-    "km": "[NEEDS KHMER]"
+    "km": "ប្រហែល A"
    },
    {
     "value": 3,
     "en": "Probably B",
-    "km": "[NEEDS KHMER]"
+    "km": "ប្រហែល B"
    },
    {
     "value": 4,
     "en": "Definitely B",
-    "km": "[NEEDS KHMER]"
+    "km": "B ច្បាស់"
    }
   ],
   "dimensions": [

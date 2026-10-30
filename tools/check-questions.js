@@ -4,20 +4,21 @@
 // Run: node tools/check-questions.js
 const fs = require("fs"), vm = require("vm");
 const DOC = fs.readFileSync("docs/question-design.md", "utf8").split(/\r?\n/);
+const MAP = fs.readFileSync("docs/question-design-mappings.md", "utf8").split(/\r?\n/);
 const ctx = { window: {} }; vm.createContext(ctx); vm.runInContext(fs.readFileSync("js/questions.js", "utf8"), ctx);
 const Q = ctx.window.KITE_DATA.Q;
 
 let bad = 0, total = 0; const md = [];
 const esc = s => String(s).replace(/\|/g, "\\|").replace(/\t/g, " ⇥ ");
 // find `line` in the doc after line number `after`; return its line number or -1
-function check(section, rows) {
+function check(section, rows, doc = DOC) {
   md.push(`\n## ${section}\n\n| # | Your document (exact line) | questions.js (what the site uses) | Same? |\n|---|---|---|---|`);
   let last = -1;
   rows.forEach(([label, docLine, shown]) => {
     total++;
-    const at = DOC.findIndex((l, i) => i > last && l === docLine);
+    const at = doc.findIndex((l, i) => i > last && l === docLine);
     const ok = at >= 0; if (ok) last = at; else bad++;
-    md.push(`| ${label} | ${ok ? esc(DOC[at]) : "**NOT FOUND:** " + esc(docLine)} | ${esc(shown)} | ${ok ? "✓" : "✗"} |`);
+    md.push(`| ${label} | ${ok ? esc(doc[at]) : "**NOT FOUND:** " + esc(docLine)} | ${esc(shown)} | ${ok ? "✓" : "✗"} |`);
   });
 }
 const pair = p => [["- English: " + p.en, p.en], ["- Khmer: " + p.km, p.km]];
@@ -51,7 +52,8 @@ check("C — 12-question quiz (hidden: dimension and pole)", Q.C.quiz.map((x, i)
   `${n(i)}\t${x.en}\t${x.km}\t${x.a.en} / ${x.a.km}\t${x.b.en} / ${x.b.km}`,
   `${x.en} / ${x.km} — A: ${x.a.en} / ${x.a.km} — B: ${x.b.en} / ${x.b.km} [hidden: ${x.dim}, pole ${x.pole}]`]));
 check("C — four dimensions", Q.C.dimensions.map(d => [d.id, `${d.en}\t${d.high.en} — ${d.high.km}\t${d.low.en} — ${d.low.km}`, `${d.en}: ${d.high.en} / ${d.low.en}`]));
-check("C — quiz answer scale", Q.C.quizScale.map(s => [s.value, `${s.value}\t${s.en}`, `${s.en} / ${s.km}`]));
+check("C — quiz answer scale (English)", Q.C.quizScale.map(s => [s.value, `${s.value}\t${s.en}`, `${s.en}`]));
+check("C — quiz answer scale (Khmer, from your mappings doc)", Q.C.quizScale.map(s => [s.value, `${s.en}\t${s.km}`, `${s.en} / ${s.km}`]), MAP);
 // D1
 check("D1 — school results", [...pairRows("Question", Q.D1.question),
   ...Q.D1.subjects.map(s => [s.id, `${s.en}\t${s.km}`, `${s.en} / ${s.km}`]),
@@ -68,7 +70,7 @@ const types = Q.B1.items.reduce((a, x) => (a[x.type] = (a[x.type] || 0) + 1, a),
 extra.push(["B1 has 5 items of each type R I A S E C", Object.values(types).every(v => v === 5) && Object.keys(types).join("") === "RIASEC"]);
 extra.push(["Quiz has 3 items per dimension", ["social", "big_picture", "heart_first", "planner"].every(d => Q.C.quiz.filter(x => x.dim === d).length === 3)]);
 extra.push(["Quiz poles match the owner's Part C table (A,B,A · B,A,B · B,A,B · A,B,A)", Q.C.quiz.map(x => x.pole).join("") === "ABABABBABABA"]);
-extra.push(["Only the 4 quiz scale labels are marked [NEEDS KHMER]", JSON.stringify(Q).split("[NEEDS KHMER]").length - 1 === 4]);
+extra.push(["Nothing is marked [NEEDS KHMER] any more", !JSON.stringify(Q).includes("[NEEDS KHMER]")]);
 extra.push(["Attention-check item is not in questions.js", !JSON.stringify(Q).includes("To show you're reading")]);
 extra.forEach(([t, ok]) => { total++; if (!ok) bad++; });
 
