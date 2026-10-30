@@ -51,6 +51,8 @@ p{margin:0}
 .small{font-size:.875rem}
 .mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 .label{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+/* Khmer small labels: no letter-spacing (it pulls stacked letters apart), Khmer font, a bit larger */
+html[lang="km"] :is(.label,.pass__band,.tag,th,.gate){font-family:var(--f-body);letter-spacing:0;text-transform:none;font-size:.8rem}
 .wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .narrow{max-width:720px}
 .stack{display:flex;flex-direction:column;gap:16px}
