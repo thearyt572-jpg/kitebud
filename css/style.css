@@ -46,6 +46,8 @@ h2{font-size:clamp(1.3rem,3.2vw,1.85rem)}
 h3{font-size:1.15rem}
 .display{font-family:var(--f-display);font-weight:400}
 html[lang="en"] .display{font-weight:800;letter-spacing:-.01em}
+/* Khmer: Moul only for big h1 headings; smaller display headings use Kantumruy Pro */
+html[lang="km"] .display:not(h1){font-family:var(--f-body);font-weight:700}
 p{margin:0}
 .muted{color:var(--muted)}
 .small{font-size:.875rem}
