@@ -64,6 +64,7 @@ function applyStatic(root){
     el.setAttribute("aria-label", en ? el.dataset.enAria : el.dataset.kmAria);
   });
   (root||document).querySelectorAll("[data-weight]").forEach(el=>{ el.textContent = K.weightPct(el.dataset.weight); });
+  (root||document).querySelectorAll("[data-price]").forEach(el=>{ el.textContent = K.price(el.dataset.price); });
   document.documentElement.lang = en ? "en" : "km";
 }
 K.weightPct = part => K.n(Math.round(K.WEIGHTS[part]*100)) + "%";
@@ -202,7 +203,6 @@ K.state = () => K.isDemo() ? K.demoState() : K.load();
 function boot(){
   K.load();
   applyStatic(); renderChrome(); showCookie(false);
-  document.querySelectorAll("[data-price]").forEach(el=>el.textContent = K.price(el.dataset.price));
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot); else boot();
 })();
