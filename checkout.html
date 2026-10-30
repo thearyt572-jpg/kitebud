@@ -52,8 +52,9 @@ function render(){
     app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel stack"><h1>${K.t("សូមបញ្ចប់តេស្តជាមុនសិន","Finish the test first")}</h1><p class="muted">${K.t("អ្នកត្រូវមានលទ្ធផល មុនពេលដោះសោវា។","You need results before you can unlock them.")}</p><a class="btn btn--gold" href="assessment.html">${K.t("ទៅកាន់តេស្ត","Go to the test")}</a></div></div>`;
     return;
   }
-  let pkg = S.pkg==="A" && S.paid!=="A" ? "A" : "B";
-  if(S.paid==="B"){ view = view==="success"?"success":"already"; }
+  const top = K.score(S).top, thirdOpen = K.unlocked(S, top[2].id);
+  let pkg = S.pkg==="A" && !thirdOpen ? "A" : "B";
+  if(top.every(x=>K.unlocked(S, x.id))){ view = view==="success"?"success":"already"; }
   const p = PK[pkg];
 
   if(view==="already"){
@@ -90,7 +91,7 @@ function render(){
     <h1 class="display">${K.t("ការបង់ប្រាក់","Checkout")}</h1>
     <section class="panel stack" aria-labelledby="sum">
       <h2 id="sum" style="font-size:1.15rem">${K.t("សេចក្ដីសង្ខេបការបញ្ជាទិញ","Order summary")}</h2>
-      ${S.paid==="A"?`<p class="small muted">${K.t("អ្នកមានកញ្ចប់ A រួចហើយ។ ដំឡើងទៅកញ្ចប់ B ដើម្បីដោះសោជំនាញទាំង ៣។","You already have Package A. Upgrade to Package B to unlock all 3 majors.")}</p>`:
+      ${thirdOpen?`<p class="small muted">${K.t("អ្នកមានកញ្ចប់ A រួចហើយ។ ដំឡើងទៅកញ្ចប់ B ដើម្បីដោះសោជំនាញទាំង ៣។","You already have Package A. Upgrade to Package B to unlock all 3 majors.")}</p>`:
       `<div class="choices g2 grid" role="radiogroup" aria-label="Package">${opt("pkg","A",pkg,K.t(PK.A.name)+" · $1.00","")}${opt("pkg","B",pkg,K.t(PK.B.name)+" · $2.50",K.t("ណែនាំ","Recommended"))}</div>`}
       <div>
         <div class="sumrow"><span>${K.t("កញ្ចប់","Package")}</span><b>${K.t(p.name)}</b></div>
@@ -121,7 +122,7 @@ function render(){
     setTimeout(()=>{
       if(outcome==="success"){
         order = "KT-ORD-" + Math.random().toString(36).slice(2,8).toUpperCase();
-        K.update(s=>{ s.paid = (pkg==="B"||s.paid==="B") ? "B" : "A"; s.order = order; });
+        K.update(s=>{ const t = K.score(s).top; K.unlock(s, pkg==="B" ? t.map(x=>x.id) : [t[2].id]); s.paid = (pkg==="B"||s.paid==="B") ? "B" : "A"; s.order = order; });
         view = "success";
       } else view = "failed";
       render();

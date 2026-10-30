@@ -15,7 +15,7 @@ function genId(){
   for(let i=0;i<8;i++){ s+=a[Math.floor(Math.random()*a.length)]; if(i===3) s+="-"; }
   return "KT-"+s;
 }
-function fresh(){ return {v:1,id:genId(),lang:"km",track:null,ans:{},cKnown:null,cType:"",pos:0,done:false,paid:null,pkg:"B",checks:{},started:null}; }
+function fresh(){ return {v:1,id:genId(),lang:"km",track:null,ans:{},cKnown:null,cType:"",pos:0,done:false,paid:null,unlocked:[],pkg:"B",checks:{},started:null}; }
 K.load = function(){
   let s = safe(()=>JSON.parse(store().getItem(SKEY)||"null"), null)
        || safe(()=>JSON.parse(sessionStorage.getItem(SKEY)||"null"), null)
@@ -174,7 +174,9 @@ K.taskSentence = function(P){
 };
 
 /* ---------- unlocks & demo ---------- */
-K.unlocked = (s, rank) => K.isDemo() || s.paid==="B" || (s.paid==="A" && rank===3);
+// unlocks are saved as major ids at payment time, so changing answers can't reveal other majors
+K.unlocked = (s, majorId) => K.isDemo() || (s.unlocked||[]).includes(majorId);
+K.unlock = (s, majorIds) => { s.unlocked = [...new Set([...(s.unlocked||[]), ...majorIds])]; };
 K.demoState = function(){
   const s = fresh(); s.id="KT-DEMO-0000"; s.lang = K.lang(); s.track="sci"; s.done=true; s.paid="B"; s.cKnown=false;
   const like = {j2:4,j13:4,j4:3,j18:3,j11:3,j7:2,j1:2,j9:1,j3:1,j5:2,j6:1,j8:2,j10:1,j12:1,j14:2,j15:1,j16:1,j17:2};

@@ -50,9 +50,9 @@ function render(){
     return;
   }
   const R = K.score(S), P = R.profile;
-  const anyUnlocked = [1,2,3].some(r=>K.unlocked(S,r));
+  const anyUnlocked = R.top.some(x=>K.unlocked(S,x.id));
   const passes = R.top.map((x,i)=>{
-    const rank = i+1, open = K.unlocked(S, rank);
+    const rank = i+1, open = K.unlocked(S, x.id);
     return `<article class="pass ${rank===1?"pass--gold":""}" aria-label="${K.t("ភាពសាកសមលេខ","Match")} ${rank}">
       <div class="pass__main">
         <div class="pass__band"><span>${K.t("ភាពសាកសមលេខ","Match #")}${K.n(rank)}</span><span>${S.id}</span></div>
@@ -77,11 +77,11 @@ function render(){
   else if(needSci.length) admit = K.t(`ជំនាញ ${K.n(needSci.length)} ក្នុងចំណោមជំនាញកំពូលរបស់អ្នក ជាធម្មតាតម្រូវឱ្យមានបាក់ឌុបថ្នាក់វិទ្យាសាស្ត្រ។ សូមសួរសាកលវិទ្យាល័យ ព្រោះកន្លែងខ្លះមានឆ្នាំសិក្សាមូលដ្ឋាន ឬលក្ខខណ្ឌផ្សេង។`,`${needSci.length} of your top majors usually require the Science track for BacII. Ask the university: some offer a foundation year or other routes.`);
   else admit = K.t("ជំនាញកំពូលរបស់អ្នក ជាធម្មតាទទួលសិស្សពីថ្នាក់ទាំងពីរ។ សូមពិនិត្យលក្ខខណ្ឌចូលរៀនរបស់សាកលវិទ្យាល័យនីមួយៗ។","Your top majors usually accept students from either track. Check each university's entry requirements.");
 
-  const paid = S.paid;
-  const unlockBlock = (demo || paid==="B") ? "" : `<section class="stack" aria-labelledby="unl">
+  const allOpen = R.top.every(x=>K.unlocked(S,x.id)), thirdOpen = K.unlocked(S, R.top[2].id);
+  const unlockBlock = (demo || allOpen) ? "" : `<section class="stack" aria-labelledby="unl">
     <h2 id="unl">${K.t("ដោះសោលទ្ធផលពេញលេញ","Unlock your full results")}</h2>
     <div class="unlock">
-      ${paid==="A"?"":`<div class="panel panel--flat"><span class="label">${K.t("កញ្ចប់ A","Package A")}</span><span class="mono" style="font-size:1.6rem;font-weight:600">$1.00</span><p class="small muted">${K.t("ដោះសោជំនាញលេខ ៣ និងព័ត៌មានលម្អិត","Unlocks major #3 and its details")}</p><button class="btn" type="button" data-pkg="A">${K.t("ជ្រើសកញ្ចប់ A","Choose Package A")}</button></div>`}
+      ${thirdOpen?"":`<div class="panel panel--flat"><span class="label">${K.t("កញ្ចប់ A","Package A")}</span><span class="mono" style="font-size:1.6rem;font-weight:600">$1.00</span><p class="small muted">${K.t("ដោះសោជំនាញលេខ ៣ និងព័ត៌មានលម្អិត","Unlocks major #3 and its details")}</p><button class="btn" type="button" data-pkg="A">${K.t("ជ្រើសកញ្ចប់ A","Choose Package A")}</button></div>`}
       <div class="panel" style="outline:3px solid var(--gold);outline-offset:-3px"><span class="row" style="justify-content:space-between"><span class="label">${K.t("កញ្ចប់ B","Package B")}</span><span class="tag tag--gold">${K.t("ណែនាំ","Recommended")}</span></span><span class="mono" style="font-size:1.6rem;font-weight:600">$2.50</span><p class="small muted">${K.t("ដោះសោជំនាញទាំង ៣ និងព័ត៌មានលម្អិត","Unlocks all 3 majors and their details")}</p><button class="btn btn--gold" type="button" data-pkg="B">${K.t("ជ្រើសកញ្ចប់ B","Choose Package B")}</button></div>
     </div>
     <p class="banner small">${K.t("របៀបសាកល្បង — មិនមានការកាត់ប្រាក់ពិតប្រាកដទេ។","Test mode — no real money is collected.")}</p>
@@ -130,7 +130,7 @@ function render(){
   // open the test's start screen (it has the Retake button and its confirm box), not the "You've landed" screen
   document.getElementById("retake").onclick = e => { if(demo){ K.setDemo(false); } else K.update(s=>{ s.pos = -1; s.started = null; }); };
   document.getElementById("share").onclick = ()=>{
-    const lines = R.top.map((x,i)=> `${i+1}. ${K.unlocked(S,i+1)?K.t(x.m):"🔒"} — ${x.pct}%`);
+    const lines = R.top.map((x,i)=> `${i+1}. ${K.unlocked(S,x.id)?K.t(x.m):"🔒"} — ${x.pct}%`);
     const txt = K.t("ភាពសាកសមកំពូលរបស់ខ្ញុំនៅលើ KITE ✈️","My top KITE matches ✈️") + "\n" + lines.join("\n") + "\n" + K.t("សាកល្បងតេស្តឥតគិតថ្លៃនៅ KITE","Try the free test on KITE");
     K.copy(txt, document.getElementById("sharebox"));
   };
