@@ -22,7 +22,7 @@
 .reasons{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
 .reasons li{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--card);border-radius:10px;border:1px solid var(--line)}
 .reasons li::before{content:"✓";color:var(--ok);font-weight:700}
-.filters{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}
+.filters{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
 @media (max-width:620px){.filters{grid-template-columns:1fr}}
 .uni{display:flex;flex-direction:column;gap:6px;padding:16px;background:var(--card);border-radius:12px;border:1px solid var(--line);min-width:0}
 .uni dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:.9rem}
@@ -56,10 +56,12 @@ const STEPS = [
 ];
 const money = n => "$" + n.toLocaleString("en-US");
 
+const safeUrl = u => /^https?:\/\//i.test(u||"") ? u : null; // only real web links
+const dateText = d => d ? K.n(d.split("-").reverse().join("/")) : K.t("មិនទាន់ពិនិត្យ","Not checked yet"); // "2026-10-30" → 30/10/2026
+
 function uniList(m){
-  const f = F[m.id] || (F[m.id] = {city:"all",max:"all",sch:false});
+  const f = F[m.id] || (F[m.id] = {max:"all",sch:false});
   const list = D.UNIS.filter(u=>u.majors.includes(m.id))
-    .filter(u=>f.city==="all"||u.city===f.city)
     .filter(u=>f.max==="all"||u.fee[0]<=+f.max)
     .filter(u=>!f.sch||u.sch);
   if(!list.length) return `<p class="banner banner--info">${K.t("គ្មានសាកលវិទ្យាល័យត្រូវនឹងតម្រងនេះទេ។ សូមដកតម្រងខ្លះចេញ។","No universities match these filters. Try removing one.")}</p>`;
@@ -71,15 +73,15 @@ function uniList(m){
       <dt>${K.t("ភាសា","Language")}</dt><dd>${K.t(u.lang)}</dd>
       <dt>${K.t("លក្ខខណ្ឌ","Entry")}</dt><dd>${K.t(u.req)}</dd>
       <dt>${K.t("អាហារូបករណ៍","Scholarship")}</dt><dd>${u.sch?K.t("មាន","Available"):K.t("មិនមានព័ត៌មាន","No info")}</dd>
+      <dt>${K.t("ពិនិត្យចុងក្រោយ","Date checked")}</dt><dd>${dateText(u.lastVerified)}</dd>
     </dl>
-    <a href="${u.url}" target="_blank" rel="noopener">${K.t("គេហទំព័រផ្លូវការ","Official website")} ↗</a>
+    ${safeUrl(u.url)?`<a href="${K.esc(safeUrl(u.url))}" target="_blank" rel="noopener">${K.t("គេហទំព័រផ្លូវការ","Official website")} ↗</a>`:""}
   </div>`).join("")}</div>`;
 }
 
 function section(x, rank, S){
-  const m = x.m, f = F[m.id] || (F[m.id] = {city:"all",max:"all",sch:false});
+  const m = x.m, f = F[m.id] || (F[m.id] = {max:"all",sch:false});
   const sch = D.SCHOLARSHIPS.filter(s=>s.majors==="all"||s.majors.includes(m.id));
-  const cities = [...new Set(D.UNIS.filter(u=>u.majors.includes(m.id)).map(u=>u.city))];
   const reasons = x.reasons.length ? x.reasons.map(r=>`<li>${K.t(r)}</li>`).join("") : `<li>${K.t("ចម្លើយរបស់អ្នកមានតុល្យភាពល្អ ក្នុងគ្រប់ផ្នែកទាំង ៤ សម្រាប់ជំនាញនេះ។","Your answers line up evenly with this major across all 4 categories.")}</li>`;
   const checks = (S.checks && S.checks[m.id]) || {};
   return `<section class="major" id="m-${m.id}" aria-labelledby="h-${m.id}">
@@ -100,13 +102,13 @@ function section(x, rank, S){
     <div class="sub"><h3><span class="label">D</span>${K.t("អាជីពទូទៅ","Typical careers")}</h3><div class="careers">${m.c.map(c=>`<span>${K.t(c)}</span>`).join("")}</div></div>
 
     <div class="sub"><h3><span class="label">E</span>${K.t("សាកលវិទ្យាល័យដែលមានជំនាញនេះ","Universities offering it")}</h3>
+      <p class="small muted">${K.t("បង្ហាញតែកម្មវិធីថ្នាក់បរិញ្ញាបត្រប៉ុណ្ណោះ។","Bachelor's degree programs only.")}</p>
       <div class="filters">
-        <div class="field"><label class="small muted" for="c-${m.id}">${K.t("ទីក្រុង","City")}</label><select class="input" id="c-${m.id}" data-f="city" data-m="${m.id}"><option value="all">${K.t("ទាំងអស់","All")}</option>${cities.map(c=>`<option value="${c}" ${f.city===c?"selected":""}>${K.t(D.CITIES[c])}</option>`).join("")}</select></div>
         <div class="field"><label class="small muted" for="t-${m.id}">${K.t("ថ្លៃសិក្សាអតិបរមា (ចាប់ពី)","Max tuition (starting from)")}</label><select class="input" id="t-${m.id}" data-f="max" data-m="${m.id}">${[["all",K.t("មិនកំណត់","Any")],["600","≤ $600"],["1000","≤ $1,000"],["2500","≤ $2,500"]].map(([v,l])=>`<option value="${v}" ${f.max===v?"selected":""}>${l}</option>`).join("")}</select></div>
         <label class="cb"><input type="checkbox" id="s-${m.id}" data-f="sch" data-m="${m.id}" ${f.sch?"checked":""}>${K.t("មានអាហារូបករណ៍","Scholarship available")}</label>
       </div>
       <div id="u-${m.id}">${uniList(m)}</div>
-      <p class="banner small">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។ ពិនិត្យចុងក្រោយ: មិនទាន់ផ្ទៀងផ្ទាត់ (ទិន្នន័យគំរូសម្រាប់របៀបសាកល្បង)។","Info may change — check the official site. Last checked: not yet verified (sample data for test mode).")}</p>
+      <p class="banner small">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។ (ទិន្នន័យគំរូសម្រាប់របៀបសាកល្បង)","Info may change — check the official site. (Sample data for test mode.)")}</p>
     </div>
 
     <div class="sub"><h3><span class="label">F</span>${K.t("អាហារូបករណ៍","Scholarships")}</h3>
