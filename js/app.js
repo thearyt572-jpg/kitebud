@@ -139,15 +139,15 @@ function renderChrome(){
           <p>${K.t("ហោះហើរឆ្ពោះទៅរកជំនាញដែលសាកសមនឹងអ្នក។","Take off toward a major that fits you.")}</p>
         </div>
         <div class="footer__links">
-          <span class="label" style="color:#9FB3C4">${K.t("ព័ត៌មាន","Info")}</span>
+          <span class="label" style="color:var(--board-label)">${K.t("ព័ត៌មាន","Info")}</span>
           <a href="about.html">${K.t("អំពីយើង និងប្រភព","About & sources")}</a>
           <a href="privacy.html">${K.t("ឯកជនភាព","Privacy")}</a>
           <a href="faq.html">${K.t("សំណួរញឹកញាប់ និងទំនាក់ទំនង","FAQ & contact")}</a>
           <button class="linkbtn" type="button" id="cookieset">${K.t("ការកំណត់ខូគី","Cookie settings")}</button>
         </div>
         <div class="footer__links">
-          <span class="label" style="color:#9FB3C4">${K.t("ទំនាក់ទំនង","Contact")}</span>
-          <span class="mono" style="user-select:all;color:#fff">${K.EMAIL}</span>
+          <span class="label" style="color:var(--board-label)">${K.t("ទំនាក់ទំនង","Contact")}</span>
+          <span class="mono" style="user-select:all;color:var(--board-strong)">${K.EMAIL}</span>
           <button class="linkbtn" type="button" id="copyemail">${K.t("ចម្លងអ៊ីមែល","Copy email")}</button>
         </div>
       </div>
