@@ -13,7 +13,6 @@
 .unlock{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 @media (max-width:560px){.unlock{grid-template-columns:1fr}}
 .unlock .panel{display:flex;flex-direction:column;gap:10px}
-.typechip{font-family:var(--f-mono);font-weight:600;letter-spacing:.2em;background:var(--board);color:var(--board-fg);padding:4px 10px;border-radius:6px}
 .words{display:flex;flex-wrap:wrap;gap:8px}
 .words span{padding:4px 12px;border-radius:999px;background:var(--sky-soft);font-weight:500}
 textarea.copybox{width:100%;min-height:90px;font:inherit;border:2px solid var(--line);border-radius:12px;padding:10px;background:var(--card);color:var(--ink)}
@@ -103,7 +102,7 @@ function render(){
       <h2 id="prof">${K.t("ប្រវត្តិរូបរបស់អ្នក ជាពាក្យសាមញ្ញ","Your profile in plain words")}</h2>
       <div class="stack" style="gap:6px"><span class="label">${K.t("ចំណាប់អារម្មណ៍","Interests")}</span><p>${K.interestSentence(P)}</p></div>
       <div class="stack" style="gap:6px"><span class="label">${K.t("បុគ្គលិកលក្ខណៈ","Personality")}</span>
-        <div class="row"><span class="typechip">${P.type}</span><div class="words">${K.persWords(P).map(w=>`<span>${w}</span>`).join("")}</div></div>
+        <div class="words">${K.persWords(P).map(w=>`<span>${w}</span>`).join("")}</div>
         ${S.cKnown===true?`<p class="small muted">${K.t("ផ្អែកលើប្រភេទដែលអ្នកបានវាយបញ្ចូល។","Based on the type you entered.")}</p>`:""}
       </div>
       <div class="stack" style="gap:6px"><span class="label">${K.t("ការងារអនាគត","Future jobs")}</span><p>${K.taskSentence(P)}</p></div>
