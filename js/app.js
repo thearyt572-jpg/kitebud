@@ -89,7 +89,7 @@ K.copy = function(text, fallbackEl){
   };
   try { navigator.clipboard.writeText(text).then(ok, fb); } catch(e){ fb(); }
 };
-K.flap = (pct, size) => `<span class="flap ${size||"flap--md"} anim" aria-label="${pct}%">${String(pct).split("").concat("%").map(c=>`<span>${c}</span>`).join("")}</span>`;
+K.flap = (pct, size) => `<span class="flap ${size||"flap--md"} anim" aria-label="${K.n(pct)}%">${K.n(pct).split("").concat("%").map(c=>`<span>${c}</span>`).join("")}</span>`;
 K.EMAIL = "weare@thekitebud.com";
 // Prices in USD, shown everywhere from here. TEST MODE: later the server decides prices and checks payments.
 K.PRICES = {A:"1.00", B:"2.50"};

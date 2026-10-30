@@ -9,7 +9,7 @@
   --shadow:0 1px 0 var(--line), 0 10px 28px -18px rgba(15,39,64,.45);
   --f-body:"Kantumruy Pro","Noto Sans Khmer",system-ui,sans-serif;
   --f-display:"Moul","Kantumruy Pro",serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --f-mono:"IBM Plex Mono","Kantumruy Pro",ui-monospace,SFMono-Regular,Menlo,monospace; /* Kantumruy Pro draws Khmer digits/letters */
   --r:14px; --stub:136px;
   color-scheme:light;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
