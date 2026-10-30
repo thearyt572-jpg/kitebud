@@ -34,8 +34,8 @@
 (function(){
 const K = window.KITE, app = document.getElementById("app");
 const PK = {
-  A:{price:"1.00",name:{km:"កញ្ចប់ A",en:"Package A"},what:{km:"ដោះសោជំនាញលេខ ៣ របស់អ្នក ព្រមទាំងព័ត៌មានលម្អិត សាកលវិទ្យាល័យ និងអាហារូបករណ៍",en:"Unlocks your #3 major with its details, universities and scholarships"}},
-  B:{price:"2.50",name:{km:"កញ្ចប់ B",en:"Package B"},what:{km:"ដោះសោជំនាញកំពូលទាំង ៣ ព្រមទាំងព័ត៌មានលម្អិត សាកលវិទ្យាល័យ និងអាហារូបករណ៍",en:"Unlocks all 3 top majors with their details, universities and scholarships"}}
+  A:{price:K.PRICES.A,name:{km:"កញ្ចប់ A",en:"Package A"},what:{km:"ដោះសោជំនាញលេខ ៣ របស់អ្នក ព្រមទាំងព័ត៌មានលម្អិត សាកលវិទ្យាល័យ និងអាហារូបករណ៍",en:"Unlocks your #3 major with its details, universities and scholarships"}},
+  B:{price:K.PRICES.B,name:{km:"កញ្ចប់ B",en:"Package B"},what:{km:"ដោះសោជំនាញកំពូលទាំង ៣ ព្រមទាំងព័ត៌មានលម្អិត សាកលវិទ្យាល័យ និងអាហារូបករណ៍",en:"Unlocks all 3 top majors with their details, universities and scholarships"}}
 };
 let view = "form", method = "qr", outcome = "success", order = null, lastPkg = null;
 const DEV = new URLSearchParams(location.search).has("dev"); // checkout.html?dev=1 shows the developer test box
@@ -93,7 +93,7 @@ function render(){
     <section class="panel stack" aria-labelledby="sum">
       <h2 id="sum" style="font-size:1.15rem">${K.t("សេចក្ដីសង្ខេបការបញ្ជាទិញ","Order summary")}</h2>
       ${thirdOpen?`<p class="small muted">${K.t("អ្នកមានកញ្ចប់ A រួចហើយ។ ដំឡើងទៅកញ្ចប់ B ដើម្បីដោះសោជំនាញទាំង ៣។","You already have Package A. Upgrade to Package B to unlock all 3 majors.")}</p>`:
-      `<div class="choices g2 grid" role="radiogroup" aria-label="Package">${opt("pkg","A",pkg,K.t(PK.A.name)+" · $1.00","")}${opt("pkg","B",pkg,K.t(PK.B.name)+" · $2.50",K.t("ណែនាំ","Recommended"))}</div>`}
+      `<div class="choices g2 grid" role="radiogroup" aria-label="Package">${opt("pkg","A",pkg,K.t(PK.A.name)+" · "+K.price("A"),"")}${opt("pkg","B",pkg,K.t(PK.B.name)+" · "+K.price("B"),K.t("ណែនាំ","Recommended"))}</div>`}
       <div>
         <div class="sumrow"><span>${K.t("កញ្ចប់","Package")}</span><b>${K.t(p.name)}</b></div>
         <div class="sumrow"><span>${K.t("អ្វីដែលបានដោះសោ","What unlocks")}</span><span style="text-align:right;max-width:30ch">${K.t(p.what)}</span></div>

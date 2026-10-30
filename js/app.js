@@ -87,6 +87,9 @@ K.copy = function(text, fallbackEl){
 };
 K.flap = (pct, size) => `<span class="flap ${size||"flap--md"} anim" aria-label="${pct}%">${String(pct).split("").concat("%").map(c=>`<span>${c}</span>`).join("")}</span>`;
 K.EMAIL = "weare@thekitebud.com";
+// Prices in USD, shown everywhere from here. TEST MODE: later the server decides prices and checks payments.
+K.PRICES = {A:"1.00", B:"2.50"};
+K.price = pkg => "$" + K.PRICES[pkg];
 
 /* ---------- header, footer, cookie banner ---------- */
 const NAV = [
@@ -195,6 +198,7 @@ K.state = () => K.isDemo() ? K.demoState() : K.load();
 function boot(){
   K.load();
   applyStatic(); renderChrome(); showCookie(false);
+  document.querySelectorAll("[data-price]").forEach(el=>el.textContent = K.price(el.dataset.price));
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot); else boot();
 })();
