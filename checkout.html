@@ -38,6 +38,7 @@ const PK = {
   B:{price:"2.50",name:{km:"កញ្ចប់ B",en:"Package B"},what:{km:"ដោះសោជំនាញកំពូលទាំង ៣ ព្រមទាំងព័ត៌មានលម្អិត សាកលវិទ្យាល័យ និងអាហារូបករណ៍",en:"Unlocks all 3 top majors with their details, universities and scholarships"}}
 };
 let view = "form", method = "qr", outcome = "success", order = null, lastPkg = null;
+const DEV = new URLSearchParams(location.search).has("dev"); // checkout.html?dev=1 shows the developer test box
 
 const banner = () => `<div class="testmode" role="note"><div><b>TEST MODE</b><span>${K.t("របៀបសាកល្បង — មិនមានការកាត់ប្រាក់ពិតប្រាកដទេ។ កុំបញ្ចូលព័ត៌មានកាតពិត។","Test mode — no real money is collected. Never enter real card details.")}</span></div></div>`;
 
@@ -106,8 +107,8 @@ function render(){
         ${opt("m","qr",method,K.t("ស្កេន QR (សាកល្បង)","Scan QR (test)"),K.t("ក្លែងធ្វើការបង់តាមកម្មវិធីធនាគារ","Simulates paying with a banking app"))}
         ${opt("m","card",method,K.t("កាត (សាកល្បង)","Card (test)"),K.t("មិនសួររកលេខកាតទេ — ការបង់ប្រាក់ត្រូវបានក្លែងធ្វើ","No card number asked — the payment is simulated"))}
       </div>
-      <div class="field"><label for="outcome" class="small muted">${K.t("លទ្ធផលសាកល្បង (សម្រាប់អ្នកអភិវឌ្ឍ)","Test outcome (for developers)")}</label>
-        <select id="outcome" class="input"><option value="success" ${outcome==="success"?"selected":""}>${K.t("ជោគជ័យ","Success")}</option><option value="failed" ${outcome==="failed"?"selected":""}>${K.t("បរាជ័យ","Failed")}</option></select></div>
+      ${!DEV?"":`<div class="field"><label for="outcome" class="small muted">${K.t("លទ្ធផលសាកល្បង (សម្រាប់អ្នកអភិវឌ្ឍ)","Test outcome (for developers)")}</label>
+        <select id="outcome" class="input"><option value="success" ${outcome==="success"?"selected":""}>${K.t("ជោគជ័យ","Success")}</option><option value="failed" ${outcome==="failed"?"selected":""}>${K.t("បរាជ័យ","Failed")}</option></select></div>`}
     </section>
     <div class="stack" style="gap:10px">
       <button class="btn btn--gold btn--lg" type="button" id="pay">${K.t("បង់ប្រាក់សាកល្បង","Pay (test)")} $${p.price}</button>
@@ -116,7 +117,7 @@ function render(){
   </div>`;
   app.querySelectorAll("[data-pkg]").forEach(b=>b.onclick=()=>{ K.update(s=>s.pkg=b.dataset.pkg); render(); });
   app.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{ method=b.dataset.m; render(); });
-  document.getElementById("outcome").onchange = e => outcome = e.target.value;
+  const oc = document.getElementById("outcome"); if(oc) oc.onchange = e => outcome = e.target.value;
   document.getElementById("pay").onclick = ()=>{
     lastPkg = pkg; view = "processing"; render(); window.scrollTo({top:0});
     setTimeout(()=>{
