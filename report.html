@@ -163,11 +163,11 @@ function render(){
   }
   app.innerHTML = `<div class="stack-lg">
     ${demo?`<div class="banner banner--info">${K.t("របាយការណ៍គំរូ — សិស្សប្រឌិត «ដារា»។","Sample report — fictional student “Dara”.")}</div>`:""}
-    <div class="stack" style="gap:8px"><span class="label">${K.t("របាយការណ៍ពេញលេញ","Full report")} · ${S.id}</span>
+    <div class="with-sticker page-band"><div class="stack" style="gap:8px"><span class="label">${K.t("របាយការណ៍ពេញលេញ","Full report")} · ${S.id}</span>
       <h1 class="display">${K.t("ផែនការហោះហើររបស់អ្នក","Your flight plan")}</h1>
       ${open.length>1?`<nav class="jump" aria-label="Majors">${open.map(o=>`<a href="#m-${o.x.m.id}">${K.n(o.rank)}. ${K.t(o.x.m)}</a>`).join("")}</nav>`:""}
       ${!demo && topOpen<3?`<p class="small muted">${K.t(`អ្នកបានដោះសោ ${K.n(topOpen)} ក្នុងចំណោមជំនាញកំពូលទាំង ៣។`,`You've unlocked ${topOpen} of your top 3 majors.`)} <a href="checkout.html" id="upB">${K.t("ដំឡើងទៅកញ្ចប់ B ដើម្បីមើលទាំង ៣","Upgrade to Package B to see all 3")}</a></p>`:""}
-    </div>
+    </div><img class="sticker" src="images/sticker-graduate.webp" alt="" width="520" height="625"></div>
     ${open.map(o=>section(o.x,o.rank,S)).join("")}
     <a class="btn" href="results.html">← ${K.t("ត្រឡប់ទៅលទ្ធផល","Back to results")}</a>
   </div>`;

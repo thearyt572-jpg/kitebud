@@ -107,11 +107,11 @@ function render(){
 
   app.innerHTML = `<div class="stack-lg">
     ${demo?`<div class="banner banner--info" style="justify-content:space-between;flex-wrap:wrap"><span>${K.t("នេះជាលទ្ធផលគំរូរបស់សិស្សប្រឌិតម្នាក់ឈ្មោះ «ដារា»។ ទិន្នន័យទាំងអស់ជាការប្រឌិត។","This is a sample result for a fictional student, “Dara”. All data is made up.")}</span><button class="btn btn--sm" type="button" id="exitDemo">${K.t("ចេញពីគំរូ","Exit sample")}</button></div>`:""}
-    <div class="stack" style="gap:8px">
+    <div class="with-sticker page-band"><div class="stack" style="gap:8px">
       <span class="label">${K.t("ផ្ទាំងព័ត៌មានការហោះហើរ","Departures board")}</span>
       <h1 class="display">${K.t("ជំនាញដែលសាកសមបំផុតរបស់អ្នក","Your top matches")}</h1>
       <p class="muted">${K.t("ទាំងនេះជាភាគរយភាពសាកសម មិនមែន «ជំនាញរបស់អ្នក» ទេ។ ប្រើវាដើម្បីចាប់ផ្ដើមស្វែងយល់។","These are % matches, not “your major”. Use them as a starting point to explore.")}</p>
-    </div>
+    </div><img class="sticker" src="images/sticker-major-match.webp" alt="" width="520" height="634"></div>
     <div class="stack" style="gap:22px">${passes}</div>
     ${extra.length?`<p class="small muted">${K.t("ជំនាញផ្សេងទៀតដែលអ្នកបានដោះសោពីមុន៖ ","Other majors you unlocked before: ")}${extra.map(x=>`<b>${K.t(x.m)}</b> (${x.pct===null?K.t(K.NOINFO):K.n(x.pct)+"%"})`).join(" · ")}</p>`:""}
     ${K.SHOWCASE && !demo ? `<a class="btn btn--gold btn--lg" href="report.html">${K.t(K.SHOWCASE_LABEL)} →</a>`

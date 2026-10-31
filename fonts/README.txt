@@ -1,13 +1,14 @@
 KITE fonts — hosted on our own site, so visitors' browsers never contact Google.
 
 Font                  Used for                              Source
-Inter                 English text and headings             https://fonts.google.com/specimen/Inter
-Kantumruy Pro         All Khmer text and headings           https://fonts.google.com/specimen/Kantumruy+Pro
+Fredoka               English headings                      https://fonts.google.com/specimen/Fredoka
+Inter                 (no longer used, since Nov 2026)      https://fonts.google.com/specimen/Inter
+Kantumruy Pro         All body text; Khmer headings         https://fonts.google.com/specimen/Kantumruy+Pro
 Moul                  (no longer used, since Oct 2026)      https://fonts.google.com/specimen/Moul
 Bricolage Grotesque   (no longer used, since Oct 2026)      https://fonts.google.com/specimen/Bricolage+Grotesque
 IBM Plex Mono         Numbers, codes, small English labels  https://fonts.google.com/specimen/IBM+Plex+Mono
 
-All five fonts are licensed under the SIL Open Font License, Version 1.1:
+All six fonts are licensed under the SIL Open Font License, Version 1.1:
 https://openfontlicense.org
 They may be used, shared and hosted on a website for free.
 
