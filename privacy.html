@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>KITE · Privacy</title>
+<title>KITEBud · Privacy</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
@@ -20,71 +20,98 @@
 <body data-page="privacy">
 <div id="kite-header"></div>
 <main class="wrap"><div class="page">
+  <!-- Privacy notice approved by the owner 2026-10-31. It must match what js/db.js and js/app.js actually save. Khmer: draft, see docs/khmer-review.md section H. -->
   <div class="stack" style="gap:8px">
-    <span class="label" data-en="Privacy policy · test mode">គោលការណ៍ឯកជនភាព · របៀបសាកល្បង</span>
-    <h1 class="display" data-en="Your privacy">ឯកជនភាពរបស់អ្នក</h1>
-    <p class="muted" data-en="Short version: no login, no name, no phone number. Your answers stay on your device.">សង្ខេប៖ គ្មានការចុះឈ្មោះ គ្មានឈ្មោះ គ្មានលេខទូរស័ព្ទ។ ចម្លើយរបស់អ្នកនៅលើឧបករណ៍របស់អ្នក។</p>
+    <span class="label" data-en="Privacy notice">សេចក្តីជូនដំណឹងអំពីឯកជនភាព</span>
+    <h1 class="display" data-en="KITEBud Privacy Notice">សេចក្តីជូនដំណឹងអំពីឯកជនភាពរបស់ KITEBud</h1>
+    <p class="muted" data-en="KITEBud respects your privacy. We collect only the information needed to run the major-matching test and to study how useful it is.">KITEBud គោរពឯកជនភាពរបស់អ្នក។ យើងប្រមូលតែព័ត៌មានដែលចាំបាច់ ដើម្បីដំណើរការតេស្តផ្គូផ្គងជំនាញ និងដើម្បីសិក្សាថាតេស្តនេះមានប្រយោជន៍កម្រិតណា។</p>
   </div>
 
-  <section class="stack" aria-labelledby="p1">
-    <h2 id="p1" data-en="What we collect, and what we never collect">អ្វីដែលយើងប្រមូល និងអ្វីដែលយើងមិនដែលប្រមូល</h2>
-    <div class="yesno">
-      <div class="panel panel--flat stack" style="gap:8px"><span class="tag tag--ok" data-en="We keep">យើងរក្សាទុក</span><ul>
-        <li data-en="Your test answers">ចម្លើយតេស្តរបស់អ្នក</li>
-        <li data-en="Your grade 12 track, usual grades and skill self-ratings">ផ្នែកសិក្សាថ្នាក់ទី ១២ និទ្ទេសជាធម្មតា និងការវាយតម្លៃជំនាញខ្លួនឯង</li>
-        <li data-en="A dream job you choose or type in (please don&#39;t type your name)">ការងារក្នុងក្តីស្រមៃដែលអ្នកជ្រើស ឬវាយបញ្ចូល (សូមកុំវាយឈ្មោះរបស់អ្នក)</li>
-        <li data-en="A random visitor ID, such as KT-AB12-CD34">លេខសម្គាល់អ្នកទស្សនាចៃដន្យ ដូចជា KT-AB12-CD34</li>
-        <li data-en="Your language and cookie choice">ភាសា និងជម្រើសខូគីរបស់អ្នក</li>
-        <li data-en="Which package you unlocked (test mode)">កញ្ចប់ដែលអ្នកបានដោះសោ (របៀបសាកល្បង)</li>
-      </ul></div>
-      <div class="panel panel--flat stack" style="gap:8px"><span class="tag tag--bad" data-en="We never collect">យើងមិនដែលប្រមូល</span><ul>
-        <li data-en="Your name, phone, email or address">ឈ្មោះ លេខទូរស័ព្ទ អ៊ីមែល ឬអាសយដ្ឋាន</li>
-        <li data-en="Your school or ID card number">សាលា ឬលេខអត្តសញ្ញាណប័ណ្ណ</li>
-        <li data-en="Photos, location or contacts">រូបថត ទីតាំង ឬបញ្ជីទំនាក់ទំនង</li>
-        <li data-en="Real card or bank details">ព័ត៌មានកាត ឬគណនីធនាគារពិតប្រាកដ</li>
-      </ul></div>
-    </div>
+  <section class="prose" aria-labelledby="p1">
+    <h2 id="p1" data-en="What information do we collect?">តើយើងប្រមូលព័ត៌មានអ្វីខ្លះ?</h2>
+    <p data-en="If you choose Allow, we save:">បើអ្នកជ្រើស «អនុញ្ញាត» យើងរក្សាទុក៖</p>
+    <ul>
+      <li data-en="An anonymous visitor ID, also kept in a cookie called &lt;span class=&quot;mono&quot;&gt;kite_vid&lt;/span&gt;.">លេខសម្គាល់អ្នកទស្សនាអនាមិក ដែលក៏ត្រូវបានរក្សាទុកក្នុងខូគីឈ្មោះ <span class="mono">kite_vid</span> ផងដែរ។</li>
+      <li data-en="Your cookie choice.">ជម្រើសខូគីរបស់អ្នក។</li>
+      <li data-en="Your questionnaire answers, one part at a time, including a dream job you type in yourself.">ចម្លើយកម្រងសំណួររបស់អ្នក ម្តងមួយផ្នែក រួមទាំងការងារក្នុងក្តីស្រមៃដែលអ្នកវាយបញ្ចូលខ្លួនឯង។</li>
+      <li data-en="Your matching results, the version of the matching formula, and how long the test took you.">លទ្ធផលផ្គូផ្គងរបស់អ្នក កំណែនៃរូបមន្តផ្គូផ្គង និងរយៈពេលដែលអ្នកប្រើក្នុងការធ្វើតេស្ត។</li>
+      <li data-en="Your 1–5 rating and comment, if you choose to send feedback.">ការវាយតម្លៃពី ១ ដល់ ៥ និងមតិរបស់អ្នក ប្រសិនបើអ្នកជ្រើសផ្ញើមតិ។</li>
+      <li data-en="The date and time each record was saved. This is added automatically, so we know when the study data was collected. It does not tell us who you are.">កាលបរិច្ឆេទ និងម៉ោងដែលកំណត់ត្រានីមួយៗត្រូវបានរក្សាទុក។ វាត្រូវបានបន្ថែមដោយស្វ័យប្រវត្តិ ដើម្បីឱ្យយើងដឹងថាទិន្នន័យសិក្សាត្រូវបានប្រមូលនៅពេលណា។ វាមិនប្រាប់យើងថាអ្នកជានរណាទេ។</li>
+      <li data-en="Your language (Khmer or English).">ភាសារបស់អ្នក (ខ្មែរ ឬអង់គ្លេស)។</li>
+      <li data-en="Your device type: phone, tablet or computer.">ប្រភេទឧបករណ៍របស់អ្នក៖ ទូរស័ព្ទ ថេប្លេត ឬកុំព្យូទ័រ។</li>
+    </ul>
+    <p data-en="We do not ask for your name, phone number, school name, or precise location. Please don&#39;t type them in the dream job box or in your comment.">យើងមិនសួររកឈ្មោះ លេខទូរស័ព្ទ ឈ្មោះសាលា ឬទីតាំងច្បាស់លាស់របស់អ្នកទេ។ សូមកុំវាយព័ត៌មានទាំងនេះក្នុងប្រអប់ការងារក្នុងក្តីស្រមៃ ឬក្នុងមតិរបស់អ្នក។</p>
   </section>
 
   <section class="prose" aria-labelledby="p2">
-    <h2 id="p2" data-en="Why we collect it">ហេតុអ្វីយើងប្រមូល</h2>
-    <p data-en="Only to calculate your % matches, show your results again when you come back, and remember what you unlocked. We do not sell data or use it for advertising.">គ្រាន់តែដើម្បីគណនាភាគរយភាពសាកសម បង្ហាញលទ្ធផលម្ដងទៀតពេលអ្នកត្រឡប់មកវិញ និងចងចាំអ្វីដែលអ្នកបានដោះសោ។ យើងមិនលក់ទិន្នន័យ ឬប្រើសម្រាប់ការផ្សាយពាណិជ្ជកម្មឡើយ។</p>
+    <h2 id="p2" data-en="Why do we collect this information?">ហេតុអ្វីបានជាយើងប្រមូលព័ត៌មាននេះ?</h2>
+    <p data-en="We use the information to:">យើងប្រើព័ត៌មាននេះដើម្បី៖</p>
+    <ul>
+      <li data-en="Improve the questionnaire and the matching.">កែលម្អកម្រងសំណួរ និងការផ្គូផ្គង។</li>
+      <li data-en="Run a validation study of how useful KITEBud is.">ធ្វើការសិក្សាផ្ទៀងផ្ទាត់ ថា KITEBud មានប្រយោជន៍កម្រិតណា។</li>
+    </ul>
+    <p data-en="Your results are calculated on your own device. They are not university admission decisions or professional psychological assessments.">លទ្ធផលរបស់អ្នកត្រូវបានគណនានៅលើឧបករណ៍របស់អ្នកផ្ទាល់។ វាមិនមែនជាការសម្រេចចូលរៀននៅសាកលវិទ្យាល័យ ឬការវាយតម្លៃផ្លូវចិត្តដោយអ្នកជំនាញទេ។</p>
   </section>
 
   <section class="prose" aria-labelledby="p3">
-    <h2 id="p3" data-en="How long we keep it">យើងរក្សាទុករយៈពេលប៉ុន្មាន</h2>
-    <p data-en="In this test version, everything is stored only in your own browser. If you allowed cookies, it stays until you delete it. If you declined, it clears when you close the tab. Nothing is sent to a KITE server.">ក្នុងកំណែសាកល្បងនេះ អ្វីៗទាំងអស់ត្រូវបានរក្សាទុកតែក្នុងកម្មវិធីរុករករបស់អ្នកប៉ុណ្ណោះ។ ប្រសិនបើអ្នកអនុញ្ញាតខូគី វានៅរហូតដល់អ្នកលុប។ ប្រសិនបើអ្នកបដិសេធ វានឹងបាត់ពេលអ្នកបិទផ្ទាំង។ គ្មានអ្វីត្រូវបានផ្ញើទៅម៉ាស៊ីនមេរបស់ KITE ទេ។</p>
+    <h2 id="p3" data-en="Who can see it?">តើនរណាអាចមើលឃើញ?</h2>
+    <p data-en="Only the KITEBud team. Your answers are stored with our database provider. The website can add answers but cannot read them back.">មានតែក្រុមការងារ KITEBud ប៉ុណ្ណោះ។ ចម្លើយរបស់អ្នកត្រូវបានរក្សាទុកនៅក្រុមហ៊ុនផ្តល់សេវាមូលដ្ឋានទិន្នន័យរបស់យើង។ គេហទំព័រអាចបន្ថែមចម្លើយបាន ប៉ុន្តែមិនអាចអានវាត្រឡប់មកវិញបានទេ។</p>
   </section>
 
-  <section class="prose" id="cookies" aria-labelledby="p4">
-    <h2 id="p4" data-en="Cookies explained">ការពន្យល់អំពីខូគី</h2>
-    <p data-en="“Cookies” here means small pieces of data saved in your browser. KITE uses them for one job: keeping your answers and results. There are no advertising or tracking cookies.">«ខូគី» នៅទីនេះមានន័យថាទិន្នន័យតូចៗដែលរក្សាទុកក្នុងកម្មវិធីរុករករបស់អ្នក។ KITE ប្រើវាសម្រាប់ការងារតែមួយ គឺរក្សាចម្លើយ និងលទ្ធផលរបស់អ្នក។ គ្មានខូគីផ្សាយពាណិជ្ជកម្ម ឬតាមដានទេ។</p>
-    <p data-en="We do remember whether you chose Allow or Decline, so we don't ask you every time.">យើងចងចាំថាអ្នកបានជ្រើស «អនុញ្ញាត» ឬ «បដិសេធ» ដើម្បីកុំឱ្យសួរអ្នករាល់ពេល។</p>
+  <section class="prose" aria-labelledby="p4">
+    <h2 id="p4" data-en="On your device">នៅលើឧបករណ៍របស់អ្នក</h2>
+    <p data-en="Your browser keeps your answers and results on this device so you can continue later. If you choose Decline, they disappear when you close the tab.">កម្មវិធីរុករករបស់អ្នករក្សាទុកចម្លើយ និងលទ្ធផលរបស់អ្នកនៅលើឧបករណ៍នេះ ដើម្បីឱ្យអ្នកអាចបន្តពេលក្រោយ។ ប្រសិនបើអ្នកជ្រើស «បដិសេធ» វានឹងបាត់ពេលអ្នកបិទផ្ទាំង។</p>
+  </section>
+
+  <section class="prose" aria-labelledby="p5">
+    <h2 id="p5" data-en="Technical logs">កំណត់ត្រាបច្ចេកទេស</h2>
+    <p data-en="We do not use analytics or advertising trackers. The services that run KITEBud automatically keep short technical logs, such as your internet (IP) address and browser type, to keep the service safe and working:">យើងមិនប្រើកម្មវិធីតាមដានសម្រាប់វិភាគ ឬផ្សាយពាណិជ្ជកម្មទេ។ សេវាដែលដំណើរការ KITEBud រក្សាទុកកំណត់ត្រាបច្ចេកទេសខ្លីៗដោយស្វ័យប្រវត្តិ ដូចជាអាសយដ្ឋានអ៊ីនធឺណិត (IP) និងប្រភេទកម្មវិធីរុករករបស់អ្នក ដើម្បីរក្សាសេវាឱ្យមានសុវត្ថិភាព និងដំណើរការបានល្អ៖</p>
+    <ul>
+      <li data-en="our database provider: up to 7 days;">ក្រុមហ៊ុនផ្តល់សេវាមូលដ្ឋានទិន្នន័យរបស់យើង៖ រហូតដល់ ៧ ថ្ងៃ។</li>
+      <li data-en="our website host: up to 30 days;">ក្រុមហ៊ុនបង្ហោះគេហទំព័ររបស់យើង៖ រហូតដល់ ៣០ ថ្ងៃ។</li>
+      <li data-en="the service that delivers one of our code files after you press Allow (jsDelivr).">សេវាដែលផ្ញើឯកសារកូដមួយរបស់យើង បន្ទាប់ពីអ្នកចុច «អនុញ្ញាត» (jsDelivr)។</li>
+    </ul>
+  </section>
+
+  <section class="prose" aria-labelledby="p6">
+    <h2 id="p6" data-en="How long do we keep your information?">តើយើងរក្សាទុកព័ត៌មានរបស់អ្នករយៈពេលប៉ុន្មាន?</h2>
+    <p data-en="We keep pilot records for up to 12 months after the study ends. After that, we delete them or make them anonymous for research reporting.">យើងរក្សាទុកកំណត់ត្រានៃការសាកល្បងរហូតដល់ ១២ ខែ បន្ទាប់ពីការសិក្សាបញ្ចប់។ បន្ទាប់មក យើងលុបវាចោល ឬធ្វើឱ្យវាក្លាយជាអនាមិក សម្រាប់របាយការណ៍ស្រាវជ្រាវ។</p>
+  </section>
+
+  <section class="prose" id="cookies" aria-labelledby="p7">
+    <h2 id="p7" data-en="Cookies and your choice">ខូគី និងជម្រើសរបស់អ្នក</h2>
+    <p data-en="You can choose Allow or Decline.">អ្នកអាចជ្រើស «អនុញ្ញាត» ឬ «បដិសេធ»។</p>
+    <ul>
+      <li data-en="&lt;b&gt;Allow:&lt;/b&gt; KITEBud creates an anonymous visitor ID cookie that lasts 180 days."><b>អនុញ្ញាត៖</b> KITEBud បង្កើតខូគីលេខសម្គាល់អ្នកទស្សនាអនាមិកមួយ ដែលមានសុពលភាព ១៨០ ថ្ងៃ។</li>
+      <li data-en="&lt;b&gt;Decline:&lt;/b&gt; your test still works, but your answers and visitor ID are not saved to our database."><b>បដិសេធ៖</b> តេស្តរបស់អ្នកនៅតែដំណើរការ ប៉ុន្តែចម្លើយ និងលេខសម្គាល់អ្នកទស្សនារបស់អ្នក មិនត្រូវបានរក្សាទុកក្នុងមូលដ្ឋានទិន្នន័យរបស់យើងទេ។</li>
+    </ul>
+    <p data-en="You can change your choice any time with &lt;b&gt;Cookie settings&lt;/b&gt; at the bottom of every page. If you switch to Decline, nothing new is saved. Records we already saved stay until you ask us to delete them.">អ្នកអាចប្តូរជម្រើសរបស់អ្នកបានគ្រប់ពេល តាមរយៈ <b>«ការកំណត់ខូគី»</b> នៅខាងក្រោមនៃទំព័រនីមួយៗ។ ប្រសិនបើអ្នកប្តូរទៅ «បដិសេធ» គ្មានអ្វីថ្មីត្រូវបានរក្សាទុកទេ។ កំណត់ត្រាដែលយើងបានរក្សាទុករួចហើយ នៅតែមាន រហូតដល់អ្នកស្នើឱ្យយើងលុបវា។</p>
     <div class="row"><button class="btn btn--ink" type="button" id="ckbtn" data-en="Cookie settings">ការកំណត់ខូគី</button><span class="small muted" id="cknow"></span></div>
   </section>
 
-  <section class="stack" id="delete" aria-labelledby="p5">
-    <h2 id="p5" data-en="How to delete your data">របៀបលុបទិន្នន័យរបស់អ្នក</h2>
+  <section class="stack" id="delete" aria-labelledby="p8">
+    <h2 id="p8" data-en="Can you request deletion?">តើអ្នកអាចស្នើសុំលុបបានទេ?</h2>
+    <p data-en="Yes.">បាន។</p>
     <div class="idbox"><span class="small muted" data-en="Your visitor ID:">លេខសម្គាល់អ្នកទស្សនារបស់អ្នក៖</span><span class="mono" id="vid">—</span></div>
-    <ol class="prose" style="padding-left:1.3em;margin:0">
-      <li data-en="On this device: press the button below. It removes your answers, results, visitor ID and cookie choice straight away.">នៅលើឧបករណ៍នេះ៖ ចុចប៊ូតុងខាងក្រោម។ វានឹងលុបចម្លើយ លទ្ធផល លេខសម្គាល់ និងជម្រើសខូគីរបស់អ្នកភ្លាមៗ។</li>
-      <li data-en="By email: send your visitor ID to the address below and we will reply to confirm that nothing linked to it is kept.">តាមអ៊ីមែល៖ ផ្ញើលេខសម្គាល់អ្នកទស្សនាទៅអាសយដ្ឋានខាងក្រោម ហើយយើងនឹងឆ្លើយតបដើម្បីបញ្ជាក់ថាគ្មានអ្វីភ្ជាប់នឹងវាត្រូវបានរក្សាទុកទេ។</li>
-    </ol>
+    <ul class="prose" style="padding-left:1.3em;margin:0">
+      <li data-en="&lt;b&gt;On this device:&lt;/b&gt; press “Delete my data on this device” below. It removes your answers, results, visitor ID and the cookie from this device."><b>នៅលើឧបករណ៍នេះ៖</b> ចុច «លុបទិន្នន័យរបស់ខ្ញុំនៅលើឧបករណ៍នេះ» ខាងក្រោម។ វានឹងលុបចម្លើយ លទ្ធផល លេខសម្គាល់អ្នកទស្សនា និងខូគី ចេញពីឧបករណ៍នេះ។</li>
+      <li data-en="&lt;b&gt;From our database:&lt;/b&gt; send us your visitor ID (shown at the bottom of your results page and on this page). We will delete all records linked to it."><b>ពីមូលដ្ឋានទិន្នន័យរបស់យើង៖</b> ផ្ញើលេខសម្គាល់អ្នកទស្សនារបស់អ្នកមកយើង (បង្ហាញនៅខាងក្រោមទំព័រលទ្ធផល និងនៅលើទំព័រនេះ)។ យើងនឹងលុបកំណត់ត្រាទាំងអស់ដែលភ្ជាប់នឹងលេខនោះ។</li>
+    </ul>
     <div><button class="btn" type="button" id="delbtn" style="border-color:var(--bad);color:var(--bad)" data-en="Delete my data on this device">លុបទិន្នន័យរបស់ខ្ញុំនៅលើឧបករណ៍នេះ</button></div>
     <div id="delconfirm" class="banner banner--bad" style="flex-direction:column" hidden>
-      <span data-en="This can't be undone. Your answers and any unlocked results will be gone.">សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។ ចម្លើយ និងលទ្ធផលដែលបានដោះសោនឹងបាត់។</span>
+      <span data-en="This can&#39;t be undone. Your answers and any unlocked results will be gone.">សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។ ចម្លើយ និងលទ្ធផលដែលបានដោះសោនឹងបាត់។</span>
       <div class="row"><button class="btn btn--ink btn--sm" type="button" id="delyes" data-en="Yes, delete everything">បាទ/ចាស លុបទាំងអស់</button><button class="btn btn--sm" type="button" id="delno" data-en="Cancel">បោះបង់</button></div>
     </div>
   </section>
 
-  <section class="prose" aria-labelledby="p6">
-    <h2 id="p6" data-en="For parents">សម្រាប់ឪពុកម្ដាយ</h2>
-    <p data-en="KITE is made for students around 15–18. Because we never ask for names or contact details, your child can use it without creating an account. We encourage you to look at the results together and talk about them. If you want your child's data removed, use the steps above or email us with the visitor ID shown on their results page.">KITE បង្កើតឡើងសម្រាប់សិស្សអាយុប្រហែល ១៥–១៨ ឆ្នាំ។ ដោយសារយើងមិនដែលសួររកឈ្មោះ ឬព័ត៌មានទំនាក់ទំនង កូនរបស់អ្នកអាចប្រើវាដោយមិនចាំបាច់បង្កើតគណនី។ យើងលើកទឹកចិត្តឱ្យអ្នកមើលលទ្ធផលជាមួយគ្នា ហើយពិភាក្សាអំពីវា។ ប្រសិនបើអ្នកចង់លុបទិន្នន័យកូនរបស់អ្នក សូមប្រើជំហានខាងលើ ឬផ្ញើអ៊ីមែលមកយើងជាមួយលេខសម្គាល់ដែលបង្ហាញនៅលើទំព័រលទ្ធផល។</p>
+  <section class="prose" aria-labelledby="p9">
+    <h2 id="p9" data-en="Contact">ទំនាក់ទំនង</h2>
+    <p><span data-en="For privacy questions or deletion requests, contact:">សម្រាប់សំណួរអំពីឯកជនភាព ឬការស្នើសុំលុប សូមទាក់ទង៖</span> <b class="mono" style="user-select:all">thearyt572@gmail.com</b></p>
   </section>
 
-  <section class="prose" aria-labelledby="p7">
-    <h2 id="p7" data-en="Contact">ទំនាក់ទំនង</h2>
-    <p><span data-en="Privacy questions:">សំណួរពីឯកជនភាព៖</span> <span class="mono" style="user-select:all">weare@thekitebud.com</span></p>
+  <section class="prose" aria-labelledby="p10">
+    <h2 id="p10" data-en="For parents and guardians">សម្រាប់ឪពុកម្តាយ និងអាណាព្យាបាល</h2>
+    <p data-en="KITEBud is designed to help students explore their future study options. We never ask for names or contact details, and there is no account. We encourage parents or guardians to review this notice with students under 18 before they take part in the research pilot.">KITEBud ត្រូវបានរចនាឡើងដើម្បីជួយសិស្សស្វែងយល់ពីជម្រើសការសិក្សានាពេលអនាគត។ យើងមិនដែលសួររកឈ្មោះ ឬព័ត៌មានទំនាក់ទំនងទេ ហើយក៏គ្មានគណនីដែរ។ យើងលើកទឹកចិត្តឱ្យឪពុកម្តាយ ឬអាណាព្យាបាល ពិនិត្យមើលសេចក្តីជូនដំណឹងនេះជាមួយសិស្សដែលមានអាយុក្រោម ១៨ ឆ្នាំ មុនពេលពួកគេចូលរួមក្នុងការសាកល្បងស្រាវជ្រាវ។</p>
   </section>
 </div></main>
 <div id="kite-footer"></div>

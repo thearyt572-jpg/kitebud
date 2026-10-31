@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>KITE · Results</title>
+<title>KITEBud · Results</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
@@ -163,7 +163,7 @@ function render(){
   document.getElementById("retake").onclick = e => { if(demo){ K.setDemo(false); } else K.update(s=>{ s.pos = -1; s.started = null; }); };
   document.getElementById("share").onclick = ()=>{
     const lines = R.top.map((x,i)=> `${i+1}. ${K.unlocked(S,x.id)?K.t(x.m):"🔒"} — ${x.pct===null?K.t(K.NOINFO):x.pct+"%"}`);
-    const txt = K.t("ភាពសាកសមកំពូលរបស់ខ្ញុំនៅលើ KITE ✈️","My top KITE matches ✈️") + "\n" + lines.join("\n") + "\n" + K.t("សាកល្បងតេស្តឥតគិតថ្លៃនៅ KITE","Try the free test on KITE");
+    const txt = K.t("ភាពសាកសមកំពូលរបស់ខ្ញុំនៅលើ KITEBud ✈️","My top KITEBud matches ✈️") + "\n" + lines.join("\n") + "\n" + K.t("សាកល្បងតេស្តឥតគិតថ្លៃនៅ KITEBud","Try the free test on KITEBud");
     K.copy(txt, document.getElementById("sharebox"));
   };
 }

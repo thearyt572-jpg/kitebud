@@ -19,13 +19,23 @@ function genId(){
 // a: Part A · b1/b2/b3: interests · c: personality · d1: grades + track · d2: self-ratings
 function fresh(){ return {v:2,id:genId(),lang:"km",a:{},b1:{},b1order:null,b2:{},b3:[],c:{known:null,type:"",alsoQuiz:false,quiz:{}},d1:{grades:{},track:null},d2:{},
   pos:0,done:false,paid:null,unlocked:[],pkg:"B",checks:{},started:null}; }
+/* kite_vid cookie: the visitor ID only, created after Allow, for 180 days (owner's decision 2026-10-31).
+   Deleted on Decline and by "Delete my data on this device". No other cookie is ever set. */
+const VID="kite_vid", VID_DAYS=180;
+const vidCookie = () => safe(()=>(document.cookie.match(/(?:^|;\s*)kite_vid=(KT-[A-Z0-9]{4}-[A-Z0-9]{4})/)||[])[1], null) || null;
+function setVid(id){
+  if(vidCookie()===id) return; // keep the first expiry date: 180 days from when it was created
+  safe(()=>{ document.cookie = `${VID}=${id}; Max-Age=${VID_DAYS*86400}; Path=/; SameSite=Lax${location.protocol==="https:"?"; Secure":""}`; });
+}
+const dropVid = () => safe(()=>{ document.cookie = `${VID}=; Max-Age=0; Path=/; SameSite=Lax`; });
 K.load = function(){
   let s = safe(()=>JSON.parse(store().getItem(SKEY)||"null"), null)
        || safe(()=>JSON.parse(sessionStorage.getItem(SKEY)||"null"), null)
        || mem;
   // answers saved by the old test (v1) can't be scored by formula 1.0: start again, keeping the visitor ID and language
   if(s && s.v!==2){ const old = s; s = fresh(); s.id = old.id || s.id; s.lang = old.lang || s.lang; K.save(s); }
-  if(!s){ s = fresh(); K.save(s); }
+  // browser storage was cleared but the cookie is still there: keep the same visitor ID
+  if(!s){ s = fresh(); if(K.consent()==="allow" && vidCookie()) s.id = vidCookie(); K.save(s); }
   return s;
 };
 K.save = function(s){
@@ -36,13 +46,14 @@ K.update = function(fn){ const s=K.load(); fn(s); K.save(s); return s; };
 K.setConsent = function(c){
   const s = K.load();
   safe(()=>localStorage.setItem(CKEY, c));
-  if(c==="allow"){ safe(()=>localStorage.setItem(SKEY, JSON.stringify(s))); safe(()=>sessionStorage.removeItem(SKEY)); }
-  else { safe(()=>sessionStorage.setItem(SKEY, JSON.stringify(s))); safe(()=>localStorage.removeItem(SKEY)); }
+  if(c==="allow"){ safe(()=>localStorage.setItem(SKEY, JSON.stringify(s))); safe(()=>sessionStorage.removeItem(SKEY)); setVid(s.id); }
+  else { safe(()=>sessionStorage.setItem(SKEY, JSON.stringify(s))); safe(()=>localStorage.removeItem(SKEY)); dropVid(); }
   document.dispatchEvent(new CustomEvent("kite:consent"));
 };
 K.wipe = function(){
   safe(()=>localStorage.removeItem(SKEY)); safe(()=>sessionStorage.removeItem(SKEY));
   safe(()=>localStorage.removeItem(CKEY)); safe(()=>sessionStorage.removeItem(VKEY));
+  dropVid();
   mem = null;
 };
 K.isDemo = () => safe(()=>sessionStorage.getItem(VKEY)==="demo", false);
@@ -120,7 +131,7 @@ function renderChrome(){
   const links = NAV.map(n=>`<a href="${n.href}"${n.page===page?' aria-current="page"':""}>${K.t(n)}</a>`).join("");
   if(h){
     h.innerHTML = `<div class="topbar"><div class="wrap topbar__in">
-      <a class="logo" href="index.html" aria-label="KITE — ${K.t("ទំព័រដើម","Home")}"><span class="logo__mark" aria-hidden="true">✈</span>KITE</a>
+      <a class="logo" href="index.html" aria-label="KITEBud — ${K.t("ទំព័រដើម","Home")}"><span class="logo__mark" aria-hidden="true">✈</span>KITEBud</a>
       <nav class="nav" aria-label="${K.t("ម៉ឺនុយមេ","Main menu")}">${links}<a class="btn btn--gold" href="assessment.html">${K.t("ចាប់ផ្ដើមតេស្ត","Start test")}</a></nav>
       <button class="langbtn" type="button" id="langbtn" aria-label="${K.t("ប្ដូរភាសា","Change language")}"><span class="${lang==="km"?"on":""}">ខ្មែរ</span><span class="${lang==="en"?"on":""}">EN</span></button>
       <button class="menubtn" type="button" id="menubtn" aria-expanded="false" aria-controls="mobilenav">${K.t("ម៉ឺនុយ","Menu")} ☰</button>
@@ -135,7 +146,7 @@ function renderChrome(){
     f.innerHTML = `<div class="footer"><div class="wrap">
       <div class="footer__grid">
         <div class="stack" style="gap:10px">
-          <a class="logo" href="index.html"><span class="logo__mark" aria-hidden="true">✈</span>KITE</a>
+          <a class="logo" href="index.html"><span class="logo__mark" aria-hidden="true">✈</span>KITEBud</a>
           <p>${K.t("ហោះហើរឆ្ពោះទៅរកជំនាញដែលសាកសមនឹងអ្នក។","Take off toward a major that fits you.")}</p>
         </div>
         <div class="footer__links">
@@ -167,12 +178,12 @@ function showCookie(force){
   el.hidden = false;
   const now = c ? `<p class="small muted">${K.t("ជម្រើសបច្ចុប្បន្ន: ","Current choice: ")}<b>${c==="allow"?K.t("អនុញ្ញាត","Allowed"):K.t("បដិសេធ","Declined")}</b></p>` : "";
   el.innerHTML = `<div class="cookie__card" role="dialog" aria-labelledby="ck-h" aria-describedby="ck-p">
-    <h3 id="ck-h">${K.t("ខូគី និងការរក្សាទុកចម្លើយ","Cookies and saving your answers")}</h3>
-    <p id="ck-p" class="small"><span class="ck-long">${K.t("KITE ប្រើការផ្ទុកក្នុងកម្មវិធីរុករក (ខូគី) តែដើម្បីរក្សាចម្លើយ និងលទ្ធផលរបស់អ្នកនៅលើឧបករណ៍នេះ ដើម្បីឱ្យអ្នកអាចបន្តពេលក្រោយ។ យើងមិនប្រើខូគីសម្រាប់ការផ្សាយពាណិជ្ជកម្មទេ។ បើអ្នកបដិសេធ តេស្តនៅតែដំណើរការ ប៉ុន្តែចម្លើយនឹងបាត់ពេលអ្នកបិទផ្ទាំងនេះ។","KITE uses browser storage (cookies) only to keep your answers and results on this device, so you can continue later. We never use cookies for ads. If you decline, the test still works, but your answers disappear when you close this tab.")} <a href="privacy.html#cookies">${K.t("អានគោលការណ៍ឯកជនភាព","Read the privacy policy")}</a></span><span class="ck-short">${K.t("យើងរក្សាទុកចម្លើយរបស់អ្នកតែលើឧបករណ៍នេះ ដើម្បីឱ្យអ្នកបន្តពេលក្រោយបាន។ បើបដិសេធ ចម្លើយនឹងបាត់ពេលអ្នកបិទផ្ទាំងនេះ។","We save your answers only on this device so you can continue later. If you decline, they clear when you close this tab.")} <a href="privacy.html#cookies">${K.t("អានបន្ថែម","Read more")}</a></span></p>
+    <h3 id="ck-h">${K.t("យើងគោរពឯកជនភាពរបស់អ្នក។","We respect your privacy.")}</h3>
+    <p id="ck-p" class="small">${K.t("បើអ្នកជ្រើស «អនុញ្ញាត» KITEBud នឹងបង្កើតខូគីអនាមិកមួយ ដែលមានលេខសម្គាល់អ្នកទស្សនារបស់អ្នក ហើយរក្សាទុកចម្លើយ និងលទ្ធផលតេស្តរបស់អ្នក សម្រាប់ការសិក្សារបស់យើង។ អ្នកអាចបដិសេធ ហើយនៅតែប្រើតេស្តបាន៖ គ្មានលេខសម្គាល់អ្នកទស្សនា ឬទិន្នន័យកម្រងសំណួរណាមួយ ត្រូវបានរក្សាទុកក្នុងមូលដ្ឋានទិន្នន័យរបស់យើងទេ។","If you choose Allow, KITEBud creates an anonymous cookie with your visitor ID and saves your test answers and results for our study. You can decline and still use the test: no visitor ID or questionnaire data will be saved to our database.")} <a href="privacy.html">${K.t("អានសេចក្តីជូនដំណឹងអំពីឯកជនភាព","Read the privacy notice")}</a></p>
     ${now}
     <div class="cookie__btns"><button class="btn btn--ink" type="button" data-c="allow">${K.t("អនុញ្ញាត","Allow")}</button><button class="btn btn--ink" type="button" data-c="decline">${K.t("បដិសេធ","Decline")}</button></div>
   </div>`;
-  el.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ K.setConsent(b.dataset.c); el.hidden=true; K.toast(b.dataset.c==="allow"?K.t("ចម្លើយនឹងត្រូវរក្សាទុកនៅលើឧបករណ៍នេះ","Answers will be saved on this device"):K.t("ចម្លើយនឹងបាត់ពេលបិទផ្ទាំងនេះ","Answers will clear when you close this tab")); });
+  el.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{ K.setConsent(b.dataset.c); el.hidden=true; K.toast(b.dataset.c==="allow"?K.t("ចម្លើយរបស់អ្នកនឹងត្រូវរក្សាទុកសម្រាប់ការសិក្សា","Your answers will be saved for the study"):K.t("ចម្លើយនឹងបាត់ពេលបិទផ្ទាំងនេះ","Answers will clear when you close this tab")); });
 }
 K.showCookie = showCookie;
 
@@ -217,7 +228,8 @@ K.state = () => K.isDemo() ? K.demoState() : K.load();
 
 /* ---------- boot ---------- */
 function boot(){
-  K.load();
+  const s = K.load();
+  if(K.consent()==="allow") setVid(s.id); // visitors who allowed before the cookie existed get it too
   applyStatic(); renderChrome(); showCookie(false);
 }
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot); else boot();
