@@ -138,6 +138,26 @@ if (process.argv.includes("--build")) {
   const scholarships = keep(/const SCHOLARSHIPS = \[[\s\S]*?\n\];/, "const SCHOLARSHIPS = [];");
   const cities = keep(/const CITIES = \{.*\};/, `const CITIES = {pp:{km:"ភ្នំពេញ",en:"Phnom Penh"}};`);
 
+  // Full university names (owner's decision 2026-11-05: always the full name), copied exactly from each university's
+  // own website; sources in docs/university-names-review.md. Khmer: 6 from the official websites, 9 given by the owner
+  // on 2026-11-05 (UTE is written with one ័; the owner's text had it twice by mistake). short = the round badge.
+  const FULL_NAMES = {
+    itc:     { en: "Institute of Technology of Cambodia", km: "វិទ្យាស្ថានបច្ចេកវិទ្យាកម្ពុជា" },
+    rupp:    { en: "Royal University of Phnom Penh", km: "សាកលវិទ្យាល័យភូមិន្ទភ្នំពេញ" },
+    cadt:    { en: "Cambodia Academy of Digital Technology", km: "វិទ្យាស្ថានបច្ចេកវិទ្យាឌីជីថល" },
+    aupp:    { en: "American University of Phnom Penh", km: "សាកលវិទ្យាល័យអាមេរិកាំងភ្នំពេញ" },
+    paragon: { en: "Paragon International University", km: "សាកលវិទ្យាល័យអន្តរជាតិ ផារ៉ាហ្គន" },
+    ute:     { en: "University of Technology and Entrepreneurship", km: "សាកលវិទ្យាល័យ បច្ចេកវិទ្យា និងសហគ្រិនភាព" },
+    beltei:  { en: "BELTEI International University", km: "សាកលវិទ្យាល័យ ប៊ែលធី អន្តរជាតិ" },
+    rule:    { en: "Royal University of Law and Economics", km: "សាកលវិទ្យាល័យភូមិន្ទនីតិសាស្ត្រ និងវិទ្យាសាស្ត្រសេដ្ឋកិច្ច" },
+    camtech: { en: "CamTech University", km: "សាកលវិទ្យាល័យខេមតិច" },
+    camed:   { en: "CamEd Business School", km: "វិទ្យាស្ថានខេមអេដ" },
+    uc:      { en: "The University of Cambodia", km: "សាកលវិទ្យាល័យកម្ពុជា" },
+    setech:  { en: "SETEC Institute", km: "វិទ្យាស្ថានស៊ីតិក", short: "SETEC" }, // the sheet writes "SeTech"; the official spelling is SETEC
+    norton:  { en: "Norton University", km: "សាកលវិទ្យាល័យ ន័រតុន" },
+    num:     { en: "National University of Management", km: "សាកលវិទ្យាល័យជាតិគ្រប់គ្រង" },
+    iu:      { en: "International University", km: "សាកលវិទ្យាល័យ អន្តរជាតិ" }
+  };
   // each university's block of sheet rows: from the row after the previous university's last row to its own last row
   const ids = [...new Set(ROWS.map(r => r.universityId))];
   const lastRow = id => Math.max(...ROWS.filter(r => r.universityId === id).map(r => r.sheetRow));
@@ -147,8 +167,9 @@ if (process.argv.includes("--build")) {
     const name = r0.universityNameEn;
     const programs = out.filter(o => o.uniId === id && o.majors.length)
       .map(o => ({ name: o.prog + (o.type ? " · " + o.type : ""), majors: o.majors, fee: o.fee }));
-    return { id, en: name, km: name, // no Khmer university names yet: the short name is shown in both languages
-      short: name.length <= 7 ? name.toUpperCase() : name.replace(/[^A-Z]/g, ""), // badge: "CamTech" → CAMTECH, "Norton University" → NU
+    const full = FULL_NAMES[id] || {};
+    return { id, en: full.en || name, km: full.km || name, // the sheet's short name only where no full name is confirmed yet
+      short: full.short || (name.length <= 7 ? name.toUpperCase() : name.replace(/[^A-Z]/g, "")), // badge: "CamTech" → CAMTECH, "Norton University" → NU
       city: "pp", url: r0.officialWebsite || "", sch, lastVerified: r0.lastVerified || null, logo: "", logo_permission: "no", programs };
   }).filter(u => u.programs.length);
 

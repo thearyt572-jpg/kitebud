@@ -23,19 +23,12 @@
 .reasons{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
 .reasons li{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--card);border-radius:10px;border:var(--bw) solid var(--edge)}
 .reasons li::before{content:"✓";color:var(--ok);font-weight:700}
-.filters{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
-@media (max-width:620px){.filters{grid-template-columns:1fr}}
-.uni{display:flex;flex-direction:column;gap:6px;padding:16px;background:var(--card);border-radius:12px;border:var(--bw) solid var(--edge);min-width:0}
-.uni dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:.9rem}
-.uni dt{color:var(--muted)}
-.uni dd{margin:0;min-width:0}
-.uni__head{display:flex;gap:12px;align-items:center;min-width:0}
-.badge{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:var(--sky-soft);color:var(--ink);border:2px solid var(--sky);font-family:var(--f-mono);font-weight:600;font-size:.78rem;letter-spacing:.02em;line-height:1}
-.badge--long{font-size:.62rem;letter-spacing:0}
-.progs{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:2px}
-.badge img{width:100%;height:100%;object-fit:contain;background:var(--logo-bg)}
-.cb{display:flex;align-items:center;gap:8px;min-height:48px}
-.cb input{width:20px;height:20px;accent-color:var(--sky)}
+/* D. where to study it: a compact list (university name + the matching programs), in two columns on wide screens.
+   The thin stem takes the match's rank colour (css/style.css section 17). */
+.unilist{margin:0;padding:0;list-style:none;columns:2 280px;column-gap:28px}
+.unilist li{break-inside:avoid;display:flex;flex-direction:column;gap:2px;padding:8px 0 8px 14px;margin-bottom:8px;border-left:3px solid var(--rank,var(--edge))}
+.unilist b{font-weight:700}
+.unilist__progs{font-size:.875rem;color:var(--muted)}
 </style>
 </head>
 <body data-page="report">
@@ -53,7 +46,6 @@
 <script>
 (function(){
 const K = window.KITE, D = window.KITE_DATA, app = document.getElementById("app");
-const F = {}; // filters per major
 const STEPS = [
   {id:"talk",km:"ពិភាក្សាលទ្ធផលនេះជាមួយគ្រួសារ ឬគ្រូរបស់អ្នក",en:"Talk these results through with your family or a teacher"},
   {id:"site",km:"បើកគេហទំព័រផ្លូវការរបស់សាកលវិទ្យាល័យ ២ យ៉ាងតិច ហើយពិនិត្យថ្លៃសិក្សា",en:"Open the official site of at least 2 universities and check the fees"},
@@ -62,50 +54,28 @@ const STEPS = [
   {id:"sch",km:"ជ្រើសអាហារូបករណ៍មួយ ហើយរៀបចំឯកសារដាក់ពាក្យ",en:"Pick one scholarship and start gathering the documents"},
   {id:"bac",km:"ផ្ដោតលើមុខវិជ្ជាដែលសំខាន់សម្រាប់ជំនាញនេះ សម្រាប់ប្រឡងបាក់ឌុប",en:"Focus on the BacII subjects that matter most for this major"}
 ];
-const money = n => "$" + n.toLocaleString("en-US");
-
 const safeUrl = u => /^https?:\/\//i.test(u||"") ? u : null; // only real web links
-// a real logo only with the university's written permission and a plain file name in images/logos/; otherwise its initials
-const logoFile = u => u.logo_permission==="yes" && /^[\w-]+\.(png|jpe?g|svg|webp)$/i.test(u.logo||"") ? "images/logos/" + u.logo : null;
-const initials = u => u.short || ((u.en.match(/\(([^)]+)\)/) || [])[1] || u.id).toUpperCase(); // "RUPP", "CAMTECH", "NU"
-const badge = u => { const t = initials(u); return `<span class="badge${t.length>4?" badge--long":""}" aria-hidden="true">${logoFile(u) ? `<img src="${logoFile(u)}" alt="">` : K.esc(t)}</span>`; };
-const dateText = d => d ? K.n(d.split("-").reverse().join("/")) : K.t("មិនទាន់ពិនិត្យ","Not checked yet"); // "2026-10-30" → 30/10/2026
-// fee = [min, max] USD per year (js/universities.js), or null when the sheet gives no per-year price
-const perYear = (a, b) => `${money(a)}${b && b!==a ? "–" + money(b) : ""} / ${K.t("ឆ្នាំ","year")}`;
+// a university offers a major when one of its programs (js/universities.js) lists that major: the only rule used, nothing invented
 const offers = (u, id) => u.programs.some(p=>p.majors.includes(id));
 
 function uniList(m){
-  const f = F[m.id] || (F[m.id] = {max:"all",sch:false});
   if(!D.UNIS.some(u=>offers(u, m.id))) return `<p class="banner banner--info">${K.t("យើងកំពុងពិនិត្យបញ្ជីសាកលវិទ្យាល័យសម្រាប់ជំនាញនេះនៅឡើយ។","We're still checking the university list for this major.")}</p>`;
-  const list = D.UNIS.filter(u=>offers(u, m.id)).map(u=>{
-      const progs = u.programs.filter(p=>p.majors.includes(m.id)), fees = progs.filter(p=>p.fee);
-      return {u, progs, min: fees.length ? Math.min(...fees.map(p=>p.fee[0])) : null, max: fees.length ? Math.max(...fees.map(p=>p.fee[1])) : null};
-    })
-    .filter(o=>f.max==="all"||(o.min!==null && o.min<=+f.max)) // a price we can't confirm can't pass a budget filter
-    .filter(o=>!f.sch||o.u.sch.length);
-  if(!list.length) return `<p class="banner banner--info">${K.t("គ្មានសាកលវិទ្យាល័យត្រូវនឹងតម្រងនេះទេ។ សូមដកតម្រងខ្លះចេញ។","No universities match these filters. Try removing one.")}</p>`;
-  return `<div class="grid g2">${list.map(({u,progs,min,max})=>`<div class="uni">
-    <div class="uni__head">${badge(u)}<b>${K.esc(K.t(u))}</b></div>
-    <dl>
-      <dt>${K.t("ទីក្រុង","City")}</dt><dd>${K.t(D.CITIES[u.city])}</dd>
-      <dt>${K.t("កម្មវិធីសិក្សា","Programs")}</dt><dd><ul class="progs">${progs.map(p=>`<li>${K.esc(p.name)}${p.fee?` <span class="mono">· ${perYear(p.fee[0],p.fee[1])}</span>`:""}</li>`).join("")}</ul></dd>
-      <dt>${K.t("ថ្លៃសិក្សា","Tuition")}</dt><dd>${min!==null?`<span class="mono">≈ ${perYear(min,max)}</span>`:`<span class="muted">${K.t("មិនទាន់បញ្ជាក់","Not confirmed yet")}</span>`}</dd>
-      <dt>${K.t("អាហារូបករណ៍","Scholarship")}</dt><dd>${u.sch.length?K.esc(u.sch.join(" · ")):K.t("មិនមានព័ត៌មាន","No info")}</dd>
-      <dt>${K.t("ពិនិត្យចុងក្រោយ","Date checked")}</dt><dd>${dateText(u.lastVerified)}</dd>
-    </dl>
-    ${safeUrl(u.url)?`<a href="${K.esc(safeUrl(u.url))}" target="_blank" rel="noopener">${K.t("គេហទំព័រផ្លូវការ","Official website")} ↗</a>`:""}
-  </div>`).join("")}</div>`;
+  // only the name and the programs that match this major: no prices, scholarships, dates or links here
+  return `<ul class="unilist">${D.UNIS.filter(u=>offers(u, m.id)).map(u=>{
+    const progs = u.programs.filter(p=>p.majors.includes(m.id)).map(p=>K.esc(p.name));
+    return `<li><b>${K.esc(K.t(u))}</b>${progs.length?`<span class="unilist__progs">${progs.join(" · ")}</span>`:""}</li>`;
+  }).join("")}</ul>`;
 }
 
 function section(x, rank, S){
-  const m = x.m, f = F[m.id] || (F[m.id] = {max:"all",sch:false});
+  const m = x.m;
   const sch = D.SCHOLARSHIPS.filter(s=>s.majors==="all"||s.majors.includes(m.id));
   const reasons = x.reasons.length ? x.reasons.map(r=>`<li>${K.t(r)}</li>`).join("") : `<li>${K.t("ចម្លើយរបស់អ្នកមានតុល្យភាពល្អ ក្នុងគ្រប់ផ្នែកទាំង ៤ សម្រាប់ជំនាញនេះ។","Your answers line up evenly with this major across all 4 categories.")}</li>`;
   const db = x.dealBreakers.map(id=>K.t(D.Q.B3.items.find(i=>i.id===id)));
   const jobs = m.jobs.map(id=>D.Q.A.jobs.find(j=>j.id===id)).filter(Boolean);
   const hasUnis = D.UNIS.some(u=>offers(u, m.id));
   const checks = (S.checks && S.checks[m.id]) || {};
-  return `<section class="major" id="m-${m.id}" aria-labelledby="h-${m.id}">
+  return `<section class="major" id="m-${m.id}" data-rank="${rank}" aria-labelledby="h-${m.id}">
     <div class="pass ${rank===1?"pass--gold":""}">
       <div class="pass__main"><div class="pass__band"><span>${K.t("ភាពសាកសមលេខ","Match #")}${K.n(rank)}</span><span>${S.id}</span></div>
       <h2 id="h-${m.id}" class="display">${K.t(m)}</h2></div>
@@ -125,17 +95,13 @@ function section(x, rank, S){
 
     <div class="sub"><h3><span class="label">D</span>${K.t("សាកលវិទ្យាល័យដែលមានជំនាញនេះ","Universities offering it")}</h3>
       <p class="small muted">${K.t("បង្ហាញតែកម្មវិធីថ្នាក់បរិញ្ញាបត្រប៉ុណ្ណោះ។","Bachelor's degree programs only.")}</p>
-      <div class="filters" ${hasUnis?"":"hidden"}>
-        <div class="field"><label class="small muted" for="t-${m.id}">${K.t("ថ្លៃសិក្សាអតិបរមា (ចាប់ពី)","Max tuition (starting from)")}</label><select class="input" id="t-${m.id}" data-f="max" data-m="${m.id}">${[["all",K.t("មិនកំណត់","Any")],["600","≤ $600"],["1000","≤ $1,000"],["2500","≤ $2,500"]].map(([v,l])=>`<option value="${v}" ${f.max===v?"selected":""}>${l}</option>`).join("")}</select></div>
-        <label class="cb"><input type="checkbox" id="s-${m.id}" data-f="sch" data-m="${m.id}" ${f.sch?"checked":""}>${K.t("មានអាហារូបករណ៍","Scholarship available")}</label>
-      </div>
       <div id="u-${m.id}">${uniList(m)}</div>
       ${hasUnis?`<p class="small muted">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។","Info may change — check the official site.")} ${K.t("KITEBud មិនមានទំនាក់ទំនង ឬទទួលបានការគាំទ្រពីសាកលវិទ្យាល័យទាំងនេះទេ។ ព័ត៌មានយកចេញពីគេហទំព័រផ្លូវការរបស់ពួកគេ។","KITEBud is not affiliated with or endorsed by these universities. Information comes from their official websites.")}</p>`:""}
     </div>
 
     <div class="sub"><h3><span class="label">E</span>${K.t("អាហារូបករណ៍","Scholarships")}</h3>
       <div class="tablewrap"><table><thead><tr><th>${K.t("ឈ្មោះ","Name")}</th><th>${K.t("ថ្ងៃផុតកំណត់","Deadline")}</th><th>${K.t("តំណ","Link")}</th></tr></thead><tbody>
-      ${sch.map(s=>`<tr><td>${K.t(s)}</td><td>${K.t(s.when)}</td><td>${safeUrl(s.url)?`<a href="${K.esc(safeUrl(s.url))}" target="_blank" rel="noopener">${K.t("បើក","Open")} ↗</a>`:K.t("មើលផ្នែក D","See section D")}</td></tr>`).join("")}
+      ${sch.map(s=>`<tr><td>${K.t(s)}</td><td>${K.t(s.when)}</td><td>${safeUrl(s.url)?`<a href="${K.esc(safeUrl(s.url))}" target="_blank" rel="noopener">${K.t("បើក","Open")} ↗</a>`:"—"}</td></tr>`).join("")}
       </tbody></table></div>
     </div>
 
@@ -164,18 +130,13 @@ function render(){
     ${demo?`<div class="banner banner--info">${K.t("របាយការណ៍គំរូ — សិស្សប្រឌិត «ដារា»។","Sample report — fictional student “Dara”.")}</div>`:""}
     <div class="with-sticker page-band"><div class="stack" style="gap:8px"><span class="label">${K.t("របាយការណ៍ពេញលេញ","Full report")} · ${S.id}</span>
       <h1 class="display">${K.t("ផែនការហោះហើររបស់អ្នក","Your flight plan")}</h1>
-      ${open.length>1?`<nav class="jump" aria-label="Majors">${open.map(o=>`<a href="#m-${o.x.m.id}">${K.n(o.rank)}. ${K.t(o.x.m)}</a>`).join("")}</nav>`:""}
+      ${open.length>1?`<nav class="jump" aria-label="Majors">${open.map(o=>`<a href="#m-${o.x.m.id}" data-rank="${o.rank}">${K.n(o.rank)}. ${K.t(o.x.m)}</a>`).join("")}</nav>`:""}
       ${!demo && topOpen<3?`<p class="small muted">${K.t(`អ្នកបានដោះសោ ${K.n(topOpen)} ក្នុងចំណោមជំនាញកំពូលទាំង ៣។`,`You've unlocked ${topOpen} of your top 3 majors.`)} <a href="checkout.html" id="upB">${K.t("ដំឡើងទៅកញ្ចប់ B ដើម្បីមើលទាំង ៣","Upgrade to Package B to see all 3")}</a></p>`:""}
     </div><img class="sticker" src="images/sticker-graduate.webp" alt="" width="520" height="625"></div>
     ${open.map(o=>section(o.x,o.rank,S)).join("")}
     <a class="btn" href="results.html">← ${K.t("ត្រឡប់ទៅលទ្ធផល","Back to results")}</a>
   </div>`;
   const up = document.getElementById("upB"); if(up) up.onclick = ()=>K.update(s=>s.pkg="B");
-  app.querySelectorAll("[data-f]").forEach(el=>el.onchange=()=>{
-    const f = F[el.dataset.m]; f[el.dataset.f] = el.type==="checkbox" ? el.checked : el.value;
-    const m = D.MAJORS.find(x=>x.id===el.dataset.m);
-    document.getElementById("u-"+m.id).innerHTML = uniList(m);
-  });
   app.querySelectorAll("[data-check]").forEach(el=>el.onchange=()=>{
     if(demo) return;
     K.update(s=>{ s.checks = s.checks||{}; s.checks[el.dataset.m] = s.checks[el.dataset.m]||{}; s.checks[el.dataset.m][el.dataset.check] = el.checked; });

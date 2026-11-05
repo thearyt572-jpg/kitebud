@@ -125,10 +125,10 @@ function renderStart(){
   const inProgress = !S.done && (has(S.a.mode) || Object.keys(S.b1).length>0 || has(S.c.known) || has(S.d1.track));
   app.innerHTML = `<div class="stack-lg">
     <div class="stack" style="gap:10px">
-      <span class="label">${K.t("ការត្រួតពិនិត្យមុនឡើងយន្តហោះ","Pre-flight check")}</span>
+      <span class="label kicker">${K.t("ការត្រួតពិនិត្យមុនឡើងយន្តហោះ","Pre-flight check")}</span>
       <h1 class="display">${S.done?K.t("អ្នកបានបញ្ចប់តេស្តរួចហើយ","You've finished the test"):K.t("មុនពេលចាប់ផ្ដើម","Before you start")}</h1>
     </div>
-    <div class="parts">${Object.entries(PARTS).map(([k,v])=>`<div><b>${k}</b>${K.t(v)}</div>`).join("")}</div>
+    <div class="parts">${Object.entries(PARTS).map(([k,v])=>`<div data-k="${k}"><b>${k}</b>${K.t(v)}</div>`).join("")}</div>
     <ul class="prose" style="padding-left:1.2em;margin:0">
       <li>${K.t("ផ្នែក ៤ ប្រហែល ១២ នាទី។","4 parts, about 12 minutes.")}</li>
       <li>${K.t("ឆ្លើយដោយស្មោះត្រង់ តាមអ្វីដែលអ្នកពិតជាគិត មិនមែនអ្វីដែលអ្នកដទៃចង់ឱ្យអ្នកក្លាយជា។","Answer honestly, with what you really think, not what others expect of you.")}</li>
@@ -157,7 +157,10 @@ function header(st){
   const g = GROUPS[st.t];
   let n = 0, t = 0;
   if(g){ t = g[1]; n = SEQ.slice(0,S.pos+1).filter(x=>GROUPS[x.t] && GROUPS[x.t][0]===g[0]).length; }
-  return `<div class="stack" style="gap:10px">
+  // binder tabs: the four parts at a glance (decorative; the "Part B · Interests" label below says it in words)
+  const tabs = `<div class="binder" aria-hidden="true">${Object.keys(PARTS).map(k=>`<span class="binder__tab${k===st.part?" is-on":k<st.part?" is-done":""}" data-k="${k}">${k}</span>`).join("")}</div>`;
+  return `<div class="stack" style="gap:10px" data-part="${st.part}">
+    ${tabs}
     <div class="qhead"><span class="label">${K.t("ផ្នែក","Part")} ${st.part} · ${K.t(PARTS[st.part])}</span>
     ${g?`<span class="mono small">${K.n(n)} / ${K.n(t)}</span>`:""}</div>
     ${g?`<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="${t}" aria-valuenow="${n}"><div class="progress__fill" style="width:${(n-1)/t*100}%"></div></div>`:""}

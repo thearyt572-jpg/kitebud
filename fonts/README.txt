@@ -4,12 +4,16 @@ Font                  Used for                              Source
 Fredoka               English headings                      https://fonts.google.com/specimen/Fredoka
 Kantumruy Pro         All body text; Khmer headings         https://fonts.google.com/specimen/Kantumruy+Pro
 IBM Plex Mono         Numbers, codes, small English labels  https://fonts.google.com/specimen/IBM+Plex+Mono
+Playfair Display      Journal headings (English)            https://fonts.google.com/specimen/Playfair+Display
+Nunito                Journal body text (English)           https://fonts.google.com/specimen/Nunito
+Caveat                Small handwritten labels (English)    https://fonts.google.com/specimen/Caveat
 
-All three fonts are licensed under the SIL Open Font License, Version 1.1:
+All six fonts are licensed under the SIL Open Font License, Version 1.1:
 https://openfontlicense.org
 They may be used, shared and hosted on a website for free.
 
-Only the Khmer, Latin and Latin-extended character sets were downloaded (October 2026).
+Only the Khmer, Latin and Latin-extended character sets were downloaded (October 2026;
+Playfair Display, Nunito and Caveat: Latin only, November 2026).
 Several files are "variable" fonts: one file covers more than one weight, so the
 weight number in a file name is just the first weight it was downloaded for.
 The @font-face rules that load these files are in css/fonts.css.

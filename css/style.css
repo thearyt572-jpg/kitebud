@@ -2,7 +2,7 @@
    with a boarding-pass identity. Sticky white top bar, content as rounded cards on a pale sky-blue ground, max 1080px.
    Sections: 1 tokens · 2 base · 3 type · 4 layout · 5 buttons · 6 navigation · 7 footer · 8 cookie banner ·
    9 boarding pass · 10 % tiles · 11 bars & progress · 12 cards & banners · 13 questions & forms ·
-   14 FAQ, locked, tables, checklist, toast · 15 motion */
+   14 FAQ, locked, tables, checklist, toast · 15 motion · 16 journey themes (airport, journal, library, destination) · 17 colour roles */
 
 /* ============ 1. Design tokens (change the look here only) ============
    Colours follow the KITEBud reference design (soft blue, white, navy; the logo's kite blue for main actions).
@@ -170,7 +170,7 @@ html[lang="km"] :is(.label,.pass__band,.tag,th,.gate){font-family:var(--f-body);
 .nav a[aria-current="page"]{background:var(--sky-soft);color:var(--sky);font-weight:700;box-shadow:inset 0 -3px 0 var(--lime)}
 .nav .btn{margin-left:6px;min-height:42px;color:var(--fg)} /* keep the button text colour (the .nav a rule would change it) */
 .nav .btn:hover{background:var(--bg)}
-.langbtn{display:inline-flex;align-items:center;gap:2px;border:var(--bw) solid var(--edge);border-radius:var(--r-pill);background:transparent;padding:3px;cursor:pointer;font:inherit;color:var(--ink)}
+.langbtn{display:inline-flex;align-items:center;gap:2px;min-height:44px;border:var(--bw) solid var(--edge);border-radius:var(--r-pill);background:transparent;padding:3px 5px;cursor:pointer;font:inherit;color:var(--ink)} /* 44px: a comfortable touch target */
 .langbtn span{padding:2px 10px;border-radius:var(--r-pill);font-size:.85rem;font-weight:600;line-height:1.6}
 .langbtn span.on{background:var(--ink);color:var(--paper)}
 .menubtn{display:none;margin-left:auto;min-height:44px;white-space:nowrap;min-width:44px;border:var(--bw) solid var(--edge);border-radius:var(--r-sm);background:transparent;color:var(--ink);font:inherit;font-weight:600;cursor:pointer;padding:0 12px}
@@ -345,3 +345,228 @@ html[lang="km"] .mascot__caption{font-size:7cqw;line-height:1.5}
 
 /* ============ 15. Motion ============ */
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ============ 16. Journey themes (owner, 2026-11-05) ============
+   KITEBud is one trip in four stages. Each stage re-colours the shared components through tokens, plus a few rules of its own:
+   · home                        = the AIRPORT: sky gradient inside an airplane window, boarding passes, yellow CTA, Fredoka
+   · test, FAQ, about, privacy,
+     checkout                    = the STUDY JOURNAL: periwinkle grid paper, paper cards, binder tabs, Playfair + Nunito (English)
+   · report                      = the KNOWLEDGE LIBRARY: the journal, with binder-tab navigation and pill tags
+   · results                     = the DESTINATION: journal paper with a sky "arrival" header and a featured top match
+   Khmer text always uses Kantumruy Pro (Playfair, Nunito and Caveat have no Khmer letters).
+   Every token is set for light AND dark mode (the dark blocks must mirror the light ones). */
+
+/* ---- 16a. Airport (home) ---- */
+body[data-page="home"]{
+  --sky-top:#0294E1; --sky-bottom:#76D1FF; --frame:#E2E6E9; --frame-lo:#C9D0D6; --frame-hi:#F7F9FA;
+  --spark:#FFF100; --cta:#FFF100; --cta-ink:#12202B; --cloud:rgba(255,255,255,.92); --final-bg:#0077C8;
+  --paper:#F3FAFF; --card:#FFFFFF; --ink:#12202B; --muted:#4A6176; --line:#E2E6E9; --line-strong:#7A93A8;
+  --sky:#006BB4; --sky-soft:#E6F5FD; --sky-mid:#A9DDF6; --label-ink:#005E99; /* links: #0077C8 is just under 4.5:1 on this paper */
+  --accent:#009FE3; --accent-strong:#0077C8; --accent-ink:#FFFFFF; --accent-soft:#E6F5FD; --accent-hover:#00629F;
+  --gold:#0077C8; --gold-soft:#E6F5FD; --focus:#0077C8;
+  --edge:#E2E6E9; --edge-strong:#7A93A8; --lime:#009FE3; --lime-soft:#E6F5FD; --lime-ink:#12202B;
+  --board:#0B3A5E;
+  --shadow:0 1px 0 rgba(18,32,43,.04), 0 14px 30px -18px rgba(0,80,140,.35);
+}
+/* ---- 16b. Study journal (test, FAQ, about, privacy, checkout) + library (report) + destination (results) ---- */
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]){
+  --grid:#CDE0F9; --spark:#709AD9; --option:#FFFFFF; --arrive:#009FE3; --arrive-soft:#E6F5FD; --band-top:#BFE9FF;
+  --paper:#DCE7F7; --card:#FAFCFF; --ink:#2B3E6B; --muted:#4A5C86; --line:#CDE0F9; --line-strong:#7C98C8;
+  --sky:#3763A7; --sky-soft:#E9F0FB; --sky-mid:#B8CCEE; --label-ink:#3763A7;
+  --accent:#709AD9; --accent-strong:#3763A7; --accent-ink:#FFFFFF; --accent-soft:#DCE7F7; --accent-hover:#2C548F;
+  --gold:#3763A7; --gold-soft:#DCE7F7; --focus:#3763A7;
+  --edge:#9BB8EA; --edge-strong:#3763A7; --lime:#698CC7; --lime-soft:#DCE7F7; --lime-ink:#FFFFFF;
+  --board:#2B3E6B;
+  --shadow:0 4px 15px rgba(105,140,199,.15); --shadow-pop:0 18px 40px -16px rgba(43,62,107,.35);
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;
+}
+/* dark mode: night flight (home) and the journal by lamplight (the two blocks must stay the same) */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) body[data-page="home"]{
+    --sky-top:#0C4677; --sky-bottom:#2B7DB5; --frame:#4A5560; --frame-lo:#2B333B; --frame-hi:#66727D;
+    --cta-ink:#12202B; --cloud:rgba(220,236,250,.22); --final-bg:#0B3A5E;
+    --paper:#0B1A2B; --card:#13263B; --ink:#E6F1FA; --muted:#A3B8CB; --line:#24405C; --line-strong:#5F80A6;
+    --sky:#7CC8F2; --sky-soft:#173451; --sky-mid:#245178; --label-ink:#9AD6F7;
+    --accent:#4FB8EC; --accent-strong:#5CC0F0; --accent-ink:#0B1A2B; --accent-soft:#173451; --accent-hover:#86D1F5;
+    --gold:#5CC0F0; --gold-soft:#173451; --focus:#7CC8F2;
+    --edge:#3A4C5E; --edge-strong:#7CC8F2; --lime:#4FB8EC; --lime-soft:#173451; --lime-ink:#0B1A2B;
+    --board:#081422; --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 30px -18px rgba(0,0,0,.8);
+  }
+  :root:not([data-theme="light"]) body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]){
+    --grid:rgba(155,184,234,.07); --spark:#9BB8EA; --option:#1F2C4B; --arrive:#4FB8EC; --arrive-soft:#173451; --band-top:#173D63;
+    --paper:#111A2E; --card:#1A2540; --ink:#E3EAF8; --muted:#A9B8D6; --line:#2A3A60; --line-strong:#6F86B8;
+    --sky:#9BB8EA; --sky-soft:#22305A; --sky-mid:#34477A; --label-ink:#B8CCF0;
+    --accent:#9BB8EA; --accent-strong:#9BB8EA; --accent-ink:#111A2E; --accent-soft:#22305A; --accent-hover:#B8CCF0;
+    --gold:#9BB8EA; --gold-soft:#22305A; --focus:#9BB8EA;
+    --edge:#34477A; --edge-strong:#9BB8EA; --lime:#9BB8EA; --lime-soft:#2A3A66; --lime-ink:#111A2E;
+    --board:#0B1222; --shadow:0 4px 15px rgba(0,0,0,.35); --shadow-pop:0 18px 40px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"] body[data-page="home"]{
+  --sky-top:#0C4677; --sky-bottom:#2B7DB5; --frame:#4A5560; --frame-lo:#2B333B; --frame-hi:#66727D;
+  --cta-ink:#12202B; --cloud:rgba(220,236,250,.22); --final-bg:#0B3A5E;
+  --paper:#0B1A2B; --card:#13263B; --ink:#E6F1FA; --muted:#A3B8CB; --line:#24405C; --line-strong:#5F80A6;
+  --sky:#7CC8F2; --sky-soft:#173451; --sky-mid:#245178; --label-ink:#9AD6F7;
+  --accent:#4FB8EC; --accent-strong:#5CC0F0; --accent-ink:#0B1A2B; --accent-soft:#173451; --accent-hover:#86D1F5;
+  --gold:#5CC0F0; --gold-soft:#173451; --focus:#7CC8F2;
+  --edge:#3A4C5E; --edge-strong:#7CC8F2; --lime:#4FB8EC; --lime-soft:#173451; --lime-ink:#0B1A2B;
+  --board:#081422; --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 30px -18px rgba(0,0,0,.8);
+}
+:root[data-theme="dark"] body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]){
+  --grid:rgba(155,184,234,.07); --spark:#9BB8EA; --option:#1F2C4B; --arrive:#4FB8EC; --arrive-soft:#173451; --band-top:#173D63;
+  --paper:#111A2E; --card:#1A2540; --ink:#E3EAF8; --muted:#A9B8D6; --line:#2A3A60; --line-strong:#6F86B8;
+  --sky:#9BB8EA; --sky-soft:#22305A; --sky-mid:#34477A; --label-ink:#B8CCF0;
+  --accent:#9BB8EA; --accent-strong:#9BB8EA; --accent-ink:#111A2E; --accent-soft:#22305A; --accent-hover:#B8CCF0;
+  --gold:#9BB8EA; --gold-soft:#22305A; --focus:#9BB8EA;
+  --edge:#34477A; --edge-strong:#9BB8EA; --lime:#9BB8EA; --lime-soft:#2A3A66; --lime-ink:#111A2E;
+  --board:#0B1222; --shadow:0 4px 15px rgba(0,0,0,.35); --shadow-pop:0 18px 40px -16px rgba(0,0,0,.8);
+}
+
+/* tokens defined from other tokens must be set again here, or they keep the values from :root */
+body[data-page]{--progress:var(--lime)}
+
+/* ---- 16c. Typography per stage (English only; Khmer keeps Kantumruy Pro everywhere) ---- */
+html[lang="en"] body[data-page="home"] :is(h1,h2,h3){font-weight:700;letter-spacing:-.02em}
+html[lang="en"] body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]){
+  --f-body:"Nunito","Kantumruy Pro",system-ui,sans-serif;
+  --f-display:"Playfair Display","Kantumruy Pro",Georgia,serif;
+}
+html[lang="en"] body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) :is(h1,h2,h3){font-weight:600;letter-spacing:-.01em}
+html[lang="en"] body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]){font-weight:500}
+/* small handwritten labels (Caveat): only the decorative kicker above a page title, English only.
+   Not on the report: its kicker carries the visitor code, and data is never handwritten. */
+html[lang="en"] body:is([data-page="assessment"],[data-page="results"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) :is(.page-band .label,.kicker){
+  font-family:"Caveat",var(--f-body);font-size:1.35rem;font-weight:600;letter-spacing:0;text-transform:none;color:var(--label-ink);line-height:1.1}
+
+/* the mascot always speaks in the playful KITEBud voice (Fredoka; Khmer letters fall back to Kantumruy Pro) */
+:is(.mascot__bubble,.mascot__caption){font-family:"Fredoka","Kantumruy Pro",system-ui,sans-serif}
+
+/* ---- 16d. Shared micro-interactions (all stages; switched off by prefers-reduced-motion in section 15) ---- */
+.btn{transition:background var(--ease),border-color var(--ease),color var(--ease),box-shadow var(--ease),transform var(--ease)}
+.btn:hover:not([disabled]):not([aria-disabled="true"]){transform:translateY(-1px)}
+
+/* ---- 16e. Airport components (home) ---- */
+body[data-page="home"] .section-head .label{background:var(--sky-soft);color:var(--label-ink);padding:4px 12px;border-radius:var(--r-pill);width:max-content}
+body[data-page="home"] .section-head .label::before{width:14px;height:14px;border-radius:0;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 12 22 3l-6 18-4-7-10-2z'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 12 22 3l-6 18-4-7-10-2z'/%3E%3C/svg%3E") center/contain no-repeat}
+body[data-page="home"] :is(.pass,.panel,details.qa){border-width:1px;border-color:var(--line)}
+body[data-page="home"] .mascot__bubble{border-color:var(--ink)}
+body[data-page="home"] .mascot__bubble::before{background:var(--spark);box-shadow:0 0 0 2px var(--ink)}
+
+/* ---- 16f. Journal components ---- */
+/* paper surfaces: a hairline instead of a heavy frame, soft periwinkle shadow */
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) :is(.panel,.pass,details.qa,.tablewrap,.cookie__card){border-width:1px;border-color:var(--line)}
+/* page headers = a journal cover with binder rings down the left */
+body:is([data-page="assessment"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) .page-band{
+  position:relative;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);padding:22px 22px 20px 48px;border-radius:20px}
+body:is([data-page="assessment"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) .page-band::before{
+  content:"";position:absolute;left:16px;top:16px;bottom:16px;width:14px;
+  background:radial-gradient(circle at 7px 7px,var(--paper) 0 4px,var(--edge) 4.5px 6px,transparent 6.5px) 0 0/14px 26px repeat-y}
+/* answers: journal options on white paper; selected = periwinkle fill, steel frame, filled key and a small sparkle */
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) .choice{
+  background:var(--option);border-color:var(--edge);box-shadow:0 1px 0 var(--line)}
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) .choice:hover{
+  border-color:var(--accent-strong);background:var(--option);transform:translateY(-1px)}
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) :is(.choice[aria-pressed="true"],.choice[aria-checked="true"]){
+  background:var(--lime-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23709AD9' d='M12 1l2.6 8.4L23 12l-8.4 2.6L12 23l-2.6-8.4L1 12l8.4-2.6z'/%3E%3C/svg%3E") right 16px center/16px no-repeat;
+  border-color:var(--accent-strong);padding-right:42px}
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) :is(.choice[aria-pressed="true"],.choice[aria-checked="true"]) .choice__key{
+  background:var(--accent-strong);color:var(--accent-ink);border-color:var(--accent-strong)}
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) .choice__key{background:var(--sky-soft);border-color:var(--line)}
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) .input{box-shadow:inset 0 -2px 0 var(--edge-strong)}
+/* binder tabs (the test's four parts; the report's three majors) */
+.binder{display:flex;gap:6px;margin-bottom:2px}
+.binder__tab{min-width:44px;padding:5px 12px 4px;border-radius:12px 12px 4px 4px;background:var(--sky-mid);color:var(--ink);font-family:var(--f-mono);font-size:.85rem;font-weight:600;text-align:center;line-height:1.5}
+.binder__tab.is-done{background:var(--accent-soft);color:var(--muted)}
+.binder__tab.is-done::after{content:" ✓"}
+.binder__tab.is-on{background:var(--accent-strong);color:var(--accent-ink);transform:translateY(-3px);box-shadow:0 3px 0 var(--accent-strong)}
+/* the test: each screen is one journal page */
+body[data-page="assessment"] .qwrap{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:26px clamp(18px,4vw,36px) 30px;margin-block:28px 44px}
+@media (max-width:560px){ body[data-page="assessment"] .qwrap{margin-block:16px 28px;border-radius:16px} }
+@media (prefers-reduced-motion:no-preference){ body[data-page="assessment"] #app > *{animation:page-in .22s ease both} }
+@keyframes page-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---- 16g. Library (report) ---- */
+body[data-page="report"] .jump a{border:0;border-radius:12px 12px 4px 4px;background:var(--sky-mid);color:var(--ink);box-shadow:0 2px 0 var(--edge)}
+body[data-page="report"] .jump a:hover{background:var(--accent-strong);color:var(--accent-ink)}
+body[data-page="report"] .careers span{background:var(--sky-soft);border-radius:var(--r-pill)}
+body[data-page="report"] .reasons li{border:1px solid var(--line);background:var(--card);box-shadow:0 1px 0 var(--line)}
+body[data-page="report"] .sub h3 .label{font-family:var(--f-mono)}
+
+/* ---- 16h. Destination (results) ---- */
+/* arrival header: from sky to journal, with a dotted flight path that lands at the mascot */
+body[data-page="results"] .page-band{position:relative;overflow:hidden;background:linear-gradient(160deg,var(--band-top),var(--paper) 78%);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:24px}
+body[data-page="results"] .page-band::after{content:"";position:absolute;left:22px;right:28%;bottom:14px;height:22px;pointer-events:none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23009FE3' d='M2 12 22 3l-6 18-4-7-10-2z'/%3E%3C/svg%3E") right center/20px no-repeat,
+    radial-gradient(circle,var(--arrive) 0 1.6px,transparent 2px) left center/12px 12px repeat-x;
+  opacity:.8}
+body[data-page="results"] .page-band > .stack{padding-bottom:22px}
+/* the three matches: #1 is the featured arrival ticket across the full width; #2 and #3 side by side */
+.matches{display:grid;gap:18px}
+@media (min-width:821px){ .matches{grid-template-columns:1fr 1fr} .matches > :first-child{grid-column:1/-1} }
+body[data-page="results"] .matches > .pass{border:1px solid var(--line)}
+body[data-page="results"] .matches > .pass--gold{border:2px solid var(--arrive);border-top-width:8px;box-shadow:var(--shadow-pop)}
+body[data-page="results"] .matches > .pass--gold .pass__stub{background:var(--arrive-soft);border-left-color:var(--arrive);border-top-color:var(--arrive)}
+body[data-page="results"] .matches > .pass--gold .mname{font-size:clamp(1.4rem,3vw,1.8rem)}
+/* #2 and #3 are half width on wide screens: the stub goes along the bottom, so the bars keep their room */
+@media (min-width:821px){
+  body[data-page="results"] .matches > :not(:first-child){grid-template-columns:1fr}
+  body[data-page="results"] .matches > :not(:first-child)::before,body[data-page="results"] .matches > :not(:first-child)::after{display:none}
+  body[data-page="results"] .matches > :not(:first-child) .pass__stub{border-left:0;border-top:2px dashed var(--edge);flex-direction:row;align-items:center;flex-wrap:wrap}
+}
+@media (prefers-reduced-motion:no-preference){
+  .matches > *{animation:arrive .5s cubic-bezier(.2,.7,.3,1) both}
+  .matches > :nth-child(2){animation-delay:.08s} .matches > :nth-child(3){animation-delay:.16s}
+}
+@keyframes arrive{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ============ 17. Colour roles (owner, 2026-11-05): more colour from the SAME two palettes ============
+   Two colour systems with a meaning, used the same way on every page:
+   · the four test parts:  A future jobs = sky · B interests = periwinkle · C personality = yellow · D strengths = steel
+     (the test's binder tabs and progress bar, the start screen, home "What we measure", the About weights)
+   · the three matches:   #1 = sky · #2 = periwinkle · #3 = steel (results cards, report tabs and report sections)
+   · yellow = "your choice / the next step": the selected answer's key, the main buttons on home, a highlighter stroke
+   Every value below already belongs to the airport or the journal palette. Light swatches always carry dark ink. */
+body[data-page]{
+  --part-a:#009FE3; --part-a-soft:#76D1FF; --part-b:#698CC7; --part-b-soft:#9BB8EA;
+  --part-c:#FFF100; --part-c-soft:#FFF100; --part-d:#3763A7; --part-d-soft:#CDE0F9;
+  --rank-1:#009FE3; --rank-1-soft:#76D1FF; --rank-2:#698CC7; --rank-2-soft:#9BB8EA; --rank-3:#3763A7; --rank-3-soft:#CDE0F9;
+  --swatch-ink:#2B3E6B; --highlight:#FFF100;
+  --band-1:#FFFFFF; --band-2:#DCE7F7;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) body[data-page]{--rank-3:#709AD9; --highlight:#34477A; --band-1:#13263B; --band-2:#173451} }
+:root[data-theme="dark"] body[data-page]{--rank-3:#709AD9; --highlight:#34477A; --band-1:#13263B; --band-2:#173451}
+[data-part="A"],[data-k="A"]{--part:var(--part-a);--part-soft:var(--part-a-soft)}
+[data-part="B"],[data-k="B"]{--part:var(--part-b);--part-soft:var(--part-b-soft)}
+[data-part="C"],[data-k="C"]{--part:var(--part-c);--part-soft:var(--part-c-soft)}
+[data-part="D"],[data-k="D"]{--part:var(--part-d);--part-soft:var(--part-d-soft)}
+[data-rank="1"]{--rank:var(--rank-1);--rank-soft:var(--rank-1-soft)}
+[data-rank="2"]{--rank:var(--rank-2);--rank-soft:var(--rank-2-soft)}
+[data-rank="3"]{--rank:var(--rank-3);--rank-soft:var(--rank-3-soft)}
+
+/* the test: binder tabs in their part colour — ahead = outlined, done = filled + ✓, current = filled, raised, inked */
+.binder__tab[data-k]{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 2px var(--part-soft)}
+.binder__tab[data-k].is-done{background:var(--part-soft);color:var(--swatch-ink);box-shadow:none}
+.binder__tab[data-k].is-on{background:var(--part-soft);color:var(--swatch-ink);transform:translateY(-4px);box-shadow:0 0 0 2px var(--swatch-ink),0 4px 0 var(--swatch-ink)}
+[data-part] .progress__fill{background:var(--part)}
+.parts [data-k]{border-top:6px solid var(--part)}
+/* the selected answer: a yellow key ("your choice") on the periwinkle fill */
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) :is(.choice[aria-pressed="true"],.choice[aria-checked="true"]) .choice__key{
+  background:var(--part-c);color:var(--swatch-ink);border-color:var(--swatch-ink)}
+/* About: the four weights in their part colours (job = A, interest = B, strength = D, personality = C) */
+.weights div:has([data-weight="job"]){border-top:6px solid var(--part-a)}
+.weights div:has([data-weight="interest"]){border-top:6px solid var(--part-b)}
+.weights div:has([data-weight="pers"]){border-top:6px solid var(--part-c)}
+.weights div:has([data-weight="strength"]){border-top:6px solid var(--part-d)}
+/* results and report: each match keeps its rank colour */
+body[data-page="results"] .matches > [data-rank]:not(:first-child){border-top:6px solid var(--rank)}
+body[data-page="report"] .major[data-rank] > .pass{border-top:6px solid var(--rank)}
+body[data-page="report"] .jump a[data-rank]{background:var(--rank-soft);color:var(--swatch-ink);box-shadow:0 2px 0 var(--rank)}
+body[data-page="report"] .jump a[data-rank]:hover{background:var(--rank);color:var(--accent-ink)}
+/* journal kickers: a yellow highlighter stroke under the words */
+body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) :is(.page-band .label,.kicker){
+  width:max-content;max-width:100%;padding-inline:3px;background:linear-gradient(transparent 58%,var(--highlight) 58%,var(--highlight) 94%,transparent 94%)}
