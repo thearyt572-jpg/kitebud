@@ -181,7 +181,7 @@ The stickers had English words drawn into the image; a real text label now cover
 
 | # | Where | Khmer now [NEEDS NATIVE CHECK] | English | OK / better Khmer |
 |---|---|---|---|---|
-| 116 | Home, main button (`index.html`; was «ចាប់ផ្ដើមដំណើររបស់អ្នក (តេស្តឥតគិតថ្លៃ)», the brackets are now a small "free" tag inside the button) | [NEEDS NATIVE CHECK] ចាប់ផ្ដើមដំណើររបស់អ្នក + tag: តេស្តឥតគិតថ្លៃ | Start your journey + tag: Free test | |
+| 116 | Home, main button (`index.html`; was «ចាប់ផ្ដើមដំណើររបស់អ្នក (តេស្តឥតគិតថ្លៃ)»; the "free test" part was removed on 2026-11-05) | [NEEDS NATIVE CHECK] ចាប់ផ្ដើមដំណើររបស់អ្នក | Start your journey | |
 | 117 | Home, small text above "How it works" (`index.html`, replaces «ផែនការហោះហើរ» / "Flight plan") | [NEEDS NATIVE CHECK] ៣ ជំហានងាយៗ | 3 simple steps | |
 
 ## K. Redesign Phase 7: section labels (draft Khmer)
