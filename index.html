@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>KITEBud Major Finder</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png" sizes="192x192">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
 <style>
@@ -13,19 +13,35 @@
 .hero h1{font-size:clamp(1.65rem,4.4vw,2.7rem)}
 .hero__lead{font-size:1.12rem;color:var(--muted);max-width:52ch}
 .hero__art{width:100%;height:auto;display:block}
+.gate::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--lime)}
 .gate{display:inline-flex;gap:10px;align-items:center;font-family:var(--f-mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;background:var(--board);color:var(--board-fg);padding:6px 12px;border-radius:6px;width:max-content;max-width:100%}
+@media (max-width:1100px){.hero__grid{grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr)}} /* small laptops / tablet landscape: room for both hero buttons on one row */
 @media (max-width:820px){.hero__grid{grid-template-columns:1fr}.hero__art{max-width:280px;margin:0 auto}}
-.steps .pass__stub{align-items:center;justify-content:center;text-align:center}
-.stepno{font-family:var(--f-mono);font-size:2.4rem;font-weight:600;line-height:1;color:var(--sky)}
-.measure{display:flex;flex-direction:column;gap:8px;padding:20px;border-radius:var(--r);background:var(--card);border-top:6px solid var(--sky);box-shadow:var(--shadow)}
+.hero__cta{box-shadow:0 8px 20px -8px rgba(31,61,99,.55)}
+.hero__cta:hover{box-shadow:0 10px 24px -8px rgba(31,61,99,.6)}
+.cta__free{padding:1px 9px;border:1px solid currentColor;border-radius:var(--r-pill);font-size:.78em;font-weight:600;line-height:1.5;white-space:nowrap}
+.hero__how{--fg:var(--sky);--bd:var(--accent-strong)}
+.hero__how:hover{--bg:var(--card)}
+@media (max-width:560px){.hero__actions .btn{width:100%}}
+.step__head{display:flex;align-items:center;gap:10px}
+.stepno{display:grid;place-items:center;flex:none;width:2rem;height:2rem;border-radius:50%;background:var(--accent-strong);color:var(--accent-ink);font-family:var(--f-mono);font-size:1rem;font-weight:600;line-height:1}
+.measure{display:flex;flex-direction:column;gap:8px;padding:20px;border-radius:var(--r);background:var(--card);border:var(--bw) solid var(--edge);border-top:6px solid var(--sky);box-shadow:var(--shadow)}
 .measure .ico{font-size:1.6rem;line-height:1}
+.measure-note{margin:18px 0 0;max-width:60ch} /* quiet supporting text under the four cards, not a notice box */
 .price{font-family:var(--f-mono);font-size:2rem;font-weight:600;line-height:1}
-.pricing .pass{--stub:120px}
+/* pricing tickets: price stub along the bottom at every width, so the three cards keep the full width for their buttons */
+.pricing .pass{grid-template-columns:1fr;grid-template-rows:1fr auto}
+.pricing .pass::before,.pricing .pass::after{display:none}
+.pricing .pass__stub{border-left:0;border-top:var(--bw) dashed var(--edge);flex-direction:row;align-items:center;flex-wrap:wrap}
+.pricing .pass--gold .pass__stub{border-radius:0 0 calc(var(--r-lg) - 2px) calc(var(--r-lg) - 2px);border-top-color:var(--accent)}
+.pricing .pass__main .btn{margin-top:auto}
+.sc-btn{flex-direction:column;gap:0;line-height:1.35;padding-block:8px}
+.sc-btn__tag{font-size:.75rem;font-weight:500}
 .pricing .pass__main ul{margin:0;padding-left:1.1em;color:var(--muted)}
 .sample{position:relative}
 .sample__veil{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
 .sample__veil span{background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:999px;font-weight:600}
-.final{background:var(--board);color:var(--final-fg);border-radius:22px;padding:36px 28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
+.final{background:var(--board);color:var(--final-fg);border:var(--bw) solid var(--edge);border-radius:22px;padding:36px 28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
 .final h2{color:var(--board-strong)}
 </style>
 </head>
@@ -36,35 +52,38 @@
 <!-- A. Hero -->
 <section class="hero"><div class="wrap hero__grid">
   <div class="stack" style="gap:20px">
-    <span class="gate" data-en="Gate 12 · Boarding now">ច្រកទ្វារ ១២ · កំពុងឡើងយន្តហោះ</span>
+    <span class="gate" data-en="For Cambodian high school students">សម្រាប់សិស្សវិទ្យាល័យកម្ពុជា</span>
     <h1 class="display" data-en="Find the university major that fits you">ស្វែងរកជំនាញនៅសាកលវិទ្យាល័យ ដែលសាកសមនឹងអ្នក</h1>
     <p class="hero__lead" data-en="KITEBud is a free 12-minute test for Cambodian high school students. It shows how well you match different majors, then points you to universities and scholarships.">KITEBud គឺជាតេស្តឥតគិតថ្លៃប្រហែល ១២ នាទី សម្រាប់សិស្សវិទ្យាល័យកម្ពុជា។ វាបង្ហាញថាអ្នកសាកសមនឹងជំនាញនីមួយៗប៉ុន្មានភាគរយ ហើយណែនាំសាកលវិទ្យាល័យ និងអាហារូបករណ៍។</p>
-    <div class="row">
-      <a class="btn btn--gold btn--lg" href="assessment.html" data-en="Start your journey (free test)">ចាប់ផ្ដើមដំណើររបស់អ្នក (តេស្តឥតគិតថ្លៃ)</a>
-      <a href="#how" data-en="How it works">មើលរបៀបដំណើរការ</a>
+    <div class="row hero__actions">
+      <a class="btn btn--gold btn--lg hero__cta" href="assessment.html" data-en="Start your journey <span class='cta__free'>Free test</span>">ចាប់ផ្ដើមដំណើររបស់អ្នក <span class="cta__free">តេស្តឥតគិតថ្លៃ</span></a>
+      <a class="btn btn--ghost btn--lg hero__how" href="#how" data-en="How it works <span aria-hidden='true'>↓</span>">មើលរបៀបដំណើរការ <span aria-hidden="true">↓</span></a>
     </div>
     <p class="small muted" data-en="No login. No name or phone number needed.">មិនចាំបាច់ចុះឈ្មោះ។ មិនសួររកឈ្មោះ ឬលេខទូរស័ព្ទ។</p>
   </div>
-  <img class="hero__art sticker sticker--bob" src="images/sticker-hello.webp" alt="" width="520" height="396">
+  <div class="hero__art mascot sticker--bob">
+    <img class="sticker" src="images/sticker-hello.webp" alt="" width="520" height="396">
+    <p class="mascot__bubble" data-en="Let’s find a major that feels like YOU!">តោះ ស្វែងរកជំនាញដែលសាកសមនឹងអ្នក!</p>
+  </div>
 </div></section>
 
 <!-- B. How it works -->
 <section class="section" id="how"><div class="wrap">
   <div class="section-head">
-    <span class="label" data-en="Flight plan">ផែនការហោះហើរ</span>
+    <span class="label" data-en="3 simple steps">៣ ជំហានងាយៗ</span>
     <h2 class="display" data-en="How it works">របៀបដំណើរការ</h2>
   </div>
   <div class="grid g3 steps">
-    <div class="pass"><div class="pass__main"><div class="pass__band"><span data-en="Check-in">ឆែកអ៊ីន</span><span>KT 01</span></div><h3 data-en="Answer questions">ឆ្លើយសំណួរ</h3><p class="muted" data-en="Four short parts, about 12 minutes. There are no right or wrong answers.">ផ្នែកខ្លីៗ ៤ ប្រហែល ១២ នាទី។ គ្មានចម្លើយត្រូវ ឬខុសទេ។</p></div><div class="pass__stub"><span class="stepno">1</span></div></div>
-    <div class="pass"><div class="pass__main"><div class="pass__band"><span data-en="Boarding">ឡើងយន្តហោះ</span><span>KT 02</span></div><h3 data-en="See your % match">មើលភាគរយភាពសាកសម</h3><p class="muted" data-en="Get a percentage match for majors, based on jobs, interests, personality and strengths.">ទទួលបានភាគរយភាពសាកសមនឹងជំនាញ ផ្អែកលើការងារ ចំណាប់អារម្មណ៍ បុគ្គលិកលក្ខណៈ និងចំណុចខ្លាំង។</p></div><div class="pass__stub"><span class="stepno">2</span></div></div>
-    <div class="pass"><div class="pass__main"><div class="pass__band"><span data-en="Take-off">ហោះហើរ</span><span>KT 03</span></div><h3 data-en="Explore universities">ស្វែងរកសាកលវិទ្យាល័យ</h3><p class="muted" data-en="See which universities offer each major, what they cost, and scholarships to apply for.">មើលសាកលវិទ្យាល័យដែលមានជំនាញនោះ តម្លៃសិក្សា និងអាហារូបករណ៍ដែលអាចដាក់ពាក្យ។</p></div><div class="pass__stub"><span class="stepno">3</span></div></div>
+    <div class="pass single"><div class="pass__main"><div class="step__head"><span class="stepno">1</span><span class="label" data-en="Check-in">ឆែកអ៊ីន</span></div><h3 data-en="Answer questions">ឆ្លើយសំណួរ</h3><p class="muted" data-en="Four short parts, about 12 minutes. There are no right or wrong answers.">ផ្នែកខ្លីៗ ៤ ប្រហែល ១២ នាទី។ គ្មានចម្លើយត្រូវ ឬខុសទេ។</p></div></div>
+    <div class="pass single"><div class="pass__main"><div class="step__head"><span class="stepno">2</span><span class="label" data-en="Boarding">ឡើងយន្តហោះ</span></div><h3 data-en="See your % match">មើលភាគរយភាពសាកសម</h3><p class="muted" data-en="Get a percentage match for majors, based on jobs, interests, personality and strengths.">ទទួលបានភាគរយភាពសាកសមនឹងជំនាញ ផ្អែកលើការងារ ចំណាប់អារម្មណ៍ បុគ្គលិកលក្ខណៈ និងចំណុចខ្លាំង។</p></div></div>
+    <div class="pass single"><div class="pass__main"><div class="step__head"><span class="stepno">3</span><span class="label" data-en="Take-off">ហោះហើរ</span></div><h3 data-en="Explore universities">ស្វែងរកសាកលវិទ្យាល័យ</h3><p class="muted" data-en="See which universities offer each major, what they cost, and scholarships to apply for.">មើលសាកលវិទ្យាល័យដែលមានជំនាញនោះ តម្លៃសិក្សា និងអាហារូបករណ៍ដែលអាចដាក់ពាក្យ។</p></div></div>
   </div>
 </div></section>
 
 <!-- C. What we measure -->
 <section class="section" style="padding-top:0"><div class="wrap">
   <div class="section-head">
-    <span class="label" data-en="Your luggage">ឥវ៉ាន់របស់អ្នក</span>
+    <span class="label" data-en="4 areas">៤ ផ្នែក</span>
     <h2 class="display" data-en="What we measure">អ្វីដែលយើងវាស់</h2>
   </div>
   <div class="grid g4">
@@ -73,13 +92,13 @@
     <div class="measure"><span class="ico" aria-hidden="true">🪪</span><h3 data-en="Personality">បុគ្គលិកលក្ខណៈ</h3><p class="muted small" data-en="How you like to work, decide and spend your energy.">របៀបដែលអ្នកចូលចិត្តធ្វើការ សម្រេចចិត្ត និងប្រើថាមពល។</p></div>
     <div class="measure"><span class="ico" aria-hidden="true">💪</span><h3 data-en="Strengths">ចំណុចខ្លាំង</h3><p class="muted small" data-en="The skills and school subjects you are good at.">ជំនាញ និងមុខវិជ្ជាដែលអ្នកពូកែ។</p></div>
   </div>
-  <p class="banner banner--info" style="margin-top:22px" data-en="We show a % match, not one “right” major. You decide.">យើងបង្ហាញភាគរយភាពសាកសម មិនមែនជំនាញ «ត្រឹមត្រូវ» តែមួយនោះទេ។ អ្នកជាអ្នកសម្រេចចិត្ត។</p>
+  <p class="muted measure-note" data-en="We show a % match, not one “right” major. You decide.">យើងបង្ហាញភាគរយភាពសាកសម មិនមែនជំនាញ «ត្រឹមត្រូវ» តែមួយនោះទេ។ អ្នកជាអ្នកសម្រេចចិត្ត។</p>
 </div></section>
 
 <!-- D. Pricing -->
 <section class="section pricing" id="pricing" style="padding-top:0"><div class="wrap">
   <div class="section-head">
-    <span class="label" data-en="Fares">តម្លៃសំបុត្រ</span>
+    <span class="label" data-en="Packages">កញ្ចប់</span>
     <h2 class="display" data-en="Pricing">តម្លៃ</h2>
     <p class="muted" data-en="The test is always free. Pay only if you want to unlock your full results."
       data-showcase-en="The test is always free. For now the full report is free too. Payment will come later."
@@ -183,8 +202,13 @@ document.addEventListener("DOMContentLoaded", function(){
 // Showcase (js/config.js): the package buttons open the full report for free
 function showcaseText(){
   if(!KITE.SHOWCASE) return;
-  document.querySelectorAll("[data-pkg]").forEach(function(b){ b.textContent = KITE.t(KITE.SHOWCASE_LABEL); });
-  document.getElementById("payNote").textContent = KITE.t("កំណែបង្ហាញ — ពេលនេះរបាយការណ៍ពេញលេញឥតគិតថ្លៃ។ តម្លៃខាងលើសម្រាប់ពេលក្រោយ។","Showcase — the full report is free for now. The prices above are for later.");
+  // the label in two lines on purpose: "Showcase" small on top, "Full report free" below (same words as KITE.SHOWCASE_LABEL)
+  var label = KITE.t(KITE.SHOWCASE_LABEL), parts = label.split(/[៖:]\s*/);
+  document.querySelectorAll("[data-pkg]").forEach(function(b){
+    b.classList.add("sc-btn"); b.setAttribute("aria-label", label);
+    b.innerHTML = '<span class="sc-btn__tag">' + KITE.esc(parts[0]) + '</span><span>' + KITE.esc(parts[1].charAt(0).toUpperCase() + parts[1].slice(1)) + '</span>';
+  });
+  document.getElementById("payNote").hidden = true; // the pricing intro above already says the report is free for now and payment comes later
 }
 document.addEventListener("kite:lang", showcaseText);
 </script>

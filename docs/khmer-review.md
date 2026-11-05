@@ -163,3 +163,30 @@ Every Khmer line below is a first draft written from the approved English. **[NE
 | 107 | Cookie banner, text | [NEEDS NATIVE CHECK] បើអ្នកជ្រើស «អនុញ្ញាត» KITEBud នឹងបង្កើតខូគីអនាមិកមួយ ដែលមានលេខសម្គាល់អ្នកទស្សនារបស់អ្នក ហើយរក្សាទុកចម្លើយ និងលទ្ធផលតេស្តរបស់អ្នក សម្រាប់ការសិក្សារបស់យើង។ អ្នកអាចបដិសេធ ហើយនៅតែប្រើតេស្តបាន៖ គ្មានលេខសម្គាល់អ្នកទស្សនា ឬទិន្នន័យកម្រងសំណួរណាមួយ ត្រូវបានរក្សាទុកក្នុងមូលដ្ឋានទិន្នន័យរបស់យើងទេ។ | If you choose Allow, KITEBud creates an anonymous cookie with your visitor ID and saves your test answers and results for our study. You can decline and still use the test: no visitor ID or questionnaire data will be saved to our database. | |
 | 108 | Cookie banner, link | [NEEDS NATIVE CHECK] អានសេចក្តីជូនដំណឹងអំពីឯកជនភាព | Read the privacy notice | |
 | 109 | Toast after Allow | [NEEDS NATIVE CHECK] ចម្លើយរបស់អ្នកនឹងត្រូវរក្សាទុកសម្រាប់ការសិក្សា | Your answers will be saved for the study | |
+
+## I. Redesign Phase 2: badge, mascot bubble and sticker captions (draft Khmer)
+
+The stickers had English words drawn into the image; a real text label now covers them and follows the language.
+
+| # | Where | Khmer now [NEEDS NATIVE CHECK] | English | OK / better Khmer |
+|---|---|---|---|---|
+| 110 | Home, small badge above the main heading (`index.html`, replaces "Gate 12 · Boarding now") | [NEEDS NATIVE CHECK] សម្រាប់សិស្សវិទ្យាល័យកម្ពុជា | For Cambodian high school students | |
+| 111 | Home, mascot speech bubble (`index.html`) | [NEEDS NATIVE CHECK] តោះ ស្វែងរកជំនាញដែលសាកសមនឹងអ្នក! | Let’s find a major that feels like YOU! | |
+| 112 | About, mascot speech bubble (`about.html`) | [NEEDS NATIVE CHECK] សួស្តី! | Hello! | |
+| 113 | Results, sticker caption (`results.html`) | [NEEDS NATIVE CHECK] ជំនាញដែលសាកសម! | Major Match! | |
+| 114 | FAQ and the test's "Part done" screens, sticker caption (`faq.html`, `assessment.html`) | [NEEDS NATIVE CHECK] ទៅផ្លូវណា? | Which Way? | |
+| 115 | The test's final screen, sticker caption (`assessment.html`) | [NEEDS NATIVE CHECK] ត្រៀមខ្លួនរួចរាល់! | Future Ready! | |
+
+## J. Redesign Phase 3: hero buttons and "How it works" (draft Khmer)
+
+| # | Where | Khmer now [NEEDS NATIVE CHECK] | English | OK / better Khmer |
+|---|---|---|---|---|
+| 116 | Home, main button (`index.html`; was «ចាប់ផ្ដើមដំណើររបស់អ្នក (តេស្តឥតគិតថ្លៃ)», the brackets are now a small "free" tag inside the button) | [NEEDS NATIVE CHECK] ចាប់ផ្ដើមដំណើររបស់អ្នក + tag: តេស្តឥតគិតថ្លៃ | Start your journey + tag: Free test | |
+| 117 | Home, small text above "How it works" (`index.html`, replaces «ផែនការហោះហើរ» / "Flight plan") | [NEEDS NATIVE CHECK] ៣ ជំហានងាយៗ | 3 simple steps | |
+
+## K. Redesign Phase 7: section labels (draft Khmer)
+
+| # | Where | Khmer now [NEEDS NATIVE CHECK] | English | OK / better Khmer |
+|---|---|---|---|---|
+| 118 | Home, small text above "What we measure" (`index.html`, replaces «ឥវ៉ាន់របស់អ្នក» / "Your luggage") | [NEEDS NATIVE CHECK] ៤ ផ្នែក | 4 areas | |
+| 119 | Home, small text above "Pricing" (`index.html`, replaces «តម្លៃសំបុត្រ» / "Fares") | [NEEDS NATIVE CHECK] កញ្ចប់ | Packages | |

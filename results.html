@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>KITEBud · Results</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png" sizes="192x192">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
 <style>
@@ -17,9 +17,9 @@
 .words{display:flex;flex-wrap:wrap;gap:8px}
 .words span{padding:4px 12px;border-radius:999px;background:var(--sky-soft);font-weight:500}
 .rate5{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.rate5 button{min-height:44px;border-radius:10px;border:2px solid var(--line-strong);background:var(--card);color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
+.rate5 button{min-height:44px;border-radius:10px;border:var(--bw) solid var(--edge);background:var(--card);color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
 .rate5 button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--paper)}
-textarea.copybox{width:100%;min-height:90px;font:inherit;border:2px solid var(--line-strong);border-radius:12px;padding:10px;background:var(--card);color:var(--ink)}
+textarea.copybox{width:100%;min-height:90px;font:inherit;border:var(--bw) solid var(--edge);border-radius:12px;padding:10px;background:var(--card);color:var(--ink)}
 </style>
 </head>
 <body data-page="results">
@@ -111,7 +111,7 @@ function render(){
       <span class="label">${K.t("ផ្ទាំងព័ត៌មានការហោះហើរ","Departures board")}</span>
       <h1 class="display">${K.t("ជំនាញដែលសាកសមបំផុតរបស់អ្នក","Your top matches")}</h1>
       <p class="muted">${K.t("ទាំងនេះជាភាគរយភាពសាកសម មិនមែន «ជំនាញរបស់អ្នក» ទេ។ ប្រើវាដើម្បីចាប់ផ្ដើមស្វែងយល់។","These are % matches, not “your major”. Use them as a starting point to explore.")}</p>
-    </div><img class="sticker" src="images/sticker-major-match.webp" alt="" width="520" height="634"></div>
+    </div><div class="mascot mascot--major-match"><img class="sticker" src="images/sticker-major-match.webp" alt="" width="520" height="634"><p class="mascot__caption" aria-hidden="true">${K.t("ជំនាញដែលសាកសម!","Major Match!")}</p></div></div>
     <div class="stack" style="gap:22px">${passes}</div>
     ${extra.length?`<p class="small muted">${K.t("ជំនាញផ្សេងទៀតដែលអ្នកបានដោះសោពីមុន៖ ","Other majors you unlocked before: ")}${extra.map(x=>`<b>${K.t(x.m)}</b> (${x.pct===null?K.t(K.NOINFO):K.n(x.pct)+"%"})`).join(" · ")}</p>`:""}
     ${K.SHOWCASE && !demo ? `<a class="btn btn--gold btn--lg" href="report.html">${K.t(K.SHOWCASE_LABEL)} →</a>`
@@ -141,8 +141,8 @@ function render(){
 
     <section class="stack" style="gap:10px">
       <div class="row">
-        <a class="btn" href="assessment.html" id="retake">${K.t("ធ្វើតេស្តម្ដងទៀត","Retake test")}</a>
-        <button class="btn" type="button" id="share">${K.t("ចែករំលែកលទ្ធផល","Share result")}</button>
+        <button class="btn btn--gold" type="button" id="share">${ICON.share}${K.t("ចែករំលែកលទ្ធផល","Share result")}</button>
+        <a class="btn btn--ghost" href="assessment.html" id="retake">${ICON.retake}${K.t("ធ្វើតេស្តម្ដងទៀត","Retake test")}</a>
       </div>
       <textarea class="copybox" id="sharebox" hidden readonly aria-label="Share text"></textarea>
       <p class="small muted">${K.t("ការចែករំលែកមិនរួមបញ្ចូលព័ត៌មានផ្ទាល់ខ្លួន ឬលេខសម្គាល់អ្នកទស្សនាឡើយ។","Sharing never includes personal info or your visitor ID.")}</p>
@@ -167,6 +167,11 @@ function render(){
     K.copy(txt, document.getElementById("sharebox"));
   };
 }
+// small line icons for the two result actions (stroke follows the button text colour)
+const ICON = {
+  share: '<svg class="btn__ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>',
+  retake: '<svg class="btn__ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7M3 3v6h6"/></svg>'
+};
 document.addEventListener("DOMContentLoaded", render);
 document.addEventListener("kite:lang", render);
 document.addEventListener("kite:consent", render); // Allow pressed here: show the feedback question and save the results

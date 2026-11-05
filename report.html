@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>KITEBud · Full report</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png" sizes="192x192">
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/style.css">
 <style>
 .rwrap{max-width:920px;margin:0 auto;padding-block:32px 40px}
 .jump{display:flex;flex-wrap:wrap;gap:8px}
-.jump a{padding:6px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:500}
+.jump a{padding:6px 14px;border-radius:999px;background:var(--card);border:var(--bw) solid var(--edge);text-decoration:none;color:var(--ink);font-weight:500}
 .major{display:flex;flex-direction:column;gap:22px;scroll-margin-top:90px}
 .major + .major{border-top:2px dashed var(--line);padding-top:40px}
 .sub{display:flex;flex-direction:column;gap:10px}
@@ -19,13 +19,13 @@
 .bigbars .bar{grid-template-columns:minmax(96px,150px) 1fr 3.4em;font-size:1rem}
 .bigbars .bar__track{height:16px}
 .careers{display:flex;flex-wrap:wrap;gap:8px}
-.careers span{padding:6px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line)}
+.careers span{padding:6px 14px;border-radius:10px;background:var(--card);border:var(--bw) solid var(--edge)}
 .reasons{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
-.reasons li{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--card);border-radius:10px;border:1px solid var(--line)}
+.reasons li{display:flex;gap:10px;align-items:flex-start;padding:10px 14px;background:var(--card);border-radius:10px;border:var(--bw) solid var(--edge)}
 .reasons li::before{content:"✓";color:var(--ok);font-weight:700}
 .filters{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
 @media (max-width:620px){.filters{grid-template-columns:1fr}}
-.uni{display:flex;flex-direction:column;gap:6px;padding:16px;background:var(--card);border-radius:12px;border:1px solid var(--line);min-width:0}
+.uni{display:flex;flex-direction:column;gap:6px;padding:16px;background:var(--card);border-radius:12px;border:var(--bw) solid var(--edge);min-width:0}
 .uni dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:.9rem}
 .uni dt{color:var(--muted)}
 .uni dd{margin:0;min-width:0}
@@ -130,8 +130,7 @@ function section(x, rank, S){
         <label class="cb"><input type="checkbox" id="s-${m.id}" data-f="sch" data-m="${m.id}" ${f.sch?"checked":""}>${K.t("មានអាហារូបករណ៍","Scholarship available")}</label>
       </div>
       <div id="u-${m.id}">${uniList(m)}</div>
-      <p class="banner small">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។","Info may change — check the official site.")}</p>
-      ${hasUnis?`<p class="small muted">${K.t("KITEBud មិនមានទំនាក់ទំនង ឬទទួលបានការគាំទ្រពីសាកលវិទ្យាល័យទាំងនេះទេ។ ព័ត៌មានយកចេញពីគេហទំព័រផ្លូវការរបស់ពួកគេ។","KITEBud is not affiliated with or endorsed by these universities. Information comes from their official websites.")}</p>`:""}
+      ${hasUnis?`<p class="small muted">${K.t("ព័ត៌មានអាចផ្លាស់ប្ដូរ — សូមពិនិត្យគេហទំព័រផ្លូវការ។","Info may change — check the official site.")} ${K.t("KITEBud មិនមានទំនាក់ទំនង ឬទទួលបានការគាំទ្រពីសាកលវិទ្យាល័យទាំងនេះទេ។ ព័ត៌មានយកចេញពីគេហទំព័រផ្លូវការរបស់ពួកគេ។","KITEBud is not affiliated with or endorsed by these universities. Information comes from their official websites.")}</p>`:""}
     </div>
 
     <div class="sub"><h3><span class="label">E</span>${K.t("អាហារូបករណ៍","Scholarships")}</h3>

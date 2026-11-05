@@ -5,7 +5,7 @@
 const fs = require("fs"), path = require("path");
 const OUT = "public";
 const PAGES = ["index.html", "assessment.html", "results.html", "report.html", "checkout.html", "faq.html", "privacy.html", "about.html"];
-const FILES = [...PAGES, "favicon.svg"];
+const FILES = [...PAGES, "favicon.png"];
 const FOLDERS = ["css", "js", "fonts", "images"].filter(d => d !== "images" || fs.existsSync(d)); // images/logos/ once we have permitted logos
 const fail = msg => { console.error("\nBUILD FAILED: " + msg + "\n"); process.exit(1); };
 
