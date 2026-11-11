@@ -1,10 +1,10 @@
-// Builds the public/ folder: the ONLY files that go online (the 8 pages, css/, js/, fonts/, images/ if any, favicon).
+// Builds the public/ folder: the ONLY files that go online (the 10 pages, css/, js/, fonts/, images/ if any, favicon).
 // archive/, docs/, tools/ and tests/ are never copied. Netlify runs this on every deploy (netlify.toml).
 // We deploy ONLY through Netlify from GitHub, never by uploading public/ by hand.
 // To test locally: node tools/build-public.js
 const fs = require("fs"), path = require("path");
 const OUT = "public";
-const PAGES = ["index.html", "assessment.html", "results.html", "report.html", "checkout.html", "faq.html", "privacy.html", "about.html"];
+const PAGES = ["index.html", "assessment.html", "results.html", "report.html", "checkout.html", "faq.html", "privacy.html", "about.html", "staff.html", "pay.html"]; // staff.html: payment dashboard, not linked from the site, noindex
 const FILES = [...PAGES, "favicon.png"];
 const FOLDERS = ["css", "js", "fonts", "images"].filter(d => d !== "images" || fs.existsSync(d)); // images/logos/ once we have permitted logos
 const fail = msg => { console.error("\nBUILD FAILED: " + msg + "\n"); process.exit(1); };
@@ -12,8 +12,18 @@ const fail = msg => { console.error("\nBUILD FAILED: " + msg + "\n"); process.ex
 // js/config.js decides showcase mode. Without it every page silently falls back to paid mode, so stop here.
 const CONFIG = "js/config.js";
 if (!fs.existsSync(CONFIG)) fail(`${CONFIG} is missing. Without it showcase mode switches off and the prices and test checkout come back.`);
-const showcase = (fs.readFileSync(CONFIG, "utf8").match(/SHOWCASE_FREE\s*:\s*(true|false)/) || [])[1];
+// anchored to the setting line itself, so the comment "SHOWCASE_FREE: true = showcase mode" at the top cannot match
+const showcase = (fs.readFileSync(CONFIG, "utf8").match(/^[ \t]*SHOWCASE_FREE[ \t]*:[ \t]*(true|false)[ \t]*,?[ \t]*$/m) || [])[1];
 if (!showcase) fail(`${CONFIG} does not set SHOWCASE_FREE to true or false.`);
+// payment on: the KHQR image students pay with must be there, or pay.html shows no QR code
+const cfg = fs.readFileSync(CONFIG, "utf8");
+const payment = (cfg.match(/^[ \t]*PAYMENT_ENABLED[ \t]*:[ \t]*(true|false)[ \t]*,?[ \t]*$/m) || [])[1];
+if (!payment) fail(`${CONFIG} does not set PAYMENT_ENABLED to true or false.`);
+if (payment === "true") {
+  const qr = (cfg.match(/^[ \t]*KHQR_IMAGE[ \t]*:[ \t]*"([^"]+)"[ \t]*,?[ \t]*$/m) || [])[1];
+  if (!qr) fail(`${CONFIG} has PAYMENT_ENABLED: true but no KHQR_IMAGE.`);
+  if (!fs.existsSync(qr)) fail(`PAYMENT_ENABLED is true but the KHQR image ${qr} is missing. Students would have no QR code to pay with.`);
+}
 
 fs.rmSync(OUT, { recursive: true, force: true });     // start clean so nothing old stays online
 fs.mkdirSync(OUT);
@@ -32,4 +42,4 @@ for (const p of PAGES) for (const [, src] of fs.readFileSync(p, "utf8").matchAll
   if (!fs.existsSync(path.join(OUT, src))) missing.push(`${p} → ${src}`);
 if (missing.length) fail("pages load files that are not in public/: " + missing.join(", "));
 
-console.log(`public/ ready: ${all.length} files (${PAGES.length} pages, ${FOLDERS.join(", ")}, favicon) · showcase mode ${showcase === "true" ? "ON (full report free, no payment)" : "OFF"}`);
+console.log(`public/ ready: ${all.length} files (${PAGES.length} pages, ${FOLDERS.join(", ")}, favicon) · showcase mode ${showcase === "true" ? "ON (full report free, no payment)" : "OFF"} · payment ${payment === "true" ? "ON" : "OFF"}`);

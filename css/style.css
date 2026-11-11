@@ -570,3 +570,14 @@ body[data-page="report"] .jump a[data-rank]:hover{background:var(--rank);color:v
 /* journal kickers: a yellow highlighter stroke under the words */
 body:is([data-page="assessment"],[data-page="results"],[data-page="report"],[data-page="faq"],[data-page="about"],[data-page="privacy"],[data-page="checkout"]) :is(.page-band .label,.kicker){
   width:max-content;max-width:100%;padding-inline:3px;background:linear-gradient(transparent 58%,var(--highlight) 58%,var(--highlight) 94%,transparent 94%)}
+
+/* ============ 18. i-Stand mode (shared showcase tablet, js/app.js): Finish button and full-screen overlays ============ */
+.btn.istand-finish{background:var(--bad);border-color:var(--bad);color:#fff;white-space:nowrap;min-height:44px}
+.btn.istand-finish:hover{background:var(--bad);color:#fff;filter:brightness(1.12)}
+/* the header gets one more button in i-Stand mode: tighter spacing so the menu button still fits on phones */
+@media (max-width:560px){.topbar__in:has(.istand-finish){gap:8px}.btn.istand-finish{padding-inline:10px;font-size:.85rem}}
+@media (max-width:400px){.btn.istand-finish{white-space:normal;line-height:1.15;max-width:72px;padding-inline:8px;text-align:center}}
+.istand-ov{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(15,30,52,.78)}
+.istand-ov__card{background:var(--card);color:var(--ink);border-radius:var(--r);padding:24px;width:100%;max-width:460px;display:flex;flex-direction:column;gap:14px;text-align:center;box-shadow:var(--shadow)}
+.istand-ov__card .row{justify-content:center}
+.istand-ov__count{font-family:var(--f-mono);font-size:4rem;font-weight:700;line-height:1;color:var(--bad)}

@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>KITEBud · Staff payment check</title>
+<link rel="icon" href="favicon.png" type="image/png" sizes="192x192">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+<!-- KITEBud staff dashboard: two staff check payments (3,000៛, by ABA KHQR or cash) and approve or reject them.
+     Cash approvals use a reference unique PER REQUEST: CASH-<visitor code>-<first 4 characters of the request id>
+     (e.g. CASH-KT-ABCD-2345-7F3A), built from the card's own data. The database's one-reference-one-request rule
+     (payment_requests_txn_ref_unique) stops a cash reference being reused; ABA mode refuses references starting CASH-.
+     Not linked from the site navigation. Only accounts with app_metadata.kitebud_role = payment_staff can
+     see or change anything: the DATABASE enforces that (01_payment_requests.sql); this page only explains it.
+     The login lives in sessionStorage, so closing the tab logs the staff member out.
+     NEVER log in here on the i-Stand (the shared student tablet): staff use their own phone or laptop.
+     This page does not load js/app.js, so it never shows the i-Stand "Finish" button. -->
+<style>
+.page{max-width:900px;margin:0 auto;padding-block:28px 48px;display:flex;flex-direction:column;gap:20px}
+.topbar__in .label{margin-left:auto;margin-right:12px}
+.login{max-width:420px;display:flex;flex-direction:column;gap:14px}
+.who{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.live::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--muted);margin-right:6px;vertical-align:middle}
+.live.on::before{background:var(--ok)}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs .btn[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.search{flex:1 1 220px}
+.list{display:flex;flex-direction:column;gap:12px}
+.req{display:flex;flex-direction:column;gap:10px;padding:16px 18px}
+.req__top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.req__code{font-family:var(--f-mono);font-size:1.25rem;font-weight:700;letter-spacing:.04em}
+.req__amt{font-family:var(--f-mono);margin-left:auto;font-weight:600}
+.req__expired{color:var(--bad);font-weight:700}
+.req--expired .req__top,.req--expired .req__meta{opacity:.55;filter:grayscale(1)}
+.req--expired{border-style:dashed}
+.req__decided{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:0}
+.req__decided dt{color:var(--muted)}
+.req__decided dd{margin:0;word-break:break-word}
+.req__actions{display:grid;grid-template-columns:1fr 1fr;gap:16px;border-top:1px dashed var(--line);padding-top:12px}
+.req__actions > div{display:flex;flex-direction:column;gap:8px}
+.req__actions .check{border:0;padding:0}
+.req__err{grid-column:1/-1}
+.help ol{margin:6px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
+.help p{margin:0}
+.help ol + p{margin-top:10px}
+.method{display:flex;flex-wrap:wrap;gap:6px 16px}
+.method .check{border:0;padding:0}
+.req__ref[readonly]{background:var(--line);cursor:default}
+.today{margin:0}
+@media (max-width:640px){.req__actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body data-page="staff">
+<header id="kite-header"><div class="topbar"><div class="wrap topbar__in">
+  <a class="logo" href="index.html"><span class="logo__mark" aria-hidden="true">✈</span>KITEBud</a>
+  <span class="label">Staff only</span>
+  <button id="logout" class="btn btn--sm btn--ghost" type="button" hidden>Log out</button>
+</div></div></header>
+
+<main class="wrap"><div class="page">
+  <div class="stack" style="gap:6px">
+    <span class="label">Showcase payment · 3,000៛</span>
+    <h1 class="display">Payment check</h1>
+  </div>
+
+  <p id="setup" class="banner banner--bad" hidden></p>
+
+  <!-- 1. login -->
+  <form id="login" class="panel login" hidden novalidate>
+    <h2>Staff login</h2>
+    <label class="field"><span>Email</span><input id="email" class="input" type="email" autocomplete="username" required></label>
+    <label class="field"><span>Password</span><input id="password" class="input" type="password" autocomplete="current-password" required></label>
+    <button id="loginBtn" class="btn btn--gold" type="submit">Log in</button>
+    <p id="loginErr" class="banner banner--bad" role="alert" hidden></p>
+  </form>
+
+  <!-- 2. logged in, but not a staff account -->
+  <section id="notStaff" class="banner banner--bad" style="flex-direction:column;gap:6px" hidden>
+    <b>Not a staff account</b>
+    <span>You are logged in as <span id="notStaffEmail" class="mono"></span>, which cannot see or check payments. Log out and log in with a staff account.</span>
+  </section>
+
+  <!-- 3. the dashboard -->
+  <section id="dash" class="stack" style="gap:16px" hidden>
+    <div class="who small">
+      <span>Logged in as <b id="me" class="mono"></b></span>
+      <span><span id="live" class="live">Connecting…</span> · <span id="updated" class="muted"></span></span>
+    </div>
+    <!-- approvals since midnight (this device's clock), counted in the page; no database function -->
+    <p id="today" class="today small" aria-live="polite"></p>
+    <!-- help for staff only; nothing here changes the database by itself -->
+    <details class="qa help small" id="lostHelp">
+      <summary>Student lost their screen?</summary>
+      <div class="qa__a">
+        <p>For example: they closed the tab, or the i-Stand was cleared before you approved.</p>
+        <ol>
+          <li>The student starts a <b>new request</b> and shows you the <b>new visitor ID</b>.</li>
+          <li>If their <b>old request is still pending</b>: reject it with the reason <span class="mono">moved to new request</span>,
+            then approve the new one with the <b>same ABA ID</b>.</li>
+          <li>If their <b>old request was already approved</b>: approve the new one with the ABA ID plus
+            <span class="mono">-2</span> (for example <span class="mono">FT26315ABC123-2</span>), because one ABA ID can approve only one request.</li>
+        </ol>
+        <p><b>Paid in cash?</b> If their old request is still pending, reject it with the reason <span class="mono">moved to new request</span>.
+          Then choose <b>Paid in cash</b> on the new request and approve it. It gets its own cash reference
+          (for example <span class="mono">CASH-KT-WXYZ-6789-7F3A</span>), filled in for you, so no <span class="mono">-2</span> is needed.</p>
+      </div>
+    </details>
+    <div class="tools">
+      <div class="tabs" role="group" aria-label="Show">
+        <button class="btn btn--sm btn--ghost" type="button" data-tab="pending" aria-pressed="true">Pending</button>
+        <button class="btn btn--sm btn--ghost" type="button" data-tab="approved" aria-pressed="false">Approved</button>
+        <button class="btn btn--sm btn--ghost" type="button" data-tab="rejected" aria-pressed="false">Rejected</button>
+        <button class="btn btn--sm btn--ghost" type="button" data-tab="all" aria-pressed="false">All</button>
+      </div>
+      <label class="field search"><span class="small">Find a visitor code</span>
+        <input id="search" class="input mono" type="search" placeholder="KT-ABCD-2345" autocomplete="off" spellcheck="false"></label>
+    </div>
+    <p id="listErr" class="banner banner--bad" role="alert" hidden></p>
+    <p id="empty" class="muted" hidden>No requests here.</p>
+    <div id="list" class="list" aria-live="polite"></div>
+  </section>
+</div></main>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js" integrity="sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK" crossorigin="anonymous"></script>
+<script src="js/config.js"></script>
+<script>
+(function () {
+"use strict";
+const C = window.KITE_CONFIG || {};
+// explicit columns only: session_token_hash is never selected (and staff have no right to read it)
+const COLS = "id,visitor_code,amount_khr,currency,status,transaction_reference,verified_by_email,verified_at,reject_reason,created_at,pending_expires_at";
+const STAFF_ROLE = "payment_staff";
+const USD = C.PAYMENT_DISPLAY_USD || "0.75";   // the fixed ABA KHQR is in USD; the database records 3,000៛
+const CASH = "CASH-";   // cash approvals: reference = CASH-<visitor code>-<first 4 characters of the request id>
+const cashRef = (code, id) => CASH + code + "-" + String(id).slice(0, 4).toUpperCase();   // unique per request
+const isCash = ref => String(ref || "").trim().toUpperCase().startsWith(CASH);
+// ABA mode: a typed reference that starts with CASH- (case and spaces ignored) is refused before any database call
+const looksCash = ref => String(ref || "").replace(/\s+/g, "").toUpperCase().startsWith(CASH);
+const POLL_MS = 15000;
+const $ = id => document.getElementById(id);
+
+let sb = null, active = false, channel = null, poll = null, tab = "pending", pattern = "", loadSeq = 0, payloadLogged = false, soon = null;
+const rows = new Map();   // request id -> its card, reused so typing is never wiped by a reload
+
+function view(name) { for (const v of ["login", "notStaff", "dash"]) $(v).hidden = v !== name; $("logout").hidden = name === "login"; }
+function showErr(el, text) { el.textContent = text; el.hidden = !text; }
+let toastT = null;
+function toast(text) { const t = $("toast"); t.textContent = text; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 5000); }
+
+if (!C.SUPABASE_URL || !C.SUPABASE_KEY) { showErr($("setup"), "The database is not set. On localhost, paste the TEST project's URL and publishable key into js/config.js."); return; }
+if (!window.supabase) { showErr($("setup"), "The Supabase library did not load. Check the internet connection and reload."); return; }
+
+sb = window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_KEY, {
+  auth: { persistSession: true, storage: window.sessionStorage, storageKey: "kitebud-staff-auth", autoRefreshToken: true, detectSessionInUrl: false }
+});
+
+/* database errors in plain words */
+function plain(e) {
+  const m = (e && (e.message || e.error_description)) || String(e || "");
+  const map = [
+    [/request already approved/i, "This request is already approved (maybe by the other staff member). Nothing was changed."],
+    [/request already rejected/i, "This request is already rejected. Nothing was changed. If the student did pay, ask them to start a new request."],
+    [/ABA transaction reference was already used/i, "This ABA transaction ID was already used to approve another request. One payment unlocks one student only: check the ID in ABA."],
+    [/ABA transaction reference required/i, "Type the ABA transaction ID (at least 4 characters)."],
+    [/rejection reason required/i, "Write a short reason before rejecting."],
+    [/staff login has no email/i, "This login has no email address, so it cannot approve or reject. Ask the developer."],
+    [/not authorized/i, "This account is not allowed to approve or reject payments. Log out and log in with a staff account."],
+    [/request not found/i, "This request no longer exists."],
+    [/JWT|token.*expired/i, "Your login has expired. Log out and log in again."],
+    [/Failed to fetch|NetworkError|network/i, "No connection to the database. Check the internet and try again."]
+  ];
+  for (const [re, text] of map) if (re.test(m)) return text;
+  return "Something went wrong: " + m;
+}
+
+/* ---- login / logout ---- */
+$("login").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  showErr($("loginErr"), "");
+  const email = $("email").value.trim(), password = $("password").value;
+  if (!email || !password) return showErr($("loginErr"), "Type your email and password.");
+  $("loginBtn").disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  $("loginBtn").disabled = false;
+  $("password").value = "";
+  if (error) showErr($("loginErr"), /invalid login/i.test(error.message) ? "Wrong email or password." : plain(error));
+});
+$("logout").addEventListener("click", async () => {
+  $("logout").disabled = true;
+  await sb.auth.signOut({ scope: "local" });   // this browser tab only
+  $("logout").disabled = false;
+  apply(null);
+});
+// run outside the auth callback (calling Supabase inside it can lock up)
+sb.auth.onAuthStateChange((_event, session) => setTimeout(() => apply(session), 0));
+
+function apply(session) {
+  if (!session) { stopLive(); view("login"); return; }
+  const isStaff = ((session.user && session.user.app_metadata) || {}).kitebud_role === STAFF_ROLE;
+  if (!isStaff) { stopLive(); $("notStaffEmail").textContent = session.user.email || "(no email)"; view("notStaff"); return; }
+  $("me").textContent = session.user.email || "(no email)";
+  view("dash");
+  if (!active) { active = true; startLive(session.access_token); }
+  load();
+}
+
+/* ---- live updates: any change = reload the list; plus a 15-second fallback ---- */
+async function startLive(token) {
+  poll = setInterval(load, POLL_MS);
+  try { await sb.realtime.setAuth(token); } catch (e) { /* older behaviour: the client sets it itself */ }
+  channel = sb.channel("staff-payment-requests")
+    .on("postgres_changes", { event: "*", schema: "public", table: "payment_requests" }, p => {
+      if (!payloadLogged) {   // test aid: one payload, to check the secret's hash never reaches the browser
+        payloadLogged = true;
+        const has = ["new", "old"].some(k => p[k] && Object.prototype.hasOwnProperty.call(p[k], "session_token_hash"));
+        console.log("[KITEBud staff] first Realtime payload. session_token_hash present:", has, p);
+      }
+      clearTimeout(soon); soon = setTimeout(load, 300);
+    })
+    .subscribe(status => {
+      const on = status === "SUBSCRIBED";
+      $("live").classList.toggle("on", on);
+      $("live").textContent = on ? "Live" : "Live updates off (refreshing every 15 s)";
+    });
+  if (!active) stopLive();   // logged out while connecting
+}
+function stopLive() {
+  active = false;
+  if (channel) { sb.removeChannel(channel); channel = null; }
+  clearInterval(poll); poll = null; clearTimeout(soon);
+  rows.clear(); $("list").replaceChildren(); $("empty").hidden = true;
+}
+
+/* ---- the list ---- */
+async function load() {
+  if (!active) return;   // logged out meanwhile
+  const seq = ++loadSeq;
+  let q = sb.from("payment_requests").select(COLS).order("created_at", { ascending: false }).limit(200);
+  if (tab !== "all") q = q.eq("status", tab);
+  if (pattern) q = q.ilike("visitor_code", pattern);
+  // the "Today" line: today's approvals, read with the same staff-only access (a plain read, no database function)
+  const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+  const tq = sb.from("payment_requests").select("transaction_reference,verified_by_email")
+    .eq("status", "approved").gte("verified_at", midnight.toISOString()).limit(1000);
+  const [{ data, error }, todayRes] = await Promise.all([q, tq]);
+  if (seq !== loadSeq) return;   // a newer reload already started
+  if (error) return showErr($("listErr"), plain(error));
+  showErr($("listErr"), "");
+  render(data || []);
+  if (!todayRes.error) today(todayRes.data || []);
+  $("updated").textContent = "updated " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+}
+
+// "Today: a@x.com 3 ABA · 1 Cash | b@x.com 2 ABA · 0 Cash (6 in total)"; counted from the loaded rows
+function today(list) {
+  const by = new Map();
+  for (const r of list) {
+    const who = r.verified_by_email || "(no email)", c = by.get(who) || { aba: 0, cash: 0 };
+    isCash(r.transaction_reference) ? c.cash++ : c.aba++; by.set(who, c);
+  }
+  const parts = [...by].sort((a, b) => a[0].localeCompare(b[0])).map(([who, c]) => `${who}: ${c.aba} ABA · ${c.cash} Cash`);
+  $("today").textContent = "Today: " + (parts.length ? parts.join("  |  ") + `  (${list.length} in total)` : "no approvals yet");
+}
+
+document.querySelectorAll("[data-tab]").forEach(b => b.addEventListener("click", () => {
+  tab = b.dataset.tab;
+  document.querySelectorAll("[data-tab]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  load();
+}));
+let searchT = null;
+$("search").addEventListener("input", () => {
+  // "abcd 2345", "KT-ABCD-2345" and "abcd" all work: letters/digits only, anything else becomes a wildcard
+  const parts = $("search").value.toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
+  pattern = parts.length ? "%" + parts.join("%") + "%" : "";
+  clearTimeout(searchT); searchT = setTimeout(load, 250);
+});
+
+function render(list) {
+  const box = $("list"), ids = new Set(list.map(r => r.id)), focused = document.activeElement;
+  for (const [id, el] of rows) if (!ids.has(id)) {
+    if (el.contains(focused)) toast(el._code.textContent + " was just decided by the other staff member.");
+    el.remove(); rows.delete(id);
+  }
+  list.forEach((r, i) => {
+    let el = rows.get(r.id);
+    if (!el) { el = card(r.id); rows.set(r.id, el); }
+    fill(el, r);
+    if (box.children[i] !== el) box.insertBefore(el, box.children[i] || null);
+  });
+  $("empty").hidden = list.length > 0;
+}
+
+const fmtTime = iso => {
+  const d = new Date(iso), today = d.toDateString() === new Date().toDateString();
+  return (today ? "" : d.toLocaleDateString([], { day: "numeric", month: "short" }) + " ") + d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+};
+const node = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+
+// builds one card; data is only ever written with textContent
+function card(id) {
+  const el = node("article", "panel req"); el.dataset.id = id;
+  const top = node("div", "req__top");
+  el._code = top.appendChild(node("b", "req__code"));
+  el._status = top.appendChild(node("span", "tag"));
+  el._amt = top.appendChild(node("span", "req__amt"));
+  el._meta = node("p", "req__meta small muted");
+  el._expired = node("p", "req__expired small", "Expired — check ABA carefully before approving");
+  el._decided = node("dl", "req__decided small");
+
+  const acts = node("div", "req__actions");
+  const ap = acts.appendChild(node("div"));
+  // how the student paid: ABA (staff type the ABA ID) or cash (reference CASH-<visitor code>-<id start>, read-only)
+  const mth = ap.appendChild(node("div", "method small")); mth.setAttribute("role", "radiogroup"); mth.setAttribute("aria-label", "How the student paid");
+  const radio = (value, text) => {
+    const l = mth.appendChild(node("label", "check")), i = l.appendChild(node("input"));
+    i.type = "radio"; i.name = "method-" + id; i.value = value; l.appendChild(node("span", null, text)); return i;
+  };
+  el._mAba = radio("aba", "ABA KHQR"); el._mCash = radio("cash", "Paid in cash"); el._mAba.checked = true;
+  const refL = ap.appendChild(node("label", "field")); el._refLabel = refL.appendChild(node("span", "small", "ABA transaction ID"));
+  el._ref = refL.appendChild(node("input", "input mono req__ref")); el._ref.maxLength = 64; el._ref.autocomplete = "off"; el._ref.spellcheck = false;
+  const sawL = ap.appendChild(node("label", "check small"));
+  el._saw = sawL.appendChild(node("input")); el._saw.type = "checkbox";
+  el._sawText = sawL.appendChild(node("span", null, "I saw this " + USD + " USD (3,000៛) payment arrive in ABA"));
+  el._approve = ap.appendChild(node("button", "btn btn--gold", "Approve")); el._approve.type = "button"; el._approve.disabled = true;
+  const rj = acts.appendChild(node("div"));
+  const reL = rj.appendChild(node("label", "field")); reL.appendChild(node("span", "small", "Reason for rejecting (required)"));
+  el._reason = reL.appendChild(node("input", "input")); el._reason.maxLength = 200; el._reason.autocomplete = "off";
+  el._reject = rj.appendChild(node("button", "btn btn--ghost", "Reject")); el._reject.type = "button";
+  el._err = acts.appendChild(node("p", "req__err banner banner--bad")); el._err.setAttribute("role", "alert"); el._err.hidden = true;
+  el._acts = acts;
+
+  const ready = () => { el._approve.disabled = el._busy || !(el._ref.value.trim().length >= 4 && el._saw.checked); };
+  el._ref.addEventListener("input", ready); el._saw.addEventListener("change", ready); el._ready = ready;
+  // switching method always clears the checkbox; a typed ABA ID is kept and comes back when switching back to ABA
+  const setMethod = cash => {
+    if (cash && !el._cash) el._abaDraft = el._ref.value;
+    el._cash = cash; el._mCash.checked = cash; el._mAba.checked = !cash;
+    el._refLabel.textContent = cash ? "Cash reference (filled in for you)" : "ABA transaction ID";
+    el._ref.value = cash ? cashRef(el._code.textContent, id) : (el._abaDraft || "");
+    el._ref.readOnly = cash;
+    el._sawText.textContent = cash ? "I received 3,000៛ in cash from this student" : "I saw this " + USD + " USD (3,000៛) payment arrive in ABA";
+    el._saw.checked = false; ready();
+  };
+  el._cash = false; el._setMethod = setMethod;
+  el._mAba.addEventListener("change", () => setMethod(false)); el._mCash.addEventListener("change", () => setMethod(true));
+  el._approve.addEventListener("click", () => act(el, "approve"));
+  el._reject.addEventListener("click", () => act(el, "reject"));
+  el.append(top, el._meta, el._expired, el._decided, acts);
+  return el;
+}
+
+function fill(el, r) {
+  const now = Date.now(), pending = r.status === "pending";
+  const expired = pending && new Date(r.pending_expires_at).getTime() <= now;
+  const mins = Math.max(0, Math.floor((now - new Date(r.created_at).getTime()) / 60000));
+  el.classList.toggle("req--expired", expired);
+  el._code.textContent = r.visitor_code;
+  const cash = isCash(r.transaction_reference);
+  el._status.textContent = expired ? "pending · expired" : r.status === "approved" ? "approved · " + (cash ? "Cash" : "ABA") : r.status;
+  el._status.className = "tag" + (r.status === "approved" ? " tag--ok" : r.status === "rejected" ? " tag--bad" : "");
+  el._amt.textContent = Number(r.amount_khr).toLocaleString("en-US") + "៛ · " + USD + " USD";
+  el._meta.textContent = "Requested " + fmtTime(r.created_at) + " · " + (mins === 0 ? "just now" : mins + " min ago");
+  el._expired.hidden = !expired;
+  if (el._wasPending && !pending && el.contains(document.activeElement) && !el._busy) toast(r.visitor_code + " was just decided by the other staff member.");
+  el._wasPending = pending;
+  el._acts.hidden = !pending;
+  const d = el._decided; d.replaceChildren(); d.hidden = pending;
+  if (!pending) {
+    const add = (k, v) => { if (v) { d.append(node("dt", null, k), node("dd", null, v)); } };
+    if (r.status === "approved") add("Paid by", cash ? "Cash" : "ABA");
+    add(cash ? "Cash reference" : "ABA reference", r.transaction_reference);
+    add("Reason", r.reject_reason);
+    add(r.status === "approved" ? "Approved by" : "Rejected by", r.verified_by_email);
+    add("At", r.verified_at && fmtTime(r.verified_at));
+  }
+}
+
+async function act(el, kind) {
+  const id = el.dataset.id, code = el._code.textContent, cash = el._cash;
+  // cash: the reference is always rebuilt from the card's own data (visitor code + request id), never taken from the input
+  const ref = cash ? cashRef(code, id) : el._ref.value;
+  showErr(el._err, "");
+  if (kind === "approve" && !cash && looksCash(ref)) return showErr(el._err, "Use 'Paid in cash' for cash payments.");
+  el._busy = true; el._approve.disabled = true; el._reject.disabled = true;
+  const { error } = kind === "approve"
+    ? await sb.rpc("approve_payment", { p_request_id: id, p_transaction_reference: ref })
+    : await sb.rpc("reject_payment", { p_request_id: id, p_reason: el._reason.value });
+  el._busy = false; el._reject.disabled = false; el._ready();
+  if (error) { showErr(el._err, plain(error)); if (/already|not found/i.test(error.message || "")) load(); return; }
+  el._abaDraft = ""; el._setMethod(false); el._reason.value = "";
+  if (el.contains(document.activeElement)) document.activeElement.blur();
+  toast(kind === "approve" ? "Approved " + code + (cash ? " (cash)" : "") + ". The student can open the test now." : "Rejected " + code + ".");
+  load();
+}
+})();
+</script>
+</body>
+</html>

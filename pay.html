@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KITEBud · Payment</title>
+<link rel="icon" href="favicon.png" type="image/png" sizes="192x192">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+<!-- The student's payment screen (js/pay.js): 3,000៛ by ABA KHQR, confirmed by staff in staff.html.
+     Uses the checkout page's look (data-page="checkout"). Never shows the request's secret. -->
+<style>
+.cwrap{max-width:640px;margin:0 auto;padding-block:28px 40px}
+.vid{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:16px;border-radius:var(--r-sm);background:var(--sky-soft);border:var(--bw) dashed var(--sky-mid)}
+.vid__code{font-family:var(--f-mono);font-weight:700;font-size:clamp(1.7rem,8vw,2.6rem);letter-spacing:.06em;color:var(--ink);user-select:all;line-height:1.15}
+.qr{display:flex;flex-direction:column;align-items:center;gap:12px}
+.qr img{display:block;width:min(100%,340px);height:auto;background:#fff;padding:10px;border-radius:12px}
+.steps{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:8px}
+.wait{display:flex;align-items:center;gap:12px;font-weight:600}
+.spinner{flex:none;width:28px;height:28px;border-radius:50%;border:4px solid var(--sky-soft);border-top-color:var(--sky);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation-duration:3s}}
+.status{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding-block:20px}
+.status .big{font-size:3rem;line-height:1}
+.amount{font-family:var(--f-mono);font-weight:700}
+</style>
+</head>
+<body data-page="checkout">
+<div id="kite-header"></div>
+<main class="wrap"><div class="cwrap" id="app" aria-live="polite"></div></main>
+<div id="kite-footer"></div>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/pay.js"></script>
+<script>
+(function(){
+const K = window.KITE, app = document.getElementById("app");
+const POLL_MS = 5000;
+
+// every text on this page, Khmer first (NEW WORDING: waiting for the owner's review)
+const W = {
+  kicker: {km:"ការបង់ប្រាក់", en:"Payment"},
+  vid: {km:"លេខសម្គាល់អ្នកទស្សនារបស់អ្នក", en:"Your visitor ID"},
+  startH: a => ({km:`${a} ដើម្បីធ្វើតេស្ត និងទទួលបានរបាយការណ៍ពេញលេញរបស់អ្នក`, en:`${a} to take the test and get your full report`}),
+  startP: {km:"បង់តាម ABA KHQR ឬជាសាច់ប្រាក់។ បុគ្គលិកនឹងពិនិត្យការបង់ប្រាក់របស់អ្នក បន្ទាប់មកតេស្តនឹងបើក។", en:"Pay by ABA KHQR or in cash. A staff member checks your payment, then the test opens."},
+  ended: {km:"ពេលវេលាដែលអ្នកបានបង់ប្រាក់សម្រាប់ធ្វើតេស្តបានបញ្ចប់ហើយ។", en:"Your paid time for the test has ended."},
+  seeResults: {km:"មើលលទ្ធផលរបស់ខ្ញុំ", en:"See my results"},
+  startBtn: {km:"ចាប់ផ្ដើមបង់ប្រាក់", en:"Start payment"},
+  starting: {km:"កំពុងចាប់ផ្ដើម…", en:"Starting…"},
+  sample: {km:"មើលលទ្ធផលគំរូ", en:"See a sample result"},
+  payH: a => ({km:`បង់ ${a}`, en:`Pay ${a}`}),
+  saveQr: {km:"រក្សាទុករូប QR", en:"Save QR image"},
+  saveQrHint: {km:"បើអ្នកបង់ពីទូរស័ព្ទនេះ៖ រក្សាទុករូប QR រួចបើកវាពីវិចិត្រសាលក្នុងកម្មវិធី ABA។", en:"Paying from this phone? Save the QR image, then open it from your gallery in the ABA app."},
+  qrMissing: {km:"រូប QR មិនមាននៅទីនេះទេ។ សូមប្រើកូដ QR ABA ដែលបុគ្គលិករបស់យើងកាន់ ឬបង់ជាសាច់ប្រាក់។", en:"The QR image is not available here. Use the ABA QR code our staff carry, or pay in cash."},
+  // two ways to pay (owner decision): the ABA KHQR (held by staff, or on this screen) or 3,000៛ cash to staff
+  step1: (usd, khr) => ({km:`ស្កេនកូដ QR ABA ដែលបុគ្គលិករបស់យើងកាន់ (ឬកូដនៅលើអេក្រង់នេះ) ហើយបង់ ${usd} USD (${khr}) ឬបង់ ${khr} ជាសាច់ប្រាក់ដល់បុគ្គលិកម្នាក់។`,
+    en:`Scan the ABA QR code held by our staff (or the one on this screen) and pay ${usd} USD (${khr}), or pay ${khr} in cash to a staff member.`}),
+  step2: {km:"បង្ហាញលេខសម្គាល់អ្នកទស្សនារបស់អ្នកដល់បុគ្គលិក។", en:"Show your visitor ID to the staff member."},
+  waiting: {km:"កំពុងរង់ចាំបុគ្គលិកបញ្ជាក់…", en:"Waiting for staff to confirm…"},
+  keepOpen: {km:"សូមបើកទំព័រនេះទុក។ វាធ្វើបច្ចុប្បន្នភាពដោយខ្លួនឯង។", en:"Keep this page open. It updates by itself."},
+  checked: {km:"បានពិនិត្យចុងក្រោយ", en:"Last checked"},
+  expiredH: {km:"សំណើនេះផុតកំណត់ហើយ", en:"This request expired"},
+  expiredP: {km:"សំណើនេះផុតកំណត់ហើយ។ ប្រសិនបើអ្នកបានបង់ប្រាក់រួចហើយ សូមបង្ហាញលេខសម្គាល់អ្នកទស្សនារបស់អ្នកដល់បុគ្គលិក។", en:"This request expired. If you already paid, show staff your visitor ID."},
+  stillChecking: {km:"យើងនៅតែពិនិត្យសំណើនេះ…", en:"We are still checking this request…"},
+  stillCheckingMany: {km:"យើងនៅតែពិនិត្យសំណើរបស់អ្នក…", en:"We are still checking your requests…"},
+  either: n => n === 2 ? {km:"បុគ្គលិកអាចអនុម័តសំណើណាមួយក្នុងចំណោមសំណើទាំងពីររបស់អ្នក។", en:"Staff can approve either of your requests."}
+                       : {km:"បុគ្គលិកអាចអនុម័តសំណើណាមួយរបស់អ្នក។", en:"Staff can approve any of your requests."},
+  dontClose: {km:"សូមកុំបិទផ្ទាំងនេះ រហូតដល់ការបង់ប្រាក់របស់អ្នកត្រូវបានបញ្ជាក់។", en:"Don't close this tab until your payment is confirmed."},
+  newReq: {km:"ចាប់ផ្ដើមសំណើថ្មី", en:"Start a new request"},
+  newReqNote: {km:"សូមធ្វើបែបនេះ លុះត្រាតែអ្នកមិនទាន់បានបង់ប្រាក់។", en:"Only do this if you have not paid yet."},
+  okH: {km:"ការបង់ប្រាក់ត្រូវបានបញ្ជាក់", en:"Payment confirmed"},
+  okP: (t, h) => ({km:`អ្នកអាចធ្វើតេស្តបានរហូតដល់ម៉ោង ${t} (${h} ម៉ោង)។`, en:`You can take the test until ${t} (${h} hours).`}),
+  startTest: {km:"ចាប់ផ្ដើមតេស្ត", en:"Start the test"},
+  noH: {km:"ការបង់ប្រាក់មិនត្រូវបានបញ្ជាក់ទេ — សូមនិយាយជាមួយបុគ្គលិក", en:"Payment not confirmed — please talk to staff"},
+  again: {km:"ចាប់ផ្ដើមម្ដងទៀត", en:"Start again"},
+  offH: {km:"មិនចាំបាច់បង់ប្រាក់ទេ", en:"No payment is needed"},
+  err: {
+    busy: {km:"មានសំណើបង់ប្រាក់ច្រើនពេកនៅពេលនេះ។ សូមរង់ចាំពីរបីនាទី ហើយព្យាយាមម្ដងទៀត ឬនិយាយជាមួយបុគ្គលិក។", en:"Too many payment requests right now. Please wait a few minutes and try again, or talk to staff."},
+    offline: {km:"គ្មានអ៊ីនធឺណិត។ សូមពិនិត្យការតភ្ជាប់របស់អ្នក — យើងនឹងព្យាយាមម្ដងទៀតដោយខ្លួនឯង។", en:"No internet connection. Check your connection — we will keep trying."},
+    missing: {km:"យើងរកមិនឃើញសំណើបង់ប្រាក់របស់អ្នកទេ។ ប្រសិនបើអ្នកបានបង់ប្រាក់រួចហើយ សូមបង្ហាញលេខសម្គាល់អ្នកទស្សនារបស់អ្នកដល់បុគ្គលិក។", en:"We could not find your payment request. If you already paid, show staff your visitor ID."},
+    config: {km:"ការបង់ប្រាក់មិនអាចប្រើបាននៅពេលនេះទេ។ សូមនិយាយជាមួយបុគ្គលិក។", en:"Payment is not available right now. Please talk to staff."},
+    other: {km:"មានបញ្ហាមួយបានកើតឡើង។ សូមព្យាយាមម្ដងទៀត ឬនិយាយជាមួយបុគ្គលិក។", en:"Something went wrong. Please try again, or talk to staff."}
+  }
+};
+
+let view = null, err = null, netErr = null, busy = false, timer = null, inflight = false, checkedAt = null, drawn = "";
+const khr = () => K.n(Number(K.PAY.amount).toLocaleString("en-US")) + "៛";
+const amount = () => `${khr()} (${K.n(K.PAY.usd)} USD)`;   // "3,000៛ (0.75 USD)": the KHQR itself is a fixed USD code
+const clock = d => K.n(new Date(d).toLocaleTimeString("en-GB", {hour:"2-digit", minute:"2-digit"}));
+const idBox = s => `<div class="vid"><span class="label">${K.t(W.vid)}</span><b class="vid__code">${K.esc(s.id)}</b></div>`;
+const banner = kind => kind ? `<p class="banner banner--bad" role="alert">${K.t(W.err[kind] || W.err.other)}</p>` : "";
+const checkedLine = () => checkedAt ? `${K.t(W.checked)}: ${clock(checkedAt)}` : "";
+
+function render(force){
+  // i-Stand (js/app.js): a student waiting for staff gets the longer inactivity time (ISTAND_WAITING_IDLE_SECONDS)
+  if(K.istandSetWaiting) K.istandSetWaiting(view === "pay" || view === "expired");
+  const s = K.load();
+  const open = K.payOpenCount(s);
+  const key = [view, err, netErr, busy, open, K.lang()].join("|");
+  if(!force && key === drawn){ const c = document.getElementById("checked"); if(c) c.textContent = checkedLine(); return; } // a poll changed nothing: no redraw
+  drawn = key;
+  const head = h => `<div class="stack" style="gap:8px"><span class="label kicker">${K.t(W.kicker)}</span><h1 class="display">${h}</h1></div>`;
+  let html = "";
+  if(view === "off"){
+    html = `${head(K.t(W.offH))}<a class="btn btn--gold btn--lg" href="assessment.html">${K.t(W.startTest)} ✈</a>`;
+  } else if(view === "start"){
+    const ended = K.payState(s) === "ended";   // a paid session that has run out
+    html = `${head(K.t(W.startH(amount())))}
+      ${idBox(s)}
+      <p class="muted">${K.t(W.startP)}</p>
+      ${ended ? `<p class="banner banner--info">${K.t(W.ended)}</p>` : ""}
+      ${banner(err)}
+      <button class="btn btn--gold btn--lg" type="button" data-act="create" ${busy ? "disabled" : ""}>${busy ? K.t(W.starting) : K.t(W.startBtn)}</button>
+      ${s.done && K.hasPaidAccess(s) ? `<a class="btn" href="results.html">${K.t(W.seeResults)}</a>` : `<button class="btn btn--ghost" type="button" data-act="sample">${K.t(W.sample)}</button>`}`;
+  } else if(view === "pay"){
+    html = `${head(K.t(W.payH(amount())))}
+      <div class="panel qr">
+        <img id="qrimg" src="${K.esc(K.PAY.qr)}" alt="ABA KHQR ${amount()}" width="340" height="340">
+        <p id="qrmissing" class="banner banner--info" hidden>${K.t(W.qrMissing)}</p>
+        <a id="qrsave" class="btn" href="${K.esc(K.PAY.qr)}" download="KITEBud-ABA-KHQR${K.esc((K.PAY.qr.match(/\.[a-z0-9]+$/i) || [".png"])[0])}">${K.t(W.saveQr)}</a>
+        <p id="qrhint" class="small muted" style="text-align:center">${K.t(W.saveQrHint)}</p>
+      </div>
+      <ol class="steps"><li>${K.t(W.step1(`<span class="amount">${K.n(K.PAY.usd)}</span>`, `<span class="amount">${khr()}</span>`))}</li><li>${K.t(W.step2)}</li></ol>
+      ${idBox(s)}
+      <div class="wait" role="status"><span class="spinner" aria-hidden="true"></span>${K.t(W.waiting)}</div>
+      <p class="banner banner--info"><b>${K.t(W.dontClose)}</b></p>
+      ${banner(netErr)}
+      <p class="small muted">${K.t(W.keepOpen)} <span id="checked">${checkedLine()}</span></p>`;
+  } else if(view === "expired"){
+    html = `${head(K.t(W.expiredH))}
+      <p>${K.t(W.expiredP)}${open > 1 ? " " + K.t(W.either(open)) : ""}</p>
+      ${idBox(s)}
+      <div class="wait" role="status"><span class="spinner" aria-hidden="true"></span>${K.t(open > 1 ? W.stillCheckingMany : W.stillChecking)}</div>
+      <p class="banner banner--info"><b>${K.t(W.dontClose)}</b></p>
+      ${banner(netErr || err)}
+      <p class="small muted"><span id="checked">${checkedLine()}</span></p>
+      <div class="stack" style="gap:6px"><button class="btn" type="button" data-act="create" ${busy ? "disabled" : ""}>${busy ? K.t(W.starting) : K.t(W.newReq)}</button>
+      <span class="small muted">${K.t(W.newReqNote)}</span></div>`;
+  } else if(view === "approved"){
+    html = `<div class="panel status"><span class="big" aria-hidden="true">✅</span>
+      <h1 class="display">${K.t(W.okH)}</h1>
+      <p>${K.t(W.okP(clock(K.paySessionEnd(s)), K.n(K.PAY.sessionHours)))}</p>
+      <a class="btn btn--gold btn--lg" href="assessment.html">${K.t(W.startTest)} ✈</a></div>
+      ${idBox(s)}`;
+  } else if(view === "rejected"){
+    html = `<div class="panel status"><span class="big" aria-hidden="true">⚠️</span><h1 class="display">${K.t(W.noH)}</h1></div>
+      ${idBox(s)}
+      ${banner(err)}
+      <button class="btn btn--gold btn--lg" type="button" data-act="create" ${busy ? "disabled" : ""}>${busy ? K.t(W.starting) : K.t(W.again)}</button>`;
+  }
+  app.innerHTML = `<div class="stack-lg">${html}</div>`;
+  const img = document.getElementById("qrimg");
+  if(img){ const gone = () => { img.hidden = true; ["qrsave","qrhint"].forEach(id => document.getElementById(id).hidden = true); document.getElementById("qrmissing").hidden = false; };
+    img.onerror = gone; if(img.complete && !img.naturalWidth) gone(); }
+  app.querySelectorAll('[data-act="create"]').forEach(b => b.onclick = create);
+  app.querySelectorAll('[data-act="sample"]').forEach(b => b.onclick = () => { K.setDemo(true); K.go("results.html"); });
+}
+
+async function create(){
+  if(busy) return;
+  busy = true; err = null; netErr = null; render();
+  try { await K.payApi.create(); view = "pay"; checkedAt = null; poll(); }
+  catch(e){ err = K.payErrorKind(e); console.log("[KITEBud pay] create failed", e && e.code); }
+  busy = false; render();
+}
+
+async function check(){
+  if(inflight) return;
+  inflight = true;
+  try {
+    const { state, missing } = await K.payApi.check();
+    netErr = null; checkedAt = new Date();
+    if(state === "approved"){ stop(); err = null; view = "approved"; }
+    else if(state === "pending") view = "pay";
+    else if(state === "expired") view = "expired";
+    else if(state === "rejected"){ stop(); err = null; view = "rejected"; }
+    else { stop(); view = "start"; err = missing ? "missing" : null; }
+  } catch(e){ netErr = K.payErrorKind(e); console.log("[KITEBud pay] check failed", e && e.code); }
+  inflight = false; render();
+}
+function poll(){ stop(); timer = setInterval(() => { if(!document.hidden) check(); }, POLL_MS); }
+function stop(){ clearInterval(timer); timer = null; }
+// back on this tab (for example after paying in the ABA app): check at once
+document.addEventListener("visibilitychange", () => { if(!document.hidden && timer) check(); });
+
+function start(){
+  K.setDemo(false);
+  if(!K.PAYMENT){ view = "off"; return render(); }
+  const state = K.payState(K.load());
+  if(state === "approved"){ view = "approved"; return render(); }   // already paid and still valid
+  if(state === "pending" || state === "expired"){                  // a refresh resumes the same requests
+    view = state === "pending" ? "pay" : "expired";
+    render(); poll(); check(); return;
+  }
+  view = state === "rejected" ? "rejected" : "start";
+  render();
+}
+document.addEventListener("DOMContentLoaded", start);
+document.addEventListener("kite:lang", () => render(true));
+})();
+</script>
+</body>
+</html>

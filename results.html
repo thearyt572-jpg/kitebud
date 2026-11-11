@@ -34,6 +34,7 @@ textarea.copybox{width:100%;min-height:90px;font:inherit;border:var(--bw) solid 
 <script src="js/scoring.js"></script>
 <script src="js/app.js"></script>
 <script src="js/db.js"></script>
+<script src="js/pay.js"></script>
 <script>
 (function(){
 const K = window.KITE, D = window.KITE_DATA, app = document.getElementById("app");
@@ -78,13 +79,13 @@ function render(){
         <div class="pass__band"><span>${K.t("ភាពសាកសមលេខ","Match #")}${K.n(rank)}</span><span>${S.id}</span></div>
         ${open
           ? `<h2 class="mname">${K.t(x.m)}</h2>`
-          : `<div><h2 class="mname locked" aria-hidden="true">${K.t("ជំនាញដែលបានលាក់","Hidden major name")}</h2><span class="lockchip small">🔒 ${K.t("ចាក់សោ — ដោះសោដើម្បីមើលឈ្មោះ","Locked — unlock to see the name")}</span></div>`}
+          : `<div><h2 class="mname locked" aria-hidden="true">${K.t("ជំនាញដែលបានលាក់","Hidden major name")}</h2><span class="lockchip small">🔒 ${(K.PAYMENT ? K.t("ចាក់សោ","Locked") : K.t("ចាក់សោ — ដោះសោដើម្បីមើលឈ្មោះ","Locked — unlock to see the name"))}</span></div>`}
         ${bars(x.parts)}
       </div>
       <div class="pass__stub">
         <span class="label">${K.t("សរុប","Overall")}</span>
         ${K.flap(x.pct)}
-        ${open?`<span class="tag tag--ok">${K.t("បានដោះសោ","Unlocked")}</span>`:`<span class="tag">${rank===3?K.t("កញ្ចប់ A ឬ B","Package A or B"):K.t("កញ្ចប់ B","Package B")}</span>`}
+        ${open?`<span class="tag tag--ok">${K.t("បានដោះសោ","Unlocked")}</span>`:`<span class="tag">${K.PAYMENT?K.t("ចាក់សោ","Locked"):rank===3?K.t("កញ្ចប់ A ឬ B","Package A or B"):K.t("កញ្ចប់ B","Package B")}</span>`}
       </div>
     </article>`;
   }).join("");
@@ -96,7 +97,8 @@ function render(){
   const typed = S.c && S.c.known==="yes" && K.validType(S.c.type);
 
   const allOpen = R.top.every(x=>K.unlocked(S,x.id)), thirdOpen = K.unlocked(S, R.top[2].id);
-  const unlockBlock = (demo || allOpen) ? "" : `<section class="stack" aria-labelledby="unl">
+  // payment on: no packages, only why it is locked (the test was finished after the paid 2 hours)
+  const unlockBlock = (demo || allOpen) ? "" : K.PAYMENT ? `<section class="panel stack" style="gap:8px"><span class="tag" style="align-self:flex-start">🔒 ${K.t("ចាក់សោ","Locked")}</span><p>${K.t(K.PAY_LOCKED)}</p></section>` : `<section class="stack" aria-labelledby="unl">
     <h2 id="unl">${K.t("ដោះសោលទ្ធផលពេញលេញ","Unlock your full results")}</h2>
     <div class="unlock">
       ${thirdOpen?"":`<div class="panel panel--flat"><span class="label">${K.t("កញ្ចប់ A","Package A")}</span><span class="mono" style="font-size:1.6rem;font-weight:600">${K.price("A")}</span><p class="small muted">${K.t("ដោះសោជំនាញលំដាប់ទី៣ (#3) តែមួយប៉ុណ្ណោះ","Unlocks only your #3 major")}</p><button class="btn" type="button" data-pkg="A">${K.t("ជ្រើសរើស","Choose")} ${K.price("A")}</button></div>`}
@@ -114,7 +116,7 @@ function render(){
     </div><div class="mascot mascot--major-match"><img class="sticker" src="images/sticker-major-match.webp" alt="" width="520" height="634"><p class="mascot__caption" aria-hidden="true">${K.t("ជំនាញដែលសាកសម!","Major Match!")}</p></div></div>
     <div class="matches">${passes}</div>
     ${extra.length?`<p class="small muted">${K.t("ជំនាញផ្សេងទៀតដែលអ្នកបានដោះសោពីមុន៖ ","Other majors you unlocked before: ")}${extra.map(x=>`<b>${K.t(x.m)}</b> (${x.pct===null?K.t(K.NOINFO):K.n(x.pct)+"%"})`).join(" · ")}</p>`:""}
-    ${K.SHOWCASE && !demo ? `<a class="btn btn--gold btn--lg" href="report.html">${K.t(K.SHOWCASE_LABEL)} →</a>`
+    ${K.SHOWCASE && !K.PAYMENT && !demo ? `<a class="btn btn--gold btn--lg" href="report.html">${K.t(K.SHOWCASE_LABEL)} →</a>`
       : anyUnlocked?`<a class="btn btn--ink btn--lg" href="report.html">${K.t("បើករបាយការណ៍ពេញលេញ","Open my full report")} →</a>`:""}
 
     <section class="panel stack" aria-labelledby="prof">
@@ -158,12 +160,12 @@ function render(){
   const fbs = document.getElementById("fbsend");
   if(fbs) fbs.onclick = ()=>{ K.db.sendFeedback(fbRating, fbComment); K.update(s=>{ s.feedbackSent = true; }); render(); }; // thanks either way: a failed save only goes to the console
   const ex = document.getElementById("exitDemo"); if(ex) ex.onclick = ()=>{ K.setDemo(false); render(); };
-  app.querySelectorAll("[data-pkg]").forEach(b=>b.onclick=()=>{ K.update(s=>s.pkg=b.dataset.pkg); location.href="checkout.html"; });
+  app.querySelectorAll("[data-pkg]").forEach(b=>b.onclick=()=>{ K.update(s=>s.pkg=b.dataset.pkg); K.go("checkout.html"); });
   // open the test's start screen (it has the Retake button and its confirm box), not the "You've landed" screen
   document.getElementById("retake").onclick = e => { if(demo){ K.setDemo(false); } else K.update(s=>{ s.pos = -1; s.started = null; }); };
   document.getElementById("share").onclick = ()=>{
     const lines = R.top.map((x,i)=> `${i+1}. ${K.unlocked(S,x.id)?K.t(x.m):"🔒"} — ${x.pct===null?K.t(K.NOINFO):x.pct+"%"}`);
-    const txt = K.t("ភាពសាកសមកំពូលរបស់ខ្ញុំនៅលើ KITEBud ✈️","My top KITEBud matches ✈️") + "\n" + lines.join("\n") + "\n" + K.t("សាកល្បងតេស្តឥតគិតថ្លៃនៅ KITEBud","Try the free test on KITEBud");
+    const txt = K.t("ភាពសាកសមកំពូលរបស់ខ្ញុំនៅលើ KITEBud ✈️","My top KITEBud matches ✈️") + "\n" + lines.join("\n") + "\n" + (K.PAYMENT ? K.t("សាកល្បងតេស្ត KITEBud","Try the KITEBud test") : K.t("សាកល្បងតេស្តឥតគិតថ្លៃនៅ KITEBud","Try the free test on KITEBud"));
     K.copy(txt, document.getElementById("sharebox"));
   };
 }

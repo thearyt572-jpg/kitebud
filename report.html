@@ -43,6 +43,7 @@
 <script src="js/scoring.js"></script>
 <script src="js/app.js"></script>
 <script src="js/db.js"></script>
+<script src="js/pay.js"></script>
 <script>
 (function(){
 const K = window.KITE, D = window.KITE_DATA, app = document.getElementById("app");
@@ -123,7 +124,7 @@ function render(){
   const open = (demo || K.SHOWCASE ? R.top : R.all).map((x,i)=>({x,rank:i+1})).filter(o=>K.unlocked(S,o.x.id));
   const topOpen = R.top.filter(x=>K.unlocked(S,x.id)).length;
   if(!open.length){
-    app.innerHTML = `<div class="panel stack" style="text-align:center;align-items:center"><span style="font-size:2.4rem" aria-hidden="true">🔒</span><h1 class="display">${K.t("របាយការណ៍នៅតែចាក់សោ","Your report is still locked")}</h1><p class="muted">${K.t("ជ្រើសកញ្ចប់ A ឬ B ដើម្បីដោះសោ។","Choose Package A or B to unlock it.")}</p><a class="btn btn--gold" href="results.html">${K.t("ត្រឡប់ទៅលទ្ធផល","Back to results")}</a></div>`;
+    app.innerHTML = `<div class="panel stack" style="text-align:center;align-items:center"><span style="font-size:2.4rem" aria-hidden="true">🔒</span><h1 class="display">${K.t("របាយការណ៍នៅតែចាក់សោ","Your report is still locked")}</h1><p class="muted">${K.PAYMENT ? K.t(K.PAY_LOCKED) : K.t("ជ្រើសកញ្ចប់ A ឬ B ដើម្បីដោះសោ។","Choose Package A or B to unlock it.")}</p><a class="btn btn--gold" href="results.html">${K.t("ត្រឡប់ទៅលទ្ធផល","Back to results")}</a></div>`;
     return;
   }
   app.innerHTML = `<div class="stack-lg">

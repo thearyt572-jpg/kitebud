@@ -120,7 +120,7 @@ body[data-page="home"] .tag--gold{background:var(--cta);color:var(--cta-ink)} /*
     <div class="hero__pass stack">
       <span class="gate" data-en="For Cambodian high school students">សម្រាប់សិស្សវិទ្យាល័យកម្ពុជា</span>
       <h1 class="display" data-en="Find the university major that fits you">ស្វែងរកជំនាញនៅសាកលវិទ្យាល័យ ដែលសាកសមនឹងអ្នក</h1>
-      <p class="hero__lead" data-en="KITEBud is a free 12-minute test for Cambodian high school students. It shows how well you match different majors, then points you to universities and scholarships.">KITEBud គឺជាតេស្តឥតគិតថ្លៃប្រហែល ១២ នាទី សម្រាប់សិស្សវិទ្យាល័យកម្ពុជា។ វាបង្ហាញថាអ្នកសាកសមនឹងជំនាញនីមួយៗប៉ុន្មានភាគរយ ហើយណែនាំសាកលវិទ្យាល័យ និងអាហារូបករណ៍។</p>
+      <p class="hero__lead" data-pay-en="KITEBud is a 12-minute test for Cambodian high school students. It shows how well you match different majors, then points you to universities and scholarships." data-pay-km="KITEBud គឺជាតេស្តប្រហែល ១២ នាទី សម្រាប់សិស្សវិទ្យាល័យកម្ពុជា។ វាបង្ហាញថាអ្នកសាកសមនឹងជំនាញនីមួយៗប៉ុន្មានភាគរយ ហើយណែនាំសាកលវិទ្យាល័យ និងអាហារូបករណ៍។" data-en="KITEBud is a free 12-minute test for Cambodian high school students. It shows how well you match different majors, then points you to universities and scholarships.">KITEBud គឺជាតេស្តឥតគិតថ្លៃប្រហែល ១២ នាទី សម្រាប់សិស្សវិទ្យាល័យកម្ពុជា។ វាបង្ហាញថាអ្នកសាកសមនឹងជំនាញនីមួយៗប៉ុន្មានភាគរយ ហើយណែនាំសាកលវិទ្យាល័យ និងអាហារូបករណ៍។</p>
     </div>
     <div class="hero__art mascot sticker--bob">
       <img class="sticker" src="images/sticker-hello.webp" alt="" width="520" height="396">
@@ -129,7 +129,7 @@ body[data-page="home"] .tag--gold{background:var(--cta);color:var(--cta-ink)} /*
     <p class="small hero__note" data-en="No login. No name or phone number needed.">មិនចាំបាច់ចុះឈ្មោះ។ មិនសួររកឈ្មោះ ឬលេខទូរស័ព្ទ។</p>
     <div class="row hero__actions">
       <a class="btn btn--ghost btn--lg hero__how" href="#how" data-en="How it works <span aria-hidden='true'>↓</span>">មើលរបៀបដំណើរការ <span aria-hidden="true">↓</span></a>
-      <a class="btn btn--gold btn--lg hero__cta" href="assessment.html" data-en="Start your journey">ចាប់ផ្ដើមដំណើររបស់អ្នក</a>
+      <a class="btn btn--gold btn--lg hero__cta" href="assessment.html" data-pay-start data-pay-en="Pay 3,000៛ (0.75 USD) and start" data-pay-km="បង់ ៣,០០០៛ (០.៧៥ USD) ហើយចាប់ផ្ដើម" data-en="Start your journey">ចាប់ផ្ដើមដំណើររបស់អ្នក</a>
     </div>
   </div>
  </div></div>
@@ -166,35 +166,47 @@ body[data-page="home"] .tag--gold{background:var(--cta);color:var(--cta-ink)} /*
 <!-- D. Pricing -->
 <section class="band pricing" id="pricing"><div class="wrap">
   <div class="section-head">
-    <span class="label" data-en="Packages">កញ្ចប់</span>
+    <span class="label" data-pay-en="One price" data-pay-km="តម្លៃតែមួយ" data-en="Packages">កញ្ចប់</span>
     <h2 class="display" data-en="Pricing">តម្លៃ</h2>
     <p class="muted" data-en="The test is always free. Pay only if you want to unlock your full results."
+      data-pay-en="Pay 3,000៛ (0.75 USD) once to take the test and get your full report. The sample result is free."
+      data-pay-km="បង់ ៣,០០០៛ (០.៧៥ USD) តែម្ដង ដើម្បីធ្វើតេស្ត និងទទួលបានរបាយការណ៍ពេញលេញរបស់អ្នក។ លទ្ធផលគំរូគឺឥតគិតថ្លៃ។"
       data-showcase-en="The test is always free. For now the full report is free too. Payment will come later."
       data-showcase-km="តេស្តគឺឥតគិតថ្លៃជានិច្ច។ បច្ចុប្បន្ននេះ របាយការណ៍ពេញលេញក៏ឥតគិតថ្លៃដែរ។ ការបង់ប្រាក់នឹងមកដល់ពេលក្រោយ។">តេស្តគឺឥតគិតថ្លៃជានិច្ច។ បង់ប្រាក់តែពេលអ្នកចង់ដោះសោលទ្ធផលពេញលេញប៉ុណ្ណោះ។</p>
   </div>
-  <div class="grid g3">
-    <div class="pass"><div class="pass__main">
+  <div class="grid g3" id="priceGrid">
+    <!-- payment on (js/config.js): ONE ticket replaces the three cards below -->
+    <div class="pass pass--gold" data-pay-only hidden><div class="pass__main">
+      <div class="pass__band"><span data-en="Full report">របាយការណ៍ពេញលេញ</span></div>
+      <h3 data-en="Test + full three-major report">តេស្ត + របាយការណ៍ពេញលេញអំពីជំនាញទាំង ៣</h3>
+      <div class="row">
+        <a class="btn btn--gold" href="pay.html" data-en="Pay 3,000៛ (0.75 USD) and start">បង់ ៣,០០០៛ (០.៧៥ USD) ហើយចាប់ផ្ដើម</a>
+        <button class="btn btn--ghost" type="button" data-demo data-en="See an example">មើលឧទាហរណ៍</button>
+      </div>
+    </div><div class="pass__stub"><span class="price" data-en="3,000៛">៣,០០០៛</span><span class="label" data-en="0.75 USD">០.៧៥ USD</span></div></div>
+
+    <div class="pass" data-pay-hide><div class="pass__main">
       <div class="pass__band"><span data-en="Economy">ថ្នាក់សាមញ្ញ</span></div>
       <h3 data-en="Free Demo">សាកល្បងឥតគិតថ្លៃ</h3>
       <ul class="small"><li data-en="See an example result using sample data">មើលឧទាហរណ៍នៃលទ្ធផល ដោយប្រើទិន្នន័យគំរូ</li><li data-en="This is not your own result">មិនមែនជាលទ្ធផលផ្ទាល់ខ្លួនរបស់អ្នកទេ</li></ul>
       <button class="btn btn--ghost" type="button" id="demoBtn" data-en="See an example">មើលឧទាហរណ៍</button>
     </div><div class="pass__stub"><span class="price">$0</span><span class="label" data-en="Free">ឥតគិតថ្លៃ</span></div></div>
 
-    <div class="pass"><div class="pass__main">
+    <div class="pass" data-pay-hide><div class="pass__main">
       <div class="pass__band"><span data-en="Package A">កញ្ចប់ A</span></div>
       <h3 data-en="One major">ជំនាញមួយ</h3>
       <ul class="small"><li data-en="Unlocks only your #3 major">ដោះសោជំនាញលំដាប់ទី៣ (#3) តែមួយប៉ុណ្ណោះ</li><li data-en="Includes the details we have for that major">រួមទាំងព័ត៌មានលម្អិតដែលមានសម្រាប់ជំនាញនោះ</li></ul>
       <button class="btn" type="button" data-pkg="A" data-en="Choose <span data-price='A'>$1.00</span>">ជ្រើសរើស <span data-price="A">$1.00</span></button>
     </div><div class="pass__stub"><span class="price" data-price="A">$1.00</span><span class="label" data-en="Major #3">ជំនាញ #៣</span></div></div>
 
-    <div class="pass pass--gold"><div class="pass__main">
+    <div class="pass pass--gold" data-pay-hide><div class="pass__main">
       <div class="pass__band"><span data-en="Package B">កញ្ចប់ B</span><span class="tag tag--gold" data-en="Recommended">ណែនាំ</span></div>
       <h3 data-en="All three majors">ជំនាញទាំង ៣</h3>
       <ul class="small"><li data-en="Unlocks all three ranks (#1, #2, #3)">ដោះសោជំនាញទាំងបីលំដាប់ (#1, #2, #3)</li><li data-en="Includes the details we have for all three majors">រួមទាំងព័ត៌មានលម្អិតដែលមានសម្រាប់ជំនាញទាំងបី</li></ul>
       <button class="btn btn--gold" type="button" data-pkg="B" data-en="Choose <span data-price='B'>$2.50</span>">ជ្រើសរើស <span data-price="B">$2.50</span></button>
     </div><div class="pass__stub"><span class="price" data-price="B">$2.50</span><span class="label" data-en="Majors #1–3">ជំនាញ #១–៣</span></div></div>
   </div>
-  <p class="banner" style="margin-top:22px" id="payNote" data-en="Test mode — no real money is collected.">របៀបសាកល្បង — មិនមានការកាត់ប្រាក់ពិតប្រាកដទេ។</p>
+  <p class="banner" style="margin-top:22px" id="payNote" data-pay-hide data-en="Test mode — no real money is collected.">របៀបសាកល្បង — មិនមានការកាត់ប្រាក់ពិតប្រាកដទេ។</p>
 </div></section>
 
 <!-- E. Sample result preview -->
@@ -226,6 +238,8 @@ body[data-page="home"] .tag--gold{background:var(--cta);color:var(--cta-ink)} /*
     <details class="qa"><summary data-en="How long does the test take?">តេស្តនេះប្រើពេលប៉ុន្មាន?</summary><p class="qa__a" data-en="About 12 minutes. You can stop and continue later if you allow cookies.">ប្រហែល ១២ នាទី។ អ្នកអាចឈប់ ហើយបន្តពេលក្រោយ ប្រសិនបើអ្នកអនុញ្ញាតខូគី។</p></details>
     <details class="qa"><summary data-en="Is my result 100% correct?">តើលទ្ធផលត្រឹមត្រូវ ១០០% ទេ?</summary><p class="qa__a" data-en="No. It is a % match to help you explore. Talk it through with your family and teachers.">ទេ។ វាជាភាគរយភាពសាកសម ដើម្បីជួយអ្នកស្វែងយល់។ សូមពិភាក្សាជាមួយគ្រួសារ និងគ្រូរបស់អ្នក។</p></details>
     <details class="qa"><summary data-en="Is payment real?">តើការបង់ប្រាក់ជាការពិតទេ?</summary><p class="qa__a" data-en="Not yet. The site is in test mode, so no real money is taken."
+      data-pay-en="Yes. You pay 3,000៛ (0.75 USD) by ABA KHQR or cash. A staff member checks the payment before the test opens."
+      data-pay-km="បាទ/ចាស។ អ្នកបង់ ៣,០០០៛ (០.៧៥ USD) តាម ABA KHQR ឬជាសាច់ប្រាក់។ បុគ្គលិកនឹងពិនិត្យការបង់ប្រាក់ មុនពេលតេស្តបើក។"
       data-showcase-en="Not yet. For now the full report is free. Payment will come later."
       data-showcase-km="មិនទាន់ទេ។ បច្ចុប្បន្ននេះ របាយការណ៍ពេញលេញឥតគិតថ្លៃ។ ការបង់ប្រាក់នឹងមកដល់ពេលក្រោយ។">មិនទាន់ទេ។ គេហទំព័រកំពុងស្ថិតក្នុងរបៀបសាកល្បង ដូច្នេះគ្មានការកាត់ប្រាក់ពិតប្រាកដទេ។</p></details>
     <details class="qa"><summary data-en="Do I need to give my name?">តើខ្ញុំត្រូវផ្ដល់ឈ្មោះទេ?</summary><p class="qa__a" data-en="No. KITEBud has no login and never asks for your name, phone or school.">ទេ។ KITEBud មិនមានការចុះឈ្មោះ ហើយមិនដែលសួររកឈ្មោះ លេខទូរស័ព្ទ ឬសាលារបស់អ្នកឡើយ។</p></details>
@@ -238,9 +252,9 @@ body[data-page="home"] .tag--gold{background:var(--cta);color:var(--cta-ink)} /*
   <div class="final">
     <div class="stack" style="gap:6px">
       <h2 class="display" data-en="Ready for take-off?">ត្រៀមហោះហើរហើយឬនៅ?</h2>
-      <p data-en="Your boarding pass is waiting. The test is free.">សំបុត្រឡើងយន្តហោះរបស់អ្នកកំពុងរង់ចាំ។ តេស្តគឺឥតគិតថ្លៃ។</p>
+      <p data-pay-en="Your boarding pass is waiting." data-pay-km="សំបុត្រឡើងយន្តហោះរបស់អ្នកកំពុងរង់ចាំ។" data-en="Your boarding pass is waiting. The test is free.">សំបុត្រឡើងយន្តហោះរបស់អ្នកកំពុងរង់ចាំ។ តេស្តគឺឥតគិតថ្លៃ។</p>
     </div>
-    <a class="btn btn--gold btn--lg" href="assessment.html" data-en="Start the test">ចាប់ផ្ដើមតេស្ត</a>
+    <a class="btn btn--gold btn--lg" href="assessment.html" data-pay-start data-pay-en="Pay 3,000៛ (0.75 USD) and start" data-pay-km="បង់ ៣,០០០៛ (០.៧៥ USD) ហើយចាប់ផ្ដើម" data-en="Start the test">ចាប់ផ្ដើមតេស្ត</a>
   </div>
 </div></section>
 </main>
@@ -254,22 +268,27 @@ body[data-page="home"] .tag--gold{background:var(--cta);color:var(--cta-ink)} /*
 <script src="js/scoring.js"></script>
 <script src="js/app.js"></script>
 <script src="js/db.js"></script>
+<script src="js/pay.js"></script>
 <script>
+// payment on, but this student already has a running paid session: the start buttons keep their normal words
+if(KITE.PAYMENT && KITE.hasLiveSession && KITE.hasLiveSession(KITE.load()))
+  document.querySelectorAll("[data-pay-start]").forEach(function(el){ el.removeAttribute("data-pay-en"); el.removeAttribute("data-pay-km"); });
 document.addEventListener("DOMContentLoaded", function(){
-  document.getElementById("demoBtn").onclick = function(){ KITE.setDemo(true); location.href = "results.html"; };
+  document.querySelectorAll("#demoBtn, [data-demo]").forEach(function(b){ b.onclick = function(){ KITE.setDemo(true); KITE.go("results.html"); }; });
+  if(KITE.PAYMENT){ var g = document.getElementById("priceGrid"); g.classList.remove("g3"); g.style.maxWidth = "640px"; } // the one ticket, full width
   document.querySelectorAll("[data-pkg]").forEach(function(b){
     b.onclick = function(){
       KITE.setDemo(false);
       var s = KITE.update(function(s){ s.pkg = b.dataset.pkg; });
-      if(s.done) location.href = KITE.SHOWCASE ? "report.html" : "checkout.html";
-      else { KITE.toast(KITE.t("សូមធ្វើតេស្តជាមុនសិន បន្ទាប់មកអ្នកអាចដោះសោលទ្ធផល","Take the test first, then you can unlock your results")); setTimeout(function(){ location.href = "assessment.html"; }, 1400); }
+      if(s.done) KITE.go(KITE.SHOWCASE ? "report.html" : "checkout.html");
+      else { KITE.toast(KITE.t("សូមធ្វើតេស្តជាមុនសិន បន្ទាប់មកអ្នកអាចដោះសោលទ្ធផល","Take the test first, then you can unlock your results")); setTimeout(function(){ KITE.go("assessment.html"); }, 1400); }
     };
   });
   showcaseText();
 });
 // Showcase (js/config.js): the package buttons open the full report for free
 function showcaseText(){
-  if(!KITE.SHOWCASE) return;
+  if(!KITE.SHOWCASE || KITE.PAYMENT) return; // payment on: the one ticket replaces the package buttons
   // the label in two lines on purpose: "Showcase" small on top, "Full report free" below (same words as KITE.SHOWCASE_LABEL)
   var label = KITE.t(KITE.SHOWCASE_LABEL), parts = label.split(/[៖:]\s*/);
   document.querySelectorAll("[data-pkg]").forEach(function(b){

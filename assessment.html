@@ -55,11 +55,15 @@ html[lang="en"] .qtext{line-height:1.35}
 <script src="js/scoring.js"></script>
 <script src="js/app.js"></script>
 <script src="js/db.js"></script>
+<script src="js/pay.js"></script>
 <script>
 (function(){
 /* The test. All question wording comes from js/questions.js (LOCKED) — never write question text here.
    Order (docs/question-design.md, section 16): A dream job or field → B1 → B2 → B3 → personality → D1 → D2. */
 const K = window.KITE, D = window.KITE_DATA, Q = D.Q, app = document.getElementById("app");
+// payment (js/pay.js): without a paid session that is still running, go to the payment screen before anything
+// starts. A student who already started keeps going while the session runs.
+if(K.PAYMENT && !(K.hasLiveSession && K.hasLiveSession(K.load()))){ location.replace("pay.html"); return; }
 const PARTS = {A:{km:"ការងារអនាគត",en:"Future jobs"}, B:{km:"ចំណាប់អារម្មណ៍",en:"Interests"}, C:{km:"បុគ្គលិកលក្ខណៈ",en:"Personality"}, D:{km:"ចំណុចខ្លាំង",en:"Strengths"}};
 const NEXT_PART = {A:"B",B:"C",C:"D"};
 const OPTIONAL = {km:"ស្រេចចិត្ត — អ្នកអាចរំលងបាន។",en:"Optional — you can skip this."};
@@ -142,7 +146,7 @@ function renderStart(){
         : `<button class="btn btn--gold btn--lg" type="button" data-act="start">${inProgress?K.t("បន្តពីកន្លែងដែលអ្នកបានឈប់","Continue where you left off"):K.t("ចាប់ផ្ដើម","Start")} ✈</button>
            ${inProgress?`<button class="btn btn--ghost" type="button" data-act="restart">${K.t("ចាប់ផ្ដើមសាជាថ្មី","Start over")}</button>`:""}`}
       <div id="confirm" hidden class="banner banner--bad" style="flex-direction:column">
-        <span>${K.t("ចម្លើយ និងលទ្ធផលបច្ចុប្បន្នរបស់អ្នកនឹងត្រូវលុប។ ជំនាញដែលអ្នកបានដោះសោរួច នៅតែបើកនៅលើឧបករណ៍នេះ។","Your current answers and results will be cleared. Majors you already unlocked stay unlocked on this device.")}</span>
+        <span>${(K.PAYMENT ? K.t("ចម្លើយ និងលទ្ធផលបច្ចុប្បន្នរបស់អ្នកនឹងត្រូវលុប។","Your current answers and results will be deleted.") : K.t("ចម្លើយ និងលទ្ធផលបច្ចុប្បន្នរបស់អ្នកនឹងត្រូវលុប។ ជំនាញដែលអ្នកបានដោះសោរួច នៅតែបើកនៅលើឧបករណ៍នេះ។","Your current answers and results will be cleared. Majors you already unlocked stay unlocked on this device."))}</span>
         <div class="row"><button class="btn btn--ink btn--sm" type="button" data-act="restart-yes">${K.t("បាទ/ចាស លុប ហើយចាប់ផ្ដើមថ្មី","Yes, clear and start again")}</button><button class="btn btn--sm" type="button" data-act="restart-no">${K.t("បោះបង់","Cancel")}</button></div>
       </div>
     </div>
@@ -303,7 +307,7 @@ function bind(st){
     else if(a==="back") go(-1);
     else if(a==="next"){ const cur = SEQ[S.pos]||{}; if(answered(cur)){ if(cur.t==="break") finishPart(cur.done); go(1); } }
     // part D and the results are saved on the results page (js/db.js), so nothing is cut off by the page change
-    else if(a==="finish"){ K.update(s=>{ s.done = true; s.finishedAt = Date.now(); s.finishedParts = ["A","B","C","D"]; }); location.href = "results.html"; }
+    else if(a==="finish"){ K.update(s=>{ s.done = true; s.finishedAt = Date.now(); s.finishedParts = ["A","B","C","D"]; }); K.go("results.html"); }
     else if(a==="cookie") K.showCookie(true);
     else if(a==="toquiz") set(s=>{ s.c.known = "no"; });
     else if(a==="alsoquiz") set(s=>{ s.c.alsoQuiz = !s.c.alsoQuiz; });

@@ -33,9 +33,12 @@
 <script src="js/scoring.js"></script>
 <script src="js/app.js"></script>
 <script src="js/db.js"></script>
+<script src="js/pay.js"></script>
 <script>
 (function(){
 const K = window.KITE, app = document.getElementById("app");
+// payment on (js/config.js): the only way to pay is pay.html
+if(K.PAYMENT){ location.replace("pay.html"); return; }
 const PK = {
   A:{price:K.PRICES.A,name:{km:"កញ្ចប់ A",en:"Package A"},what:{km:"ដោះសោជំនាញលេខ ៣ របស់អ្នក ព្រមទាំងព័ត៌មានលម្អិត សាកលវិទ្យាល័យ និងអាហារូបករណ៍",en:"Unlocks your #3 major with its details, universities and scholarships"}},
   B:{price:K.PRICES.B,name:{km:"កញ្ចប់ B",en:"Package B"},what:{km:"ដោះសោជំនាញកំពូលទាំង ៣ ព្រមទាំងព័ត៌មានលម្អិត សាកលវិទ្យាល័យ និងអាហារូបករណ៍",en:"Unlocks all 3 top majors with their details, universities and scholarships"}}
@@ -57,7 +60,7 @@ function render(){
   }
   if(K.isDemo()){
     app.innerHTML = `<div class="stack-lg">${banner()}<div class="panel stack"><h1>${K.t("អ្នកកំពុងមើលលទ្ធផលគំរូ","You're viewing the sample")}</h1><p class="muted">${K.t("លទ្ធផលគំរូត្រូវបានដោះសោរួចហើយ។ ធ្វើតេស្តផ្ទាល់ខ្លួនដើម្បីដោះសោលទ្ធផលរបស់អ្នក។","The sample is already unlocked. Take the test yourself to unlock your own results.")}</p><button class="btn btn--gold" type="button" id="exit">${K.t("ចាប់ផ្ដើមតេស្តរបស់ខ្ញុំ","Start my own test")}</button></div></div>`;
-    document.getElementById("exit").onclick = ()=>{ K.setDemo(false); location.href="assessment.html"; };
+    document.getElementById("exit").onclick = ()=>{ K.setDemo(false); K.go("assessment.html"); };
     return;
   }
   if(!S.done){
